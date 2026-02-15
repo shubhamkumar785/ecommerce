@@ -8,6 +8,5 @@ A full-stack E-Commerce Web Application built using:
 - ☁️ AWS (Deployment)
 
 # 📌 Project Status
-🚧 Work in Progress
- This project is currently under development. Core modules are being implemented and tested.
+🚧 Work in Progress - This project is currently under development. Core modules are being implemented and tested.
 
