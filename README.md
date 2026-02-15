@@ -5,7 +5,7 @@ A full-stack E-Commerce Web Application built using:
 - ⚛️ React.js (Frontend)
 - 🎨 Bootstrap (UI Styling)
 - 🗄️ MySQL (Database)
-= ☁️ AWS (Deployment)
+- ☁️ AWS (Deployment)
 
 # 📌 Project Status
 🚧 Work in Progress
