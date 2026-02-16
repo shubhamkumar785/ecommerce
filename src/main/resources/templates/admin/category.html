@@ -19,8 +19,17 @@
             <div class="col-md-4">
                 <div class="card card-sh">
 
-                    <div class="card-header text-center fs-4">
-                        Add Category
+                    <div class="card-header text-center">
+                        <p class="fs-4">Add Category</p>
+                        <th:block th:if="${session.succMsg}">
+                        <p class="text-success fw-bold">[[${session.succMsg}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+                        
+                        <th:block th:if="${session.errorMsg}">
+                        <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
                     </div>
 
                     <div class="card-body">
