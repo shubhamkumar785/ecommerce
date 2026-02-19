@@ -37,6 +37,7 @@
                         <form action="/admin/updateCategory"
                               method="post"
                               enctype="multipart/form-data">
+                              <input type="hidden" name="name" th:value="${category.id}">
 
                             <!-- Category Name -->
                             <div class="mb-3">
