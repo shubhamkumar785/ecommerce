@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,9 +20,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 import com.ecommerce.model.Category;
+import com.ecommerce.model.Product;
 import com.ecommerce.service.CategoryService;
+import com.ecommerce.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -31,6 +35,9 @@ public class AdminController {
 
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private ProductService productService;
 
 	@GetMapping("/")
 	public String index() {
@@ -38,8 +45,10 @@ public class AdminController {
 	}
 
 	@GetMapping("/loadAddProduct")
-	public String loadAddProduct() {
-		return "admin/add_product";
+	public String loadAddProduct(Model m) {
+	    List<Category> categories = categoryService.getAllCategory();
+	    m.addAttribute("categories", categories);
+	    return "admin/add_product";
 	}
 
 	@GetMapping("/category")
@@ -148,6 +157,41 @@ public class AdminController {
 
 	    return "redirect:/admin/loadEditCategory/" + category.getId();
 	}
+	
+	@PostMapping("/saveProduct")
+	public String saveProduct(@ModelAttribute Product product,
+	                          @RequestParam("file") MultipartFile file,
+	                          HttpSession session) throws IOException {
+
+	    String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+	    product.setImage(imageName);
+
+	    Product saveProduct = productService.saveProduct(product);
+
+	    if (!ObjectUtils.isEmpty(saveProduct)) {
+
+	        if (!file.isEmpty()) {
+	            File saveFile = new ClassPathResource("static/img").getFile();
+
+	            Path path = Paths.get(saveFile.getAbsolutePath()
+	                    + File.separator
+	                    + "product_img"
+	                    + File.separator
+	                    + imageName);
+
+	            Files.copy(file.getInputStream(), path,
+	                    StandardCopyOption.REPLACE_EXISTING);
+	        }
+
+	        session.setAttribute("succMsg", "Product saved successfully");
+
+	    } else {
+	        session.setAttribute("errorMsg", "Something went wrong");
+	    }
+
+	    return "redirect:/admin/loadAddProduct";
+	}
+
 
 
 }
