@@ -191,6 +191,24 @@ public class AdminController {
 
 	    return "redirect:/admin/loadAddProduct";
 	}
+	
+	@GetMapping("/products")
+	public String loadViewProduct(Model m) {
+		m.addAttribute("products", productService.getAllProduct());
+		return "admin/products";
+	}
+	
+	@GetMapping("/deleteProduct/{id}")
+	public String deleteProduct(@PathVariable int id, HttpSession session) {
+		Boolean deleteproduct = productService.deleteProduct(id);
+		if(deleteproduct) {
+			session.setAttribute("succMsg", "Product deleted successfully");
+		}
+		else {
+			session.setAttribute("errorMsg", "Something wrong on server! Try again");
+		}
+		return "redirect:/admin/products";
+	}
 
 
 
