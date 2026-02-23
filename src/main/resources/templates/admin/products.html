@@ -1,12 +1,61 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{base :: Layout(~{::section})}">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{::section})}">
 <body>
+
+<section>
+	<div class="container mt-5 p-5">
+	
+	    <div class="card card-sh">
+		<div class="card-header text-center">
+			<p class="fs-4">View Product</p>
+			<th:block th:if="${session.succMsg}">
+                            <p class="text-success fw-bold">[[${session.succMsg}]]</p>
+                            <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+
+                        <th:block th:if="${session.errorMsg}">
+                            <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                            <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+		</div>
+
+		<div class="card-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Sl No</th>
+						<th>Image</th>
+						<th>Title</th>
+						<th>Category</th>
+						<th>Price</th>
+						<th>Stock</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="p, c:${products}">
+						<th scope="row">[[${c.count}]]</th>
+						<td><img th:src="@{'/img/product_img/' + ${p.image}}"width="65px" height="65px"></td>
+						<td>[[${p.title}]]</td>
+						<td>[[${p.category}]]</td>
+						<td>[[${p.price}]]</td>
+						<td>[[${p.stock}]]</td>
+						<td>
+							<a href="#" class="btn btn-sm btn-primary">Edit</a>
+							<a th:href="@{'/admin/deleteProduct/' + ${p.id}}" 
+                               class="btn btn-sm btn-danger">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+
+			</table>
+		</div>
+		
+	</div>
+	</div>
+</section>
 
 </body>
 </html>
