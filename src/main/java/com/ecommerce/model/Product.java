@@ -36,6 +36,9 @@ public class Product {
 	
 	private String image;
 	
+	private int discount;
+	
+	private Double discountPrice;
 	
 	public int getId() {
 	    return id;
@@ -91,8 +94,22 @@ public class Product {
 
 	public void setImage(String image) {
 	    this.image = image;
+	    
 	}
 
+	public int getDiscount() {
+		return discount;
+	}
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+	
+	public Double getDiscountPrice() {
+		return discountPrice;
+	}
+	public void setDiscountPrice(Double discountPrice) {
+		this.discountPrice = discountPrice;
+	}
 	
 	
 }
