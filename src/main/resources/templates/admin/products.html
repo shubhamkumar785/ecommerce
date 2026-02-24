@@ -43,7 +43,7 @@
 						<td>[[${p.price}]]</td>
 						<td>[[${p.stock}]]</td>
 						<td>
-							<a href="#" class="btn btn-sm btn-primary">Edit</a>
+							<a th:href="@{'/admin/editProduct/' + ${p.id}}" class="btn btn-sm btn-primary">Edit</a>
 							<a th:href="@{'/admin/deleteProduct/' + ${p.id}}" 
                                class="btn btn-sm btn-danger">Delete</a>
 						</td>
