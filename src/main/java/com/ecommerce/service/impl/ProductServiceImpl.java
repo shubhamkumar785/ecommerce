@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;   // ⭐ ADD THIS
+import org.springframework.stereotype.Service;  
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,6 +65,7 @@ public class ProductServiceImpl implements ProductService {
 		dbProduct.setStock(product.getStock());
 		
 		dbProduct.setDiscount(product.getDiscount());
+		dbProduct.setIsActive(product.getIsActive());
 		
 		Double discount = product.getPrice() * (product.getDiscount() / 100.0);
 		Double discountPrice = product.getPrice() - discount;
@@ -94,5 +95,12 @@ public class ProductServiceImpl implements ProductService {
 		
 		
 		return null;
+	}
+
+	@Override
+	public List<Product> getAllActiveProduct() {
+		// TODO Auto-generated method stub
+		List<Product> products =productRepository.findByIsActiveTrue();
+		return products;
 	}
 }
