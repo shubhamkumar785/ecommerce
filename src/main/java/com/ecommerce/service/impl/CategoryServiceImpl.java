@@ -51,4 +51,10 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findById(id).orElse(null);
     }
 
+	@Override
+	public List<Category> getAllActiveCategory() {
+		List<Category> categories =categoryRepository.findByIsActiveTrue();
+		return categories;
+	}
+
 }
