@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;  
+import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,33 +17,31 @@ import com.ecommerce.model.Product;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.service.ProductService;
 
-@Service  
+@Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Override
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
-    }
+	@Autowired
+	private ProductRepository productRepository;
 
 	@Override
-	public List<Product> getAllProduct() {
+	public Product saveProduct(Product product) {
+		return productRepository.save(product);
+	}
+
+	@Override
+	public List<Product> getAllProducts() {
 		return productRepository.findAll();
 	}
 
 	@Override
 	public Boolean deleteProduct(Integer id) {
+		Product product = productRepository.findById(id).orElse(null);
 
-	    Product product = productRepository.findById(id).orElse(null);
-
-	    if(!ObjectUtils.isEmpty(product)) {   
-	        productRepository.delete(product);
-	        return true;
-	    }
-
-	    return false;
+		if (!ObjectUtils.isEmpty(product)) {
+			productRepository.delete(product);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -54,53 +52,57 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product updateProduct(Product product, MultipartFile image) {
-		
+
 		Product dbProduct = getProductById(product.getId());
-		
+
 		String imageName = image.isEmpty() ? dbProduct.getImage() : image.getOriginalFilename();
-		
+
 		dbProduct.setTitle(product.getTitle());
 		dbProduct.setDescription(product.getDescription());
+		dbProduct.setCategory(product.getCategory());
 		dbProduct.setPrice(product.getPrice());
 		dbProduct.setStock(product.getStock());
-		
-		dbProduct.setDiscount(product.getDiscount());
+		dbProduct.setImage(imageName);
 		dbProduct.setIsActive(product.getIsActive());
-		
-		Double discount = product.getPrice() * (product.getDiscount() / 100.0);
-		Double discountPrice = product.getPrice() - discount;
+		dbProduct.setDiscount(product.getDiscount());
+
+		// 5=100*(5/100); 100-5=95
+		Double disocunt = product.getPrice() * (product.getDiscount() / 100.0);
+		Double discountPrice = product.getPrice() - disocunt;
 		dbProduct.setDiscountPrice(discountPrice);
-		
+
 		Product updateProduct = productRepository.save(dbProduct);
-		if(!ObjectUtils.isEmpty(updateProduct)) {
-			if(!image.isEmpty()) {
+
+		if (!ObjectUtils.isEmpty(updateProduct)) {
+
+			if (!image.isEmpty()) {
+
 				try {
 					File saveFile = new ClassPathResource("static/img").getFile();
 
-		            Path path = Paths.get(saveFile.getAbsolutePath()
-		                    + File.separator
-		                    + "product_img"
-		                    + File.separator
-		                    + imageName);
+					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
+							+ image.getOriginalFilename());
+					Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-		            Files.copy(image.getInputStream(), path,
-		                    StandardCopyOption.REPLACE_EXISTING);
-				}
-				catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 			return product;
 		}
-		
-		
 		return null;
 	}
 
 	@Override
-	public List<Product> getAllActiveProduct() {
-		// TODO Auto-generated method stub
-		List<Product> products =productRepository.findByIsActiveTrue();
+	public List<Product> getAllActiveProducts(String category) {
+		List<Product> products = null;
+		if (ObjectUtils.isEmpty(category)) {
+			products = productRepository.findByIsActiveTrue();
+		}else {
+			products=productRepository.findByCategory(category);
+		}
+
 		return products;
 	}
+
 }
