@@ -8,12 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Service
-public class CommonServiceImpl implements CommonService {
+public class CommnServiceImpl implements CommonService {
 
 	@Override
 	public void removeSessionMessage() {
-		// TODO Auto-generated method stub
-		HttpServletRequest request =((ServletRequestAttributes)(RequestContextHolder.getRequestAttributes())).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.getRequestAttributes()))
+				.getRequest();
 		HttpSession session = request.getSession();
 		session.removeAttribute("succMsg");
 		session.removeAttribute("errorMsg");
