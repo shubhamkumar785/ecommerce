@@ -8,45 +8,47 @@ import jakarta.persistence.Id;
 @Entity
 public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    private String name;
-    private String imageName;
-    private Boolean isActive;
+	private String name;
 
-    // ===== GETTERS & SETTERS =====
+	private String imageName;
 
-    public int getId() {
-        return id;
-    }
+	private Boolean isActive;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	// ===== Getter & Setter =====
 
-    public String getName() {
-        return name;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getImageName() {
-        return imageName;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Boolean getIsActive() {
-        return isActive;
-    }
+	public String getImageName() {
+		return imageName;
+	}
 
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
 }
