@@ -1,21 +1,15 @@
-package com.ecommerce.service;
+package com.ecommerce.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.ecommerce.model.Category;
 
-public interface CategoryService {
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-	public Category saveCategory(Category category);
+	public Boolean existsByName(String name);
 
-	public Boolean existCategory(String name);
+	public List<Category> findByIsActiveTrue();
 
-	public List<Category> getAllCategory();
-
-	public Boolean deleteCategory(int id);
-
-	public Category getCategoryById(int id);
-
-	public List<Category> getAllActiveCategory();
-	
 }
