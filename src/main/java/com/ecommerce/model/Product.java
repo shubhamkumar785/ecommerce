@@ -11,7 +11,7 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
 	@Column(length = 500)
 	private String title;
@@ -20,26 +20,20 @@ public class Product {
 	private String description;
 
 	private String category;
-
 	private Double price;
-
 	private int stock;
-
 	private String image;
-
 	private int discount;
-
 	private Double discountPrice;
-
 	private Boolean isActive;
 
 	// ===== Getter & Setter =====
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
