@@ -1,21 +1,12 @@
 package com.ecommerce.service;
-
 import java.util.List;
 
-import com.ecommerce.model.Category;
+import com.ecommerce.model.Cart;
 
-public interface CategoryService {
+public interface CartService {
 
-	public Category saveCategory(Category category);
+	public Cart saveCart(Integer productId, Integer userId);
 
-	public Boolean existCategory(String name);
+	public List<Cart> getCartsByUser(Integer userId);
 
-	public List<Category> getAllCategory();
-
-	public Boolean deleteCategory(int id);
-
-	public Category getCategoryById(int id);
-
-	public List<Category> getAllActiveCategory();
-	
 }
