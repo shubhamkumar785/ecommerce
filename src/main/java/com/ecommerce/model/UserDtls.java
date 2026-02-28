@@ -1,5 +1,7 @@
 package com.ecommerce.model;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +23,12 @@ public class UserDtls {
 	private String pincode;
 	private String password;
 	private String profileImage;
+	private String role;
+	private Boolean isEnable;
+	private Boolean accountNonLocked;
+	private Integer failedAttempt;
+	private Date lockTime;
+	private String resetToken;
 
 	// ===== Getter & Setter =====
 
@@ -102,5 +110,53 @@ public class UserDtls {
 
 	public void setProfileImage(String profileImage) {
 		this.profileImage = profileImage;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Boolean getIsEnable() {
+		return isEnable;
+	}
+
+	public void setIsEnable(Boolean isEnable) {
+		this.isEnable = isEnable;
+	}
+
+	public Boolean getAccountNonLocked() {
+		return accountNonLocked;
+	}
+
+	public void setAccountNonLocked(Boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+
+	public Integer getFailedAttempt() {
+		return failedAttempt;
+	}
+
+	public void setFailedAttempt(Integer failedAttempt) {
+		this.failedAttempt = failedAttempt;
+	}
+
+	public Date getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Date lockTime) {
+		this.lockTime = lockTime;
+	}
+
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
 	}
 }
