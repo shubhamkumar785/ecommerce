@@ -13,9 +13,7 @@ public class Category {
 	private int id;
 
 	private String name;
-
 	private String imageName;
-
 	private Boolean isActive;
 
 	// ===== Getter & Setter =====
