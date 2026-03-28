@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>My Orders | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg py-12 px-4 md:px-0">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Header Section -->
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">My Orders 📦</h2>
+                    <p class="text-slate-500 font-medium">Track your purchase history and order status.</p>
+                </div>
+                <!-- Breadcrumbs -->
+                <div class="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">
+                    <a href="/" class="hover:text-orange-500 transition">Home</a>
+                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span class="text-nav">Orders</span>
+                </div>
+            </div>
+
+            <!-- Toast Alerts for Status Update -->
+            <th:block th:if="${session.succMsg}">
+                <div class="mb-8 p-4 bg-green-50 border border-green-100 rounded-2xl flex items-center gap-3 text-green-600 font-bold text-sm animate-[slideDown_0.3s_ease-out]">
+                    <i class="fa-solid fa-circle-check text-lg"></i> [[${session.succMsg}]]
+                </div>
+                <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+            </th:block>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(orders)}" class="bg-white rounded-[40px] p-20 text-center shadow-xl shadow-slate-200/50 border border-slate-50">
+                 <div class="w-24 h-24 bg-orange-50 text-orange-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                     <i class="fa-solid fa-box-open"></i>
+                 </div>
+                 <h3 class="text-2xl font-bold text-slate-900 mb-2">You haven't ordered anything yet</h3>
+                 <p class="text-slate-500 font-medium mb-8">Your shopping journey starts here!</p>
+                 <a href="/products" class="inline-flex items-center gap-2 px-8 py-3.5 bg-nav text-white rounded-full font-bold shadow-lg hover:bg-slate-800 transition">
+                     EXPLORE PRODUCTS <i class="fa-solid fa-arrow-right-long opacity-50 text-xs"></i>
+                 </a>
+            </div>
+
+            <!-- Orders Table/List -->
+            <div th:unless="${#lists.isEmpty(orders)}" class="space-y-6">
+                <div th:each="o:${orders}" class="bg-white rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50 transition-all duration-300 hover:shadow-2xl">
+                    <div class="p-6 md:p-10 flex flex-col lg:flex-row lg:items-center gap-8">
+                        
+                        <!-- Product Preview -->
+                        <div class="w-full lg:w-48 h-48 bg-slate-50 rounded-[24px] p-4 flex items-center justify-center overflow-hidden border border-slate-100">
+                             <img th:src="@{'/img/product_img/'+${o.product.image}}" class="w-full h-full object-contain mix-blend-multiply drop-shadow-lg">
+                        </div>
+
+                        <!-- Info -->
+                        <div class="flex-1 space-y-4">
+                             <div class="flex flex-wrap items-center gap-4">
+                                  <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">#[[${o.orderId}]]</span>
+                                  <span class="text-[11px] font-bold text-slate-500 flex items-center gap-1.5"><i class="fa-regular fa-calendar text-xs opacity-50"></i> [[${o.orderDate}]]</span>
+                             </div>
+                             
+                             <h4 class="text-xl font-bold text-slate-900">[[${o.product.title}]]</h4>
+                             
+                             <div class="flex flex-wrap items-center gap-8">
+                                  <div class="flex flex-col">
+                                       <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider leading-none mb-1">Details</span>
+                                       <span class="text-[13px] font-bold text-slate-700">Qty: [[${o.quantity}]] • Price: ₹[[${o.price}]]</span>
+                                  </div>
+                                  <div class="flex flex-col">
+                                       <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider leading-none mb-1">Status</span>
+                                       <span th:class="${o.status == 'Cancelled' ? 'text-[11px] font-black uppercase text-red-500 bg-red-50 px-3 py-1 rounded-full border border-red-100' : 'text-[11px] font-black uppercase text-green-500 bg-green-50 px-3 py-1 rounded-full border border-green-100'}">
+                                           [[${o.status}]]
+                                       </span>
+                                  </div>
+                             </div>
+                        </div>
+
+                        <!-- Actions & Price -->
+                        <div class="flex flex-col lg:items-end justify-between gap-6 border-t lg:border-t-0 lg:border-l border-slate-100 pt-6 lg:pt-0 lg:pl-10">
+                             <div class="flex flex-col lg:text-right">
+                                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider leading-none mb-1">Total Amount</span>
+                                  <span class="text-3xl font-black text-nav">₹[[${o.quantity * o.price}]]</span>
+                             </div>
+                             
+                             <div class="flex items-center gap-3">
+                                  <th:block th:if="${o.status!='Cancelled' && o.status!='Delivered'}">
+                                       <a th:href="@{'/user/update-status?id='+${o.id}+'&st=6' }" class="px-6 py-2.5 bg-red-50 text-red-500 rounded-xl text-[11px] font-black hover:bg-red-500 hover:text-white transition-all shadow-sm border border-red-100 text-center">
+                                           CANCEL ORDER
+                                       </a>
+                                  </th:block>
+                                  <a th:href="@{'/product/'+${o.product.id}}" class="px-6 py-2.5 bg-slate-50 text-slate-700 rounded-xl text-[11px] font-black hover:bg-slate-100 transition shadow-sm border border-slate-100 text-center">
+                                      VIEW PRODUCT
+                                  </a>
+                             </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <style>
+             @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </section>
+</body>
+</html>

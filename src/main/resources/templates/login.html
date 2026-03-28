@@ -1,56 +1,208 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: Layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta charset="ISO-8859-1">
+<title>Login | Ecom Store</title>
 </head>
 <body>
-
-<section>
-
-    <div class="container mt-5 p-5">
-        <div class="row">
-
-            <div class="col-md-6 p-5">
-                <img alt="" src="img/ecom.png" width="100%" height="400px">
+    <section class="min-h-[85vh] flex items-center justify-center py-10 px-4 md:px-0">
+        
+        <!-- Toast Alerts -->
+        <th:block th:if="${param.error}">
+            <div id="loginErrorToast" class="fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm animate-[bounce_0.5s_ease-out]">
+                <i class="fa-solid fa-circle-exclamation text-lg"></i> 
+                <th:block th:if="${session.SPRING_SECURITY_LAST_EXCEPTION!=null}">
+                    [[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]
+                </th:block>
             </div>
+            <script>
+                setTimeout(function() {
+                    var toast = document.getElementById('loginErrorToast');
+                    if (toast) toast.style.display = 'none';
+                }, 3000);
+            </script>
+        </th:block>
 
-            <div class="col-md-6 mt-3 p-5">
-                <div class="card shadow p-3 mb-5 bg-body-tertiary rounded">
+        <th:block th:if="${param.logout}">
+            <div class="fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 bg-green-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm animate-[bounce_0.5s_ease-out]">
+                <i class="fa-solid fa-circle-check text-lg"></i> Logout Successfully
+            </div>
+        </th:block>
 
-                    <div class="card-header">
-                        <p class="fs-4 text-center">Login</p>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input class="form-control" name="email" type="email">
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input class="form-control" name="password" type="password">
-                            </div>
-
-                            <button type="submit" class="btn bg-primary text-white col-md-12">Login</button>
-                        </form>
-                    </div>
-                    
-                    <div class="card-footer text-center">
-                        <a href="#" class="text-decoration-none">Forgot Password</a></br>
-                        Don't have an account?<a href="/register" class="text-decoration-none"> Create one</a>
-                    </div>
-
+        <!-- Main Card Container -->
+        <div class="w-full max-w-[1000px] bg-white rounded-[40px] shadow-[0_32px_64px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col md:flex-row border border-slate-100/50">
+            
+            <!-- Left Side: Banner / Image -->
+            <div id="sideBanner" class="w-full md:w-1/2 bg-[#FFF5AB] p-10 flex flex-col justify-between relative min-h-[250px] md:min-h-[600px] overflow-hidden transition-colors duration-500">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-80 h-80 bg-white/40 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+                <div class="absolute bottom-10 left-0 w-64 h-64 bg-orange-400/10 rounded-full blur-[80px] -translate-x-1/4"></div>
+                
+                <div class="relative z-10 w-full lg:w-[90%]">
+                    <span id="roleLabel" class="inline-block bg-[#1F223D] text-white text-[10px] font-bold px-3 py-1 rounded-full mb-6 tracking-widest uppercase">Customer</span>
+                    <h2 id="bannerTitle" class="text-3xl md:text-5xl font-heading font-extrabold text-[#1F223D] leading-[1.1] mb-5 tracking-tight transition-all duration-500">Welcome <br/> Back!</h2>
+                    <p id="bannerDesc" class="text-slate-600 font-medium text-sm md:text-base opacity-80 leading-relaxed transition-all duration-500">Discover new trends, track your orders, and enjoy faster checkout.</p>
+                </div>
+                
+                <!-- Mockup Illustration -->
+                <div class="relative z-10 mt-auto flex justify-center translate-y-10 md:translate-y-16 group">
+                    <img id="bannerImg" src="/img/category_img/laptop.jpg" onerror="this.src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&fit=crop'" class="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full border-[10px] border-white/60 mix-blend-multiply drop-shadow-2xl transition-all duration-700 group-hover:scale-105" alt="Store Login">
                 </div>
             </div>
 
+            <!-- Right Side: Login Form -->
+            <div class="w-full md:w-1/2 p-8 md:p-14 lg:p-16 flex flex-col justify-center bg-white relative z-20">
+                
+                <!-- Role Switcher -->
+                <div class="mb-10">
+                    <div class="flex items-center justify-center p-1 bg-slate-100 rounded-[20px] w-full max-w-[360px] mx-auto mb-8 overflow-hidden relative">
+                        <div id="roleSlider" class="absolute left-1 top-1 w-1/3 h-[calc(100%-8px)] bg-white rounded-[16px] shadow-md transition-all duration-500 ease-out"></div>
+                        <button type="button" onclick="selectRole('ROLE_USER', 0)" class="flex-1 py-2.5 text-xs font-black text-slate-400 relative z-10 transition-colors duration-300 active:scale-95">Customer</button>
+                        <button type="button" onclick="selectRole('ROLE_SELLER', 1)" class="flex-1 py-2.5 text-xs font-black text-slate-400 relative z-10 transition-colors duration-300 active:scale-95">Seller</button>
+                        <button type="button" onclick="selectRole('ROLE_ADMIN', 2)" class="flex-1 py-2.5 text-xs font-black text-slate-400 relative z-10 transition-colors duration-300 active:scale-95">Admin</button>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="text-2xl md:text-3xl font-heading font-bold text-[#1F223D] mb-2">Sign in to Account</h3>
+                        <p class="text-sm text-slate-500 font-medium">Please enter your details to proceed.</p>
+                    </div>
+                </div>
+
+                <form action="/login" method="post" id="loginForm" class="flex flex-col gap-6">
+                    <input type="hidden" name="role" id="roleInput" value="ROLE_USER">
+
+                    <!-- Email Input -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[13px] font-bold text-slate-700 ml-1">Email Address</label>
+                        <div class="relative flex items-center group">
+                            <i class="fa-regular fa-envelope absolute left-4 text-slate-300 group-focus-within:text-orange-400 transition-colors"></i>
+                            <input required class="w-full bg-slate-50 text-slate-800 text-sm font-medium rounded-2xl pl-12 pr-4 py-3.5 border border-slate-200 outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300 transition" name="username" type="email" placeholder="owner@example.com">
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="flex flex-col gap-2">
+                         <label class="text-[13px] font-bold text-slate-700 ml-1">Password</label>
+                        <div class="relative flex items-center group">
+                            <i class="fa-solid fa-lock absolute left-4 text-slate-300 group-focus-within:text-orange-400 transition-colors"></i>
+                            <input required id="passField" class="w-full bg-slate-50 text-slate-800 text-sm font-medium rounded-2xl pl-12 pr-12 py-3.5 border border-slate-200 outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300 transition" name="password" type="password" placeholder="••••••••">
+                            <button type="button" onclick="togglePass('passField', 'eye')" class="absolute right-4 text-slate-300 hover:text-orange-400 transition-colors">
+                                <i id="eye" class="fa-regular fa-eye-slash text-sm"></i>
+                            </button>
+                        </div>
+                        <div class="flex justify-end pr-2">
+                             <a href="/forgot-password" class="text-[11px] font-bold text-orange-600 hover:text-orange-700 transition tracking-tighter uppercase">Forgot Password?</a>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" onclick="this.innerHTML='<i class=\'fa-solid fa-circle-notch fa-spin\'></i> Processing...'; this.classList.add('opacity-80')" class="w-full max-w-[340px] mx-auto bg-nav text-white rounded-[20px] py-3 px-8 mt-4 font-bold text-xl shadow-lg hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3">
+                        Submit
+                        <i class="fa-solid fa-arrow-right-long text-xs opacity-50"></i>
+                    </button>
+                </form>
+
+                <!-- Social Login -->
+                <div class="mt-8">
+                    <div class="relative flex items-center justify-center mb-6">
+                        <div class="absolute w-full h-[1px] bg-slate-100"></div>
+                        <span class="bg-white px-4 text-[10px] font-bold text-slate-300 relative z-10 uppercase tracking-[0.2em]">One-click Auth</span>
+                    </div>
+                    <button type="button" id="googleBtn" onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-2 bg-slate-50 border border-slate-200 rounded-[20px] py-3 hover:bg-slate-100 transition shadow-sm active:scale-[0.99]">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4" alt="Google">
+                        <span class="text-sm font-black text-slate-700">Continue with Google</span>
+                    </button>
+                </div>
+
+                <!-- Signup Link -->
+                <p class="text-center text-sm font-medium text-slate-400 mt-10">
+                    New to platform? <a href="/register" class="font-bold text-orange-600 hover:text-orange-700 transition">Get started</a>
+                </p>
+            </div>
         </div>
-    </div>
 
-</section>
+        <!-- Firebase Logic preserved -->
+        <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
 
+        <script>
+            function selectRole(role, index) {
+                const slider = document.getElementById('roleSlider');
+                const bannerTitle = document.getElementById('bannerTitle');
+                const bannerDesc = document.getElementById('bannerDesc');
+                const bannerImg = document.getElementById('bannerImg');
+                const roleLabel = document.getElementById('roleLabel');
+                const sideBanner = document.getElementById('sideBanner');
+                
+                document.getElementById('roleInput').value = role;
+                
+                slider.style.left = (index * 33.33) + 1 + '%';
 
+                if (role === 'ROLE_SELLER') {
+                    roleLabel.innerText = "Seller";
+                    bannerTitle.innerHTML = "Store <br/> Management";
+                    bannerDesc.innerText = "Access your shop dashboard, manage inventory and track your growth.";
+                    bannerImg.src = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=500&fit=crop";
+                    sideBanner.style.backgroundColor = "#D5E6FF"; // Blue
+                } else if (role === 'ROLE_ADMIN') {
+                    roleLabel.innerText = "Administrator";
+                    bannerTitle.innerHTML = "System <br/> Console";
+                    bannerDesc.innerText = "Full control over the marketplace, users, and platform settings.";
+                    bannerImg.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&fit=crop";
+                    sideBanner.style.backgroundColor = "#E2E8F0"; // Slate
+                } else {
+                    roleLabel.innerText = "Customer";
+                    bannerTitle.innerHTML = "Welcome <br/> Back!";
+                    bannerDesc.innerText = "Discover new trends, track your orders, and enjoy faster checkout.";
+                    bannerImg.src = "/img/category_img/laptop.jpg";
+                    sideBanner.style.backgroundColor = "#FFF5AB"; // Yellow
+                }
+                
+                // Active Button styling
+                const buttons = slider.parentElement.querySelectorAll('button');
+                buttons.forEach((btn, i) => i === index ? btn.classList.add('text-nav') : btn.classList.remove('text-nav'));
+            }
+
+            function togglePass(fid, bid) {
+                const f = document.getElementById(fid);
+                const b = document.getElementById(bid);
+                if (f.type === "password") {
+                    f.type = "text";
+                    b.classList.replace("fa-eye-slash", "fa-eye");
+                } else {
+                    f.type = "password";
+                    b.classList.replace("fa-eye", "fa-eye-slash");
+                }
+            }
+
+            // --- Firebase Integration (Placeholder/Real) ---
+            const firebaseConfig = { apiKey: "API_KEY", authDomain: "AUTH_DOMAIN", projectId: "PROJECT_ID", storageBucket: "BUCKET", messagingSenderId: "SENDER", appId: "APP_ID" };
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const provider = new firebase.auth.GoogleAuthProvider();
+
+            async function loginWithGoogle() {
+                const btn = document.getElementById('googleBtn');
+                try {
+                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+                    const result = await auth.signInWithPopup(provider);
+                    const user = result.user;
+                    const response = await fetch('/auth/google', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: user.email, name: user.displayName, profileImage: user.photoURL })
+                    });
+                    const data = await response.json();
+                    if (data.success) window.location.href = "/";
+                } catch (error) {
+                    console.error(error);
+                    btn.innerHTML = '<img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4"> Continue with Google';
+                }
+            }
+
+            // Initial
+            window.onload = () => selectRole('ROLE_USER', 0);
+        </script>
+    </section>
 </body>
-</html> 
-
+</html>

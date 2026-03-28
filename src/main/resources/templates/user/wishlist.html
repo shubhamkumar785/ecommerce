@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>My Wishlist | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg py-12 px-4 md:px-0">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Header Section -->
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">My Wishlist ❤️</h2>
+                    <p class="text-slate-500 font-medium">Keep track of items you love and buy them later.</p>
+                </div>
+                <!-- Breadcrumbs -->
+                <div class="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">
+                    <a href="/" class="hover:text-orange-500 transition">Home</a>
+                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span class="text-nav">Wishlist</span>
+                </div>
+            </div>
+
+            <!-- Empty Wishlist -->
+            <div th:if="${#lists.isEmpty(wishlist)}" class="bg-white rounded-[40px] p-20 text-center shadow-xl shadow-slate-200/50 border border-slate-50">
+                 <div class="w-24 h-24 bg-red-50 text-red-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                     <i class="fa-regular fa-heart"></i>
+                 </div>
+                 <h3 class="text-2xl font-bold text-slate-900 mb-2">Your wishlist is empty</h3>
+                 <p class="text-slate-500 font-medium mb-8">Start exploring and save your favorite products!</p>
+                 <a href="/products" class="inline-flex items-center gap-2 px-8 py-3.5 bg-nav text-white rounded-full font-bold shadow-lg hover:bg-slate-800 transition">
+                     STORY NOW <i class="fa-solid fa-arrow-right-long opacity-50 text-xs"></i>
+                 </a>
+            </div>
+
+            <!-- Wishlist Grid -->
+            <div th:unless="${#lists.isEmpty(wishlist)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 <div th:each="w:${wishlist}" class="group bg-white rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col transition-all duration-500 hover:shadow-2xl hover:shadow-orange-200/40 hover:-translate-y-2">
+                     <!-- Product Image -->
+                     <div class="h-64 relative bg-slate-50 p-4 transition-colors group-hover:bg-orange-50/50">
+                          <img th:src="@{'/img/product_img/'+${w.product.image}}" class="w-full h-full object-contain mix-blend-multiply drop-shadow-xl transition-transform duration-700 group-hover:scale-110">
+                          <!-- Remove Action -->
+                          <a th:href="@{'/user/remove-wishlist?pid='+${w.product.id}}" class="absolute top-4 right-4 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all active:scale-90">
+                              <i class="fa-solid fa-trash-can text-sm"></i>
+                          </a>
+                     </div>
+                     
+                     <!-- Details -->
+                     <div class="p-6 md:p-8 flex-1 flex flex-col">
+                          <div class="flex items-center justify-between mb-2">
+                               <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">[[${w.product.category}]]</span>
+                               <span class="text-xs font-bold text-green-500">IN STOCK</span>
+                          </div>
+                          <h4 class="text-lg font-bold text-slate-900 mb-4 line-clamp-1">[[${w.product.title}]]</h4>
+                          <div class="flex items-center justify-between mt-auto">
+                               <div class="flex flex-col">
+                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider leading-none mb-1">Price</span>
+                                    <span class="text-xl font-black text-nav">₹ [[${w.product.discountPrice}]]</span>
+                               </div>
+                               <a th:href="@{'/user/addCart?pid='+${w.product.id}+'&uid='+${user.id}}" class="w-12 h-12 bg-nav text-white rounded-2xl flex items-center justify-center hover:bg-slate-800 shadow-md transition active:scale-95 group/btn">
+                                   <i class="fa-solid fa-cart-plus transition-transform group-hover/btn:scale-110"></i>
+                               </a>
+                          </div>
+                     </div>
+                 </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>

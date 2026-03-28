@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecom Store</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            bg: '#FCFBFA',
+                            blue: '#D2F5F5',
+                            purple: '#DFD5F5',
+                            yellow: '#FFF5AB',
+                            lightBlue: '#D5E6FF',
+                        },
+                        nav: '#1F223D',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FCFBFA; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen pb-24 md:pb-0 font-sans">
+    
+    <!-- Desktop Navbar (Hidden on Mobile) -->
+    <nav class="hidden md:flex items-center justify-between px-8 py-4 bg-white shadow-sm sticky top-0 z-50">
+        <a href="/" class="text-2xl font-heading font-bold flex items-center gap-2 text-slate-900">
+            <div class="w-10 h-10 bg-orange-400 rounded-full flex items-center justify-center text-white">
+                <i class="fa-solid fa-shop"></i>
+            </div>
+            Ecom
+        </a>
+        
+        <div class="flex items-center gap-8 font-medium text-slate-600">
+            <th:block th:if="${user==null}">
+                <a href="/" class="text-slate-900 font-semibold hover:text-orange-500 transition">Home</a>
+            </th:block>
+            <th:block th:unless="${user==null}">
+                <a th:if="${user.role=='ROLE_ADMIN'}" href="/admin/" class="hover:text-orange-500 transition">Dashboard</a>
+                <a th:if="${user.role=='ROLE_USER'}" href="/" class="text-slate-900 font-semibold hover:text-orange-500 transition">Home</a>
+            </th:block>
+            
+            <a href="/products" class="hover:text-orange-500 transition">Products</a>
+            
+            <div class="group relative">
+                <a href="#" class="flex items-center gap-1 hover:text-orange-500 transition">
+                    Category <i class="fa-solid fa-chevron-down text-xs"></i>
+                </a>
+                <div class="absolute left-0 mt-2 w-48 bg-white rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-slate-100">
+                    <a th:each="c:${categorys}" th:href="@{'/products?category='+${c.name}}" class="block px-4 py-3 hover:bg-slate-50 hover:text-orange-500 first:rounded-t-2xl last:rounded-b-2xl transition">[[${c.name}]]</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <th:block th:if="${user==null}">
+                <a href="/signin" class="font-medium hover:text-orange-500 transition pl-4">Login</a>
+                <!-- Only show Sign Up if not admin tab/page -->
+                <th:block th:if="${param.role} != 'ROLE_ADMIN'">
+                    <a href="/register" class="bg-nav text-white px-6 py-2.5 rounded-full font-medium hover:bg-slate-800 transition shadow-md">Sign Up</a>
+                </th:block>
+            </th:block>
+            <th:block th:if="${user!=null}">
+                <th:block th:if="${user.role=='ROLE_USER'}">
+                    <a href="/user/cart" class="relative text-2xl text-slate-700 hover:text-orange-500 transition mr-6 group">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span class="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm transition-transform group-hover:scale-110" th:text="${countCart}">0</span>
+                    </a>
+                </th:block>
+                
+                <!-- Profile Dropdown -->
+                <div class="relative group">
+                    <button type="button" class="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full border border-slate-100 hover:border-orange-100 hover:bg-orange-50/30 transition-all duration-300">
+                        <div class="w-9 h-9 rounded-full bg-pastel-purple flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+                            <img th:if="${user.profileImage!=null}" th:src="@{'/img/profile_img/'+${user.profileImage}}" class="w-full h-full object-cover">
+                            <span th:unless="${user.profileImage!=null}" class="text-nav font-bold text-xs">[[${#strings.substring(user.name,0,1)}]]</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 mr-2 group-hover:text-orange-500 transition-colors"></i>
+                    </button>
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="absolute right-0 mt-3 w-72 bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-50 border border-slate-50 overflow-hidden">
+                        <!-- User Header -->
+                        <div class="p-6 bg-slate-50/50 border-b border-slate-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-pastel-yellow flex items-center justify-center text-nav font-bold text-lg border-2 border-white shadow-sm overflow-hidden">
+                                     <img th:if="${user.profileImage!=null}" th:src="@{'/img/profile_img/'+${user.profileImage}}" class="w-full h-full object-cover">
+                                     <span th:unless="${user.profileImage!=null}">[[${#strings.substring(user.name,0,1)}]]</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-900 leading-tight">[[${user.name}]]</span>
+                                    <span class="text-[11px] text-slate-500 font-medium truncate w-40">[[${user.email}]]</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Menu Items -->
+                        <div class="py-2">
+                             <a href="/user/profile" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                 <i class="fa-regular fa-user w-5 text-center transition-transform"></i> My Profile
+                             </a>
+                             <a href="/user/user-orders" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                 <i class="fa-solid fa-box-open w-5 text-center transition-transform"></i> My Orders
+                             </a>
+                             <a href="/user/wishlist" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                 <i class="fa-regular fa-heart w-5 text-center transition-transform text-red-400"></i> Wishlist
+                             </a>
+                             <a href="/user/address" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                 <i class="fa-solid fa-location-dot w-5 text-center transition-transform text-blue-400"></i> My Address
+                             </a>
+                             <a href="/user/settings" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                 <i class="fa-solid fa-gear w-5 text-center transition-transform"></i> Settings
+                             </a>
+                        </div>
+                        
+                        <!-- Logout -->
+                        <div class="p-3 bg-slate-50 border-t border-slate-100">
+                             <a href="/logout" class="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-red-100 text-red-500 rounded-xl text-xs font-black hover:bg-red-50 hover:shadow-sm transition-all shadow-none">
+                                 <i class="fa-solid fa-power-off"></i> LOGOUT
+                             </a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </nav>
+    
+    <!-- Mobile Top Header -->
+    <header class="md:hidden flex items-center justify-between px-5 pt-6 pb-2 bg-pastel-bg sticky top-0 z-40 relative">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100 bg-opacity-70 backdrop-blur-md">
+                <i class="fa-solid fa-bars text-slate-700 text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[11px] text-slate-500 font-medium">Delivery to</p>
+                <p class="text-[14px] font-bold text-slate-900 leading-tight">San Francisco</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <th:block th:if="${user!=null && user.role=='ROLE_USER'}">
+                <a href="/user/cart" class="relative w-11 h-11 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.05)] flex items-center justify-center border border-slate-100">
+                    <i class="fa-solid fa-bag-shopping text-slate-700"></i>
+                    <span class="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white" th:text="${countCart}">0</span>
+                </a>
+            </th:block>
+            <th:block th:if="${user==null}">
+                <a href="/signin" class="relative w-11 h-11 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.05)] flex items-center justify-center border border-slate-100">
+                    <i class="fa-regular fa-bell text-slate-700 text-lg"></i>
+                    <span class="absolute top-2 right-2.5 bg-red-500 w-2 h-2 rounded-full border border-white"></span>
+                </a>
+            </th:block>
+        </div>
+        
+        <!-- Pull for coupon decoration -->
+        <div class="absolute right-16 -top-2 z-50">
+            <div class="w-8 flex flex-col items-center">
+                <div class="h-6 border-l-2 border-dashed border-orange-300"></div>
+                <div class="w-6 h-8 bg-[#f5d7be] rounded-sm relative mt-1">
+                    <div class="absolute -top-1 left-2 w-2 h-2 bg-white rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main th:replace="${content}"></main>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="md:hidden fixed bottom-4 inset-x-4 z-50">
+        <div class="bg-nav rounded-full flex items-center justify-between px-6 py-3 shadow-2xl relative">
+            
+            <a href="/products" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                <i class="fa-regular fa-heart text-xl"></i>
+            </a>
+            
+            <a href="/products" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                <i class="fa-solid fa-chart-pie text-xl"></i>
+            </a>
+            
+            <!-- Home Center Button -->
+            <div class="relative w-14 h-1 flex items-center justify-center">
+                <!-- Blue Backdrop semi circle -->
+                <div class="absolute bottom-0 w-16 h-12 bg-[#8AE2FC] rounded-t-full -z-10 translate-y-1"></div>
+                <!-- Orange Button -->
+                <a href="/" class="absolute bottom-0 w-14 h-14 bg-[#FF9447] rounded-full flex items-center justify-center shadow-lg text-white border-4 border-[#FCFBFA] translate-y-1 hover:scale-105 transition transform">
+                    <i class="fa-solid fa-house text-xl"></i>
+                </a>
+            </div>
+            
+            <th:block th:if="${user==null}">
+                 <a href="/signin" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                     <i class="fa-regular fa-message text-xl"></i>
+                 </a>
+                 <a href="/signin" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                     <i class="fa-regular fa-user text-xl"></i>
+                 </a>
+            </th:block>
+            
+            <th:block th:if="${user!=null}">
+                 <a href="/user/orders" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                     <i class="fa-regular fa-message text-xl"></i>
+                 </a>
+                 <a th:if="${user.role=='ROLE_USER'}" href="/user/profile" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                     <i class="fa-regular fa-user text-xl"></i>
+                 </a>
+                 <a th:if="${user.role=='ROLE_ADMIN'}" href="/admin/" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                     <i class="fa-solid fa-gauge text-xl"></i>
+                 </a>
+            </th:block>
+            
+        </div>
+    </div>
+
+</body>
+</html>

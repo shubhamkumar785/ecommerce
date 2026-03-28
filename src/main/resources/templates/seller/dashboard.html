@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>Seller Dashboard | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-white border-r border-slate-100 shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative pt-8 pb-10 px-6 z-10 md:min-h-screen">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Seller Portal</h3>
+            
+            <nav class="space-y-1.5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-hide">
+                <a href="/seller/dashboard" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Overview</span>
+                </a>
+                <a href="/seller/loadAddProduct" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-plus w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Add Product</span>
+                </a>
+                <a href="/seller/products" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-boxes-stacked w-5 text-center"></i> <span class="hidden xl:inline md:inline block">My Products</span>
+                </a>
+                <a href="/seller/orders" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-receipt w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Orders</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 w-full max-w-5xl mx-auto py-10 px-4 md:px-10">
+            <div class="mb-10 animate-[slideDown_0.3s_ease-out]">
+                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">Seller Dashboard 🚀</h2>
+                <p class="text-slate-500 font-medium">Manage your products and track your sales performance.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+                <!-- Total Products -->
+                <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
+                     <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-400 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-box"></i>
+                     </div>
+                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Products</span>
+                     <span class="text-4xl font-black text-slate-800">[[${totalProducts}]]</span>
+                </div>
+
+                <!-- Total Orders -->
+                <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
+                     <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-cart-shopping"></i>
+                     </div>
+                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Orders Received</span>
+                     <span class="text-4xl font-black text-slate-800">[[${totalOrders}]]</span>
+                </div>
+
+                <!-- Revenue -->
+                <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
+                     <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-indian-rupee-sign"></i>
+                     </div>
+                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Revenue</span>
+                     <span class="text-4xl font-black text-slate-800">₹[[${totalRevenue}]]</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-[40px] p-8 md:p-10 shadow-xl shadow-slate-200/50 border border-slate-50">
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight mb-6">Quick Actions</h3>
+                <div class="flex flex-wrap gap-4">
+                    <a href="/seller/loadAddProduct" class="px-8 py-3.5 bg-nav text-white rounded-full font-bold shadow-lg hover:bg-slate-800 transition active:scale-95 whitespace-nowrap"><i class="fa-solid fa-plus mr-2"></i> Add New Product</a>
+                    <a href="/seller/products" class="px-8 py-3.5 bg-slate-50 text-slate-700 hover:text-slate-900 rounded-full font-bold transition active:scale-95 border border-slate-200 shadow-sm whitespace-nowrap"><i class="fa-solid fa-list mr-2"></i> Manage Inventory</a>
+                </div>
+            </div>
+        </div>
+        
+        <style>
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        </style>
+    </section>
+</body>
+</html>

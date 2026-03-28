@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>My Dashboard | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg py-12 px-4 md:px-0">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Header Section -->
+            <div class="mb-10 animate-[slideDown_0.3s_ease-out]">
+                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">
+                    Welcome back, <span class="text-orange-500">[[${user.name}]]</span>! 👋
+                </h2>
+                <p class="text-slate-500 font-medium">Manage your orders, track deliveries, and discover new products.</p>
+            </div>
+
+            <!-- Dashboard Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- Orders Card -->
+                <a href="/user/user-orders" class="group bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center">
+                     <div class="w-16 h-16 rounded-3xl bg-pastel-lightBlue/30 text-blue-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-box-open"></i>
+                     </div>
+                     <span class="text-3xl font-black text-slate-800 mb-1">[[${#lists.size(orders)}]]</span>
+                     <span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Total Orders</span>
+                </a>
+
+                <!-- Wishlist Card -->
+                <a href="/user/wishlist" class="group bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center">
+                     <div class="w-16 h-16 rounded-3xl bg-red-50 text-red-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-heart"></i>
+                     </div>
+                     <span class="text-3xl font-black text-slate-800 mb-1">[[${#lists.size(wishlist)}]]</span>
+                     <span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Saved Items</span>
+                </a>
+
+                <!-- Addresses Card -->
+                <a href="/user/address" class="group bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center">
+                     <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-map-location-dot"></i>
+                     </div>
+                     <span class="text-3xl font-black text-slate-800 mb-1">[[${#lists.size(addresses)}]]</span>
+                     <span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Saved Addresses</span>
+                </a>
+            </div>
+
+            <!-- Recent Orders Section -->
+            <div class="bg-white rounded-[40px] p-8 md:p-10 shadow-xl shadow-slate-200/50 border border-slate-50">
+                <div class="flex items-center justify-between mb-8 border-b border-slate-100 pb-6 mt-2">
+                    <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Recent Orders</h3>
+                    <a href="/user/user-orders" class="text-sm font-bold text-orange-500 border border-orange-100 bg-orange-50 px-4 py-2 rounded-full hover:bg-orange-500 hover:text-white transition shadow-sm">View All <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i></a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(orders)}" class="text-center py-10">
+                    <div class="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-receipt"></i></div>
+                    <p class="text-slate-500 font-medium font-bold">No recent orders found.</p>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(orders)}" class="space-y-6">
+                    <!-- We use iterStat.index < 3 to only show the top 3 latest orders -->
+                    <div th:each="o, iterStat : ${orders}" th:if="${iterStat.index &lt; 3}" class="flex flex-col md:flex-row items-center justify-between p-6 bg-slate-50 rounded-[24px] border border-slate-100/60 hover:border-slate-300 transition-colors gap-6">
+                         
+                         <div class="flex items-center gap-6 w-full md:w-auto">
+                             <div class="w-20 h-20 bg-white rounded-2xl p-2 border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+                                 <img th:src="@{'/img/product_img/'+${o.product.image}}" class="w-full h-full object-contain mix-blend-multiply drop-shadow-sm">
+                             </div>
+                             <div>
+                                 <h4 class="text-lg font-bold text-slate-900 leading-tight mb-1">[[${o.product.title}]]</h4>
+                                 <p class="text-xs font-bold text-slate-400 capitalize tracking-widest">Order ID: [[${o.orderId}]]</p>
+                             </div>
+                         </div>
+
+                         <div class="flex items-center justify-between md:justify-end gap-8 w-full md:w-auto border-t border-slate-200 md:border-0 pt-4 md:pt-0">
+                             <div class="text-left md:text-right">
+                                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
+                                 <p class="text-sm font-bold" 
+                                    th:classappend="${o.status == 'Delivered' ? 'text-green-500' : (o.status == 'Cancelled' ? 'text-red-500' : 'text-orange-500')}">
+                                    [[${o.status}]]
+                                 </p>
+                             </div>
+                             <div class="text-right">
+                                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total</p>
+                                 <p class="text-lg font-black text-slate-800">₹[[${o.price}]]</p>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <style>
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </section>
+</body>
+</html>

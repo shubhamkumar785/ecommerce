@@ -1,150 +1,557 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: Layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Ecom Store | Home</title>
 </head>
 <body>
-<section>
-<!-- start slider -->
-<div id="carouselExample" class="carousel slide">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-<img th:src="@{/img/ecom1.png}" class="d-block w-100" alt="..." height="350px">
-    </div>
-    <div class="carousel-item">
-<img th:src="@{/img/ecom2.jpg}" class="d-block w-100" alt="..." height="350px">
-    </div>
-    <div class="carousel-item">
-<img th:src="@{/img/ecom3.jpg}" class="d-block w-100" alt="..." height="350px">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-<!-- End slider -->
+<section class="max-w-[1400px] mx-auto px-4 md:px-8">
 
-<!-- Start category module -->
-<div class="container">
-        <div class="row">
+<style>
+    /* Sidebar animation */
+    #desktopFilterPanel {
+        width: 0; overflow: hidden; opacity: 0;
+        transition: width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, padding 0.3s ease;
+        flex-shrink: 0;
+    }
+    #desktopFilterPanel.open {
+        width: 288px; opacity: 1;
+    }
+    /* Mobile bottom sheet */
+    #mobileFilterSheet {
+        transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+    }
+    /* Active filter tag */
+    .filter-tag {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: #fff3e0; color: #e65100;
+        border: 1px solid #ffb74d; border-radius: 999px;
+        font-size: 11px; font-weight: 700; padding: 3px 10px;
+        cursor: pointer; transition: all 0.2s;
+    }
+    .filter-tag:hover { background: #ffe0b2; }
+    /* Selected size/color */
+    .size-btn.sel { border-color: #FF8833; color: #FF8833; background: #fff7ed; }
+    .color-dot.sel { outline: 3px solid #FF8833; outline-offset: 3px; }
+    /* Category active */
+    .cat-pill.active { background: linear-gradient(to right,#FF8833,#FF9E54) !important; color: #fff !important; box-shadow: 0 6px 18px rgba(255,136,51,0.35) !important; }
+    /* Card hover */
+    .pcard { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .pcard:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+</style>
 
-            <p class="text-center fs-4">Category</p>
-
-            <div class="col-md-2">
-                <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                    <div class="card-body text-center">
-                        <img src="/img/category_img/appli.png" width="65%" height="140px">
-                        <p>Electronics</p>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="col-md-2">
-                <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                    <div class="card-body text-center">
-                        <img src="/img/category_img/laptop.jpg" width="65%" height="140px">
-                        <p>Laptop</p>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="col-md-2">
-                <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                    <div class="card-body text-center">
-                        <img src="/img/category_img/mobile.png" width="65%" height="140px">
-                        <p>Mobile</p>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="col-md-2">
-                <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                    <div class="card-body text-center">
-                        <img src="/img/category_img/groccery.jpg" width="65%" height="140px">
-                        <p>Grocery</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
-                <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                    <div class="card-body text-center">
-                        <img src="/img/category_img/beuty.png" width="65%" height="140px">
-                        <p>Beauty</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
-                <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                    <div class="card-body text-center">
-                        <img src="/img/category_img/pant.png" width="65%" height="140px">
-                        <p>Clothes</p>
-                    </div>
-                </div>
-            </div>
-            
-            
-
-        </div>
+<!-- ============================================================
+     TOP BAR: Search | Sort | Filter
+     ============================================================ -->
+<div class="flex items-center gap-3 mt-4 mb-4">
+    <!-- Search -->
+    <div class="flex-1 bg-white rounded-2xl flex items-center px-4 py-3 shadow-sm border border-slate-100 focus-within:ring-2 focus-within:ring-orange-200 transition">
+        <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3"></i>
+        <input id="searchInput" type="text" placeholder="Search products, brands, categories..."
+               class="bg-transparent border-none outline-none w-full text-sm text-slate-700 font-medium placeholder-slate-400">
     </div>
-    <!-- End category module -->
-    
-    <!-- start latest product module -->
-    
-    <div class="container-fluid bg-light p-3">
-    <div class="row">
-        <p class="text-center fs-4">Latest Product</p>
-        <div class="col-md-3">
-            <div class="card shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                <div class="card-body text-center">
-                    <img alt="" src="/img/product_img/laptop.jpg" width="65%" height="140px">
-                    <p class="text-center">HP 15S Laptop</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="card shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                <div class="card-body text-center">
-                    <img alt="" src="/img/product_img/laptop.jpg" width="65%" height="140px">
-                    <p class="text-center">VECTUS Laptop</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="card shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                <div class="card-body text-center">
-                    <img alt="" src="/img/product_img/laptop.jpg" width="65%" height="140px">
-                    <p class="text-center">ASUS VIVOBOOK</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="card shadow-sm p-3 mb-5 bg-body tertiary rounded">
-                <div class="card-body text-center">
-                    <img alt="" src="/img/product_img/laptop.jpg" width="65%" height="140px">
-                    <p class="text-center">MAC BOOK M2</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    <!-- Sort -->
+    <select id="sortSelect" onchange="applyFilters()"
+            class="bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 outline-none cursor-pointer hover:border-orange-300 transition hidden md:block shadow-sm">
+        <option value="">Sort: Newest</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+    </select>
+    <!-- Filter Toggle Button -->
+    <button id="filterBtn" onclick="toggleDesktopFilter()"
+            class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-5 py-3 text-sm font-bold text-slate-700 hover:border-orange-400 hover:text-orange-500 shadow-sm transition hidden lg:flex">
+        <i class="fa-solid fa-sliders text-base"></i>
+        Filters
+        <span id="filterCountBadge" class="hidden bg-orange-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center">0</span>
+    </button>
+    <!-- Mobile Filter Button -->
+    <button onclick="toggleMobileFilter()"
+            class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:border-orange-400 shadow-sm transition lg:hidden">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Filter</span>
+    </button>
 </div>
 
-    <!-- end latest product module -->
+<!-- Category Pills -->
+<div class="flex overflow-x-auto gap-3 pb-4 hide-scrollbar scroll-smooth mb-3">
+    <button onclick="selectCategory('')" id="cat-all"
+            class="cat-pill flex-shrink-0 flex items-center gap-2 rounded-full px-4 py-2 border border-slate-100 font-bold text-sm text-white shadow-sm transition"
+            style="background:linear-gradient(to right,#FF8833,#FF9E54);">
+        All Products
+    </button>
+    <button th:each="c : ${category}"
+            th:attr="onclick='selectCategory(\'' + ${c.name} + '\')'"
+            th:id="'cat-' + ${c.name}"
+            class="cat-pill flex-shrink-0 flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-slate-100 text-slate-700 hover:text-[#FF8833] font-bold text-sm shadow-sm transition">
+        <div class="w-7 h-7 rounded-full overflow-hidden bg-slate-50 flex items-center justify-center">
+            <img th:src="@{'/img/category_img/'+${c.imageName}}" class="w-full h-full object-contain" alt="cat">
+        </div>
+        <span th:text="${c.name}">Category</span>
+    </button>
+</div>
+
+<!-- Active Filter Tags -->
+<div id="activeFilterTags" class="flex flex-wrap gap-2 mb-4 hidden"></div>
+
+<!-- Result Count -->
+<p id="resultCount" class="text-sm font-semibold text-slate-500 mb-4">Loading products...</p>
+
+<!-- ============================================================
+     MAIN: Sidebar (desktop, collapsible) + Product Grid
+     ============================================================ -->
+<div class="flex gap-6 items-start">
+
+    <!-- DESKTOP SIDEBAR (hidden by default) -->
+    <div id="desktopFilterPanel">
+        <div class="bg-white rounded-[24px] shadow-sm border border-slate-100 sticky top-24 p-6 w-72">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-heading font-bold text-[#1F223D] text-lg">Filters</h3>
+                <button onclick="resetFilters()" class="text-xs font-bold text-orange-500 hover:text-orange-700 uppercase tracking-wider transition">Reset All</button>
+            </div>
+
+            <!-- Price Range -->
+            <div class="mb-5">
+                <p class="text-sm font-bold text-slate-800 mb-3">Price Range</p>
+                <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-2">
+                    <span>&#8377;<span id="minPriceLabel">0</span></span>
+                    <span>&#8377;<span id="maxPriceLabel">1,00,000</span></span>
+                </div>
+                <input type="range" id="minPriceSlider" min="0" max="100000" value="0" step="500" class="w-full accent-orange-400 mb-2" oninput="onSliderChange()">
+                <input type="range" id="maxPriceSlider" min="0" max="100000" value="100000" step="500" class="w-full accent-orange-400" oninput="onSliderChange()">
+            </div>
+            <hr class="border-slate-100 mb-5">
+
+            <!-- Color -->
+            <div class="mb-5">
+                <p class="text-sm font-bold text-slate-800 mb-3">Color</p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="toggleColor('Black')" id="color-Black" title="Black"
+                            class="color-dot w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#1e293b;"></button>
+                    <button onclick="toggleColor('White')" id="color-White" title="White"
+                            class="color-dot w-8 h-8 rounded-full border-2 border-slate-300 shadow hover:scale-110 transition" style="background:#f1f5f9;"></button>
+                    <button onclick="toggleColor('Blue')" id="color-Blue" title="Blue"
+                            class="color-dot w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#3b82f6;"></button>
+                    <button onclick="toggleColor('Red')" id="color-Red" title="Red"
+                            class="color-dot w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#ef4444;"></button>
+                    <button onclick="toggleColor('Silver')" id="color-Silver" title="Silver"
+                            class="color-dot w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#94a3b8;"></button>
+                </div>
+                <div id="colorLabels" class="mt-2 text-xs text-slate-500 font-medium min-h-[1em]"></div>
+            </div>
+            <hr class="border-slate-100 mb-5">
+
+            <!-- Size -->
+            <div class="mb-5">
+                <p class="text-sm font-bold text-slate-800 mb-3">Size</p>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="toggleSize('S')" id="size-S" class="size-btn px-4 py-1.5 rounded-xl text-xs font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">S</button>
+                    <button onclick="toggleSize('M')" id="size-M" class="size-btn px-4 py-1.5 rounded-xl text-xs font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">M</button>
+                    <button onclick="toggleSize('L')" id="size-L" class="size-btn px-4 py-1.5 rounded-xl text-xs font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">L</button>
+                    <button onclick="toggleSize('XL')" id="size-XL" class="size-btn px-4 py-1.5 rounded-xl text-xs font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">XL</button>
+                </div>
+            </div>
+            <hr class="border-slate-100 mb-5">
+
+            <!-- Rating -->
+            <div class="mb-5">
+                <p class="text-sm font-bold text-slate-800 mb-3">Rating</p>
+                <div class="flex flex-col gap-2.5">
+                    <label class="flex items-center gap-2.5 cursor-pointer">
+                        <input type="radio" name="ratingFilter" value="4" class="accent-orange-400 w-4 h-4" onchange="applyFilters()">
+                        <span class="text-sm text-slate-600 font-medium">4&#9733; &amp; above</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 cursor-pointer">
+                        <input type="radio" name="ratingFilter" value="3" class="accent-orange-400 w-4 h-4" onchange="applyFilters()">
+                        <span class="text-sm text-slate-600 font-medium">3&#9733; &amp; above</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 cursor-pointer">
+                        <input type="radio" name="ratingFilter" value="" class="accent-orange-400 w-4 h-4" onchange="applyFilters()" checked="checked">
+                        <span class="text-sm text-slate-600 font-medium">All Ratings</span>
+                    </label>
+                </div>
+            </div>
+            <hr class="border-slate-100 mb-5">
+
+            <!-- Availability -->
+            <div>
+                <p class="text-sm font-bold text-slate-800 mb-3">Availability</p>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <div class="relative inline-block">
+                        <input type="checkbox" id="inStockCheck" class="sr-only peer" onchange="applyFilters()">
+                        <div class="w-10 h-5 bg-slate-200 rounded-full peer-checked:bg-orange-400 transition-colors duration-200"></div>
+                        <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-5"></div>
+                    </div>
+                    <span class="text-sm text-slate-700 font-medium">In Stock Only</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <div class="flex-1 min-w-0">
+        <!-- Skeleton -->
+        <div id="skeletonGrid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64 hidden sm:block"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64 hidden sm:block"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64 hidden xl:block"></div>
+            <div class="rounded-[28px] bg-slate-100 animate-pulse h-64 hidden xl:block"></div>
+        </div>
+        <!-- Products -->
+        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 hidden"></div>
+        <!-- Empty State -->
+        <div id="noProductsMsg" class="hidden py-16 text-center">
+            <i class="fa-solid fa-box-open text-5xl mb-4 text-slate-300"></i>
+            <p class="font-bold text-slate-400 text-lg">No products found</p>
+            <p class="text-sm text-slate-400 mt-1">Try clearing some filters</p>
+            <button onclick="resetFilters()" class="mt-5 px-6 py-2.5 bg-orange-500 text-white text-sm font-bold rounded-full hover:bg-orange-600 transition shadow-md">Clear Filters</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     MOBILE FILTER MODAL (Bottom Sheet)
+     ============================================================ -->
+<div id="mobileFilterModal" class="fixed inset-0 z-[9999] hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleMobileFilter()"></div>
+    <div id="mobileFilterSheet" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] max-h-[88vh] flex flex-col translate-y-full">
+        <!-- Sheet Header -->
+        <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100 flex-shrink-0">
+            <h3 class="font-heading font-bold text-[#1F223D] text-xl">Filters</h3>
+            <div class="flex items-center gap-4">
+                <button onclick="resetFilters()" class="text-xs font-bold text-orange-500 uppercase tracking-wider">Reset All</button>
+                <button onclick="toggleMobileFilter()" class="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-slate-600"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Sheet Body (scrollable) -->
+        <div class="overflow-y-auto flex-1 px-6 py-5">
+            <!-- Price -->
+            <p class="text-sm font-bold text-slate-800 mb-3">Price Range</p>
+            <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-2">
+                <span>&#8377;<span id="minPriceLabelM">0</span></span>
+                <span>&#8377;<span id="maxPriceLabelM">1,00,000</span></span>
+            </div>
+            <input type="range" id="minPriceSliderM" min="0" max="100000" value="0" step="500" class="w-full accent-orange-400 mb-2" oninput="syncSliders('M')">
+            <input type="range" id="maxPriceSliderM" min="0" max="100000" value="100000" step="500" class="w-full accent-orange-400 mb-5" oninput="syncSliders('M')">
+            <hr class="border-slate-100 mb-5">
+            <!-- Color -->
+            <p class="text-sm font-bold text-slate-800 mb-3">Color</p>
+            <div class="flex flex-wrap gap-4 mb-2">
+                <button onclick="toggleColor('Black')" id="color-Black-m" title="Black" class="color-dot w-9 h-9 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#1e293b;"></button>
+                <button onclick="toggleColor('White')" id="color-White-m" title="White" class="color-dot w-9 h-9 rounded-full border-2 border-slate-300 shadow hover:scale-110 transition" style="background:#f1f5f9;"></button>
+                <button onclick="toggleColor('Blue')" id="color-Blue-m" title="Blue" class="color-dot w-9 h-9 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#3b82f6;"></button>
+                <button onclick="toggleColor('Red')" id="color-Red-m" title="Red" class="color-dot w-9 h-9 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#ef4444;"></button>
+                <button onclick="toggleColor('Silver')" id="color-Silver-m" title="Silver" class="color-dot w-9 h-9 rounded-full border-2 border-white shadow hover:scale-110 transition" style="background:#94a3b8;"></button>
+            </div>
+            <div id="colorLabelsM" class="mb-4 text-xs text-slate-500 font-medium min-h-[1em]"></div>
+            <hr class="border-slate-100 mb-5">
+            <!-- Size -->
+            <p class="text-sm font-bold text-slate-800 mb-3">Size</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+                <button onclick="toggleSize('S')" class="size-btn px-5 py-2 rounded-xl text-sm font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">S</button>
+                <button onclick="toggleSize('M')" class="size-btn px-5 py-2 rounded-xl text-sm font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">M</button>
+                <button onclick="toggleSize('L')" class="size-btn px-5 py-2 rounded-xl text-sm font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">L</button>
+                <button onclick="toggleSize('XL')" class="size-btn px-5 py-2 rounded-xl text-sm font-bold border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-500 transition">XL</button>
+            </div>
+            <hr class="border-slate-100 mb-5">
+            <!-- Rating -->
+            <p class="text-sm font-bold text-slate-800 mb-3">Rating</p>
+            <div class="flex flex-col gap-3 mb-5">
+                <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="ratingFilterM" value="4" class="accent-orange-400 w-4 h-4" onchange="syncRating('M')"><span class="text-sm font-medium text-slate-700">4&#9733; &amp; above</span></label>
+                <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="ratingFilterM" value="3" class="accent-orange-400 w-4 h-4" onchange="syncRating('M')"><span class="text-sm font-medium text-slate-700">3&#9733; &amp; above</span></label>
+                <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="ratingFilterM" value="" class="accent-orange-400 w-4 h-4" checked="checked" onchange="syncRating('M')"><span class="text-sm font-medium text-slate-700">All Ratings</span></label>
+            </div>
+            <hr class="border-slate-100 mb-5">
+            <!-- Availability -->
+            <p class="text-sm font-bold text-slate-800 mb-3">Availability</p>
+            <label class="flex items-center gap-3 cursor-pointer mb-5">
+                <div class="relative inline-block">
+                    <input type="checkbox" id="inStockCheckM" class="sr-only peer" onchange="document.getElementById('inStockCheck').checked=this.checked; applyFilters()">
+                    <div class="w-10 h-5 bg-slate-200 rounded-full peer-checked:bg-orange-400 transition-colors duration-200"></div>
+                    <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-5"></div>
+                </div>
+                <span class="text-sm text-slate-700 font-medium">In Stock Only</span>
+            </label>
+        </div>
+        <!-- Sheet Footer -->
+        <div class="px-6 pb-6 pt-3 border-t border-slate-100 flex-shrink-0">
+            <button onclick="toggleMobileFilter()" class="w-full font-bold py-4 rounded-2xl text-white text-base shadow-lg transition hover:opacity-90" style="background:linear-gradient(to right,#FF8833,#FF9E54);">
+                See Results
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Choose By Category Banners -->
+<div class="mb-12 mt-14">
+    <h2 class="text-[22px] md:text-2xl font-heading font-bold text-nav tracking-tight mb-6">Shop By Category</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="bg-[#FFF5AB] rounded-[32px] p-8 flex flex-col justify-between overflow-hidden relative min-h-[200px] shadow-sm hover:shadow-lg transition-transform hover:-translate-y-1">
+            <div class="absolute bottom-6 left-6 w-32 h-32 opacity-20 bg-[radial-gradient(#FF9447_4px,transparent_4px)] [background-size:20px_20px]"></div>
+            <div class="relative z-10 w-2/3">
+                <h3 class="text-3xl font-heading font-extrabold text-[#1F223D] leading-tight">Most Sold<br/>Products</h3>
+            </div>
+            <div class="relative z-10 mt-4">
+                <a href="#" onclick="selectCategory('Clothes'); return false;" class="font-bold text-[#1F223D] text-sm hover:text-[#FF8833] transition flex items-center gap-1.5 px-4 py-2 bg-white/50 backdrop-blur-md rounded-full w-fit">
+                    Explore <i class="fa-solid fa-arrow-right-long text-xs"></i>
+                </a>
+            </div>
+            <img src="/img/category_img/pant.png" onerror="this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&amp;h=400&amp;fit=crop'" class="absolute -bottom-8 -right-4 w-48 h-48 object-cover rounded-full mix-blend-multiply opacity-90" alt="Clothes">
+        </div>
+        <div class="bg-[#D5E6FF] rounded-[32px] p-8 flex flex-col justify-between overflow-hidden relative min-h-[200px] shadow-sm hover:shadow-lg transition-transform hover:-translate-y-1">
+            <div class="absolute -bottom-10 left-0 opacity-20">
+                <i class="fa-solid fa-certificate text-[140px] text-white/80"></i>
+            </div>
+            <div class="relative z-10 w-2/3">
+                <h3 class="text-3xl font-heading font-extrabold text-[#1F223D] leading-tight">Electronics<br/>Deals</h3>
+            </div>
+            <div class="relative z-10 mt-4">
+                <a href="#" onclick="selectCategory('Electronic'); return false;" class="font-bold text-[#1F223D] text-sm hover:text-[#FF8833] transition flex items-center gap-1.5 px-4 py-2 bg-white/50 backdrop-blur-md rounded-full w-fit">
+                    Explore <i class="fa-solid fa-arrow-right-long text-xs"></i>
+                </a>
+            </div>
+            <img src="/img/category_img/laptop.jpg" onerror="this.src='https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&amp;h=400&amp;fit=crop'" class="absolute -bottom-10 -right-4 w-52 h-52 object-contain mix-blend-multiply drop-shadow-2xl" alt="Laptops">
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+var fs = {
+    category:'', minPrice:0, maxPrice:100000,
+    colors:[], sizes:[], rating:null, inStock:false, sort:'', search:'', timer:null
+};
+var PASTEL = ['#baf2ef','#fff5ab','#ddcbf7','#ffd6e0','#c7f2a4','#ffdda1','#b8d8ff'];
+var desktopOpen = false;
+
+/* ---- DESKTOP SIDEBAR TOGGLE ---- */
+function toggleDesktopFilter() {
+    desktopOpen = !desktopOpen;
+    var panel = document.getElementById('desktopFilterPanel');
+    if (desktopOpen) {
+        panel.style.width = '288px'; panel.style.opacity = '1'; panel.style.paddingRight = '0';
+        document.getElementById('filterBtn').classList.add('text-orange-500','border-orange-400');
+    } else {
+        panel.style.width = '0'; panel.style.opacity = '0';
+        document.getElementById('filterBtn').classList.remove('text-orange-500','border-orange-400');
+    }
+}
+
+/* ---- MOBILE BOTTOM SHEET TOGGLE ---- */
+function toggleMobileFilter() {
+    var modal = document.getElementById('mobileFilterModal');
+    var sheet = document.getElementById('mobileFilterSheet');
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        setTimeout(function(){ sheet.classList.remove('translate-y-full'); }, 10);
+        document.body.style.overflow = 'hidden';
+    } else {
+        sheet.classList.add('translate-y-full');
+        setTimeout(function(){ modal.classList.add('hidden'); document.body.style.overflow = ''; }, 420);
+    }
+}
+
+/* ---- CATEGORY ---- */
+function selectCategory(cat) {
+    fs.category = cat;
+    document.querySelectorAll('.cat-pill').forEach(function(b){ b.classList.remove('active'); b.style.background=''; b.style.color=''; });
+    var btn = document.getElementById(cat === '' ? 'cat-all' : 'cat-' + cat);
+    if (btn) btn.classList.add('active');
+    applyFilters();
+}
+
+/* ---- COLOR ---- */
+function toggleColor(color) {
+    var idx = fs.colors.indexOf(color);
+    if (idx > -1) fs.colors.splice(idx, 1); else fs.colors.push(color);
+    updateColorUI(color);
+    applyFilters();
+}
+function updateColorUI(color) {
+    var active = fs.colors.indexOf(color) > -1;
+    var d = document.getElementById('color-' + color);
+    var m = document.getElementById('color-' + color + '-m');
+    if (d) d.classList.toggle('sel', active);
+    if (m) m.classList.toggle('sel', active);
+    var lbl = fs.colors.length > 0 ? fs.colors.join(', ') : '';
+    var cl = document.getElementById('colorLabels');
+    var clm = document.getElementById('colorLabelsM');
+    if (cl) cl.textContent = lbl || '';
+    if (clm) clm.textContent = lbl || '';
+}
+
+/* ---- SIZE ---- */
+function toggleSize(size) {
+    var idx = fs.sizes.indexOf(size);
+    if (idx > -1) fs.sizes.splice(idx, 1); else fs.sizes.push(size);
+    document.querySelectorAll('.size-btn').forEach(function(btn){
+        if (btn.textContent.trim() === size) btn.classList.toggle('sel', fs.sizes.indexOf(size) > -1);
+    });
+    applyFilters();
+}
+
+/* ---- SLIDERS ---- */
+function onSliderChange() {
+    var mn = parseInt(document.getElementById('minPriceSlider').value);
+    var mx = parseInt(document.getElementById('maxPriceSlider').value);
+    fs.minPrice = Math.min(mn, mx); fs.maxPrice = Math.max(mn, mx);
+    document.getElementById('minPriceLabel').textContent = fmt(fs.minPrice);
+    document.getElementById('maxPriceLabel').textContent = fmt(fs.maxPrice);
+    document.getElementById('minPriceSliderM').value = fs.minPrice;
+    document.getElementById('maxPriceSliderM').value = fs.maxPrice;
+    document.getElementById('minPriceLabelM').textContent = fmt(fs.minPrice);
+    document.getElementById('maxPriceLabelM').textContent = fmt(fs.maxPrice);
+    applyFilters();
+}
+function syncSliders(s) {
+    var mn = parseInt(document.getElementById('minPriceSlider'+s).value);
+    var mx = parseInt(document.getElementById('maxPriceSlider'+s).value);
+    fs.minPrice = Math.min(mn, mx); fs.maxPrice = Math.max(mn, mx);
+    ['','M'].forEach(function(sfx){
+        var ml = document.getElementById('minPriceLabel'+sfx), xl = document.getElementById('maxPriceLabel'+sfx);
+        var ms = document.getElementById('minPriceSlider'+(sfx||'')), xs = document.getElementById('maxPriceSlider'+(sfx||''));
+        if(ml) ml.textContent = fmt(fs.minPrice);
+        if(xl) xl.textContent = fmt(fs.maxPrice);
+        if(ms) ms.value = fs.minPrice;
+        if(xs) xs.value = fs.maxPrice;
+    });
+    applyFilters();
+}
+function fmt(n) { return n.toLocaleString('en-IN'); }
+
+/* ---- RATING ---- */
+function syncRating(sfx) {
+    document.querySelectorAll('[name="ratingFilter'+sfx+'"]').forEach(function(r){ if(r.checked) fs.rating = r.value || null; });
+    applyFilters();
+}
+
+/* ---- ACTIVE FILTER TAGS ---- */
+function renderTags() {
+    var tags = [];
+    var container = document.getElementById('activeFilterTags');
+    if (fs.category) tags.push({label: 'Category: ' + fs.category, clear: function(){ selectCategory(''); }});
+    if (fs.minPrice > 0 || fs.maxPrice < 100000) tags.push({label: '&#8377;' + fmt(fs.minPrice) + ' - &#8377;' + fmt(fs.maxPrice), clear: function(){ fs.minPrice=0; fs.maxPrice=100000; ['minPriceSlider','maxPriceSlider','minPriceSliderM','maxPriceSliderM'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=id.indexOf('min')>-1?0:100000; }); ['minPriceLabel','maxPriceLabel','minPriceLabelM','maxPriceLabelM'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=id.indexOf('min')>-1?'0':'1,00,000'; }); applyFilters(); }});
+    fs.colors.forEach(function(c){ tags.push({label: c, clear: function(){ toggleColor(c); }}); });
+    fs.sizes.forEach(function(s){ tags.push({label: 'Size: ' + s, clear: function(){ toggleSize(s); }}); });
+    if (fs.rating) tags.push({label: fs.rating + '&#9733; & above', clear: function(){ fs.rating=null; document.querySelectorAll('[name="ratingFilter"],[name="ratingFilterM"]').forEach(function(r){ if(r.value==='') r.checked=true; }); applyFilters(); }});
+    if (fs.inStock) tags.push({label: 'In Stock', clear: function(){ fs.inStock=false; document.getElementById('inStockCheck').checked=false; var m=document.getElementById('inStockCheckM'); if(m) m.checked=false; applyFilters(); }});
+
+    if (tags.length === 0) { container.classList.add('hidden'); container.innerHTML=''; return; }
+    container.classList.remove('hidden');
+    container.innerHTML = tags.map(function(t, i){
+        return '<span class="filter-tag" onclick="('+t.clear.toString()+')()">' + t.label + ' <span style="font-size:10px;opacity:0.7">&#10005;</span></span>';
+    }).join('');
+
+    // Update filter badge count
+    var badge = document.getElementById('filterCountBadge');
+    if (badge) { badge.textContent = tags.length; badge.classList.toggle('hidden', tags.length === 0); }
+}
+
+/* ---- RESET ---- */
+function resetFilters() {
+    fs.colors=[]; fs.sizes=[]; fs.rating=null; fs.minPrice=0; fs.maxPrice=100000; fs.inStock=false; fs.search='';
+    document.getElementById('searchInput').value='';
+    ['minPriceSlider','maxPriceSlider','minPriceSliderM','maxPriceSliderM'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=id.indexOf('min')>-1?0:100000; });
+    ['minPriceLabel','maxPriceLabel','minPriceLabelM','maxPriceLabelM'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=id.indexOf('min')>-1?'0':'1,00,000'; });
+    document.getElementById('inStockCheck').checked=false;
+    var m=document.getElementById('inStockCheckM'); if(m) m.checked=false;
+    document.querySelectorAll('.size-btn').forEach(function(b){ b.classList.remove('sel'); });
+    document.querySelectorAll('.color-dot').forEach(function(b){ b.classList.remove('sel'); });
+    document.querySelectorAll('[name="ratingFilter"],[name="ratingFilterM"]').forEach(function(r){ if(r.value==='') r.checked=true; });
+    var cl=document.getElementById('colorLabels'); if(cl) cl.textContent='';
+    var clm=document.getElementById('colorLabelsM'); if(clm) clm.textContent='';
+    applyFilters();
+}
+
+/* ---- STARS ---- */
+function starsHtml(rating) {
+    if (!rating) return '<span class="text-xs text-slate-400">No rating</span>';
+    var full = Math.floor(rating), html='<span class="text-yellow-400 text-xs">';
+    for(var i=0;i<full;i++) html+='&#9733;';
+    html+='</span><span class="text-xs text-slate-500 font-medium ml-1">'+parseFloat(rating).toFixed(1)+'</span>';
+    return html;
+}
+
+/* ---- BUILD CARD ---- */
+function buildCard(p, idx) {
+    var bg = PASTEL[idx % PASTEL.length];
+    var badge = p.discount > 0 ? '<span class="absolute top-3 left-3 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full z-20">'+p.discount+'% OFF</span>' : '';
+    var stk = p.stock > 0 ? '<p class="text-[10px] text-slate-500 font-medium">'+p.stock+' in stock</p>' : '<p class="text-[10px] text-red-500 font-bold">Out of stock</p>';
+    var sz = p.size ? '<span class="text-[10px] bg-white/60 rounded-full px-2 py-0.5 font-bold text-slate-500 ml-1">'+p.size+'</span>' : '';
+    return '<div class="pcard group relative rounded-[28px] p-5 flex flex-col overflow-hidden border border-slate-50" style="background:'+bg+'">'
+      + badge
+      + '<div class="flex flex-col gap-2 absolute top-4 right-4 z-10 translate-x-6 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">'
+      + '<a href="/user/add-wishlist?pid='+p.id+'" class="w-10 h-10 bg-white shadow-sm rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"><i class="fa-regular fa-heart text-sm"></i></a>'
+      + '<a href="/user/addCart?pid='+p.id+'&uid=0" class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-slate-700 hover:text-orange-500 transition"><i class="fa-solid fa-bag-shopping text-sm"></i></a>'
+      + '</div>'
+      + '<div class="aspect-[4/5] w-full mb-4 flex items-center justify-center">'
+      + '<img src="/img/product_img/'+p.image+'" onerror="this.src=\'https://placehold.co/200x200/e2e8f0/94a3b8?text=Product\'" class="max-w-[85%] max-h-[85%] object-contain mix-blend-multiply drop-shadow-lg transform transition group-hover:scale-110 duration-500">'
+      + '</div>'
+      + '<div class="mt-auto flex flex-col gap-1">'
+      + '<div class="flex items-start justify-between gap-2">'
+      + '<a href="/product/'+p.id+'" class="font-heading font-bold text-slate-800 text-[14px] leading-tight w-[58%] hover:underline line-clamp-2">'+p.title+'</a>'
+      + '<div class="text-right w-[42%]"><p class="text-[14px] font-bold text-[#2d3a98]">&#8377;'+Number(p.discountPrice).toLocaleString('en-IN')+'</p>'+stk+'</div>'
+      + '</div>'
+      + '<div class="flex items-center justify-between mt-1"><div>'+starsHtml(p.rating)+'</div><p class="text-[10px] text-slate-400 font-medium">'+p.category+sz+'</p></div>'
+      + '</div></div>';
+}
+
+/* ---- FETCH + RENDER ---- */
+function applyFilters() {
+    fs.inStock = document.getElementById('inStockCheck').checked;
+    fs.sort = document.getElementById('sortSelect').value;
+    fs.search = document.getElementById('searchInput').value.trim();
+
+    var params = new URLSearchParams();
+    if (fs.category) params.set('category', fs.category);
+    if (fs.minPrice > 0) params.set('minPrice', fs.minPrice);
+    if (fs.maxPrice < 100000) params.set('maxPrice', fs.maxPrice);
+    if (fs.colors.length > 0) params.set('color', fs.colors[0]);
+    if (fs.sizes.length > 0) params.set('size', fs.sizes[0]);
+    if (fs.rating) params.set('rating', fs.rating);
+    if (fs.inStock) params.set('inStock', 'true');
+    if (fs.sort) params.set('sort', fs.sort);
+
+    var grid = document.getElementById('productGrid');
+    var skel = document.getElementById('skeletonGrid');
+    var noMsg = document.getElementById('noProductsMsg');
+    grid.classList.add('hidden'); noMsg.classList.add('hidden'); skel.classList.remove('hidden');
+
+    renderTags();
+
+    fetch('/api/products?' + params.toString())
+      .then(function(r){ return r.json(); })
+      .then(function(products){
+        if (fs.colors.length > 1) products = products.filter(function(p){ return fs.colors.indexOf(p.color)>-1; });
+        if (fs.sizes.length > 1) products = products.filter(function(p){ return fs.sizes.indexOf(p.size)>-1; });
+        if (fs.search) { var q=fs.search.toLowerCase(); products=products.filter(function(p){ return (p.title&&p.title.toLowerCase().indexOf(q)>-1)||(p.category&&p.category.toLowerCase().indexOf(q)>-1); }); }
+        skel.classList.add('hidden');
+        document.getElementById('resultCount').textContent = products.length + ' product' + (products.length!==1 ? 's' : '') + ' found';
+        if (products.length === 0) { noMsg.classList.remove('hidden'); }
+        else { grid.innerHTML = products.map(function(p,i){ return buildCard(p,i); }).join(''); grid.classList.remove('hidden'); }
+      })
+      .catch(function(){ skel.classList.add('hidden'); noMsg.classList.remove('hidden'); });
+}
+
+/* ---- INIT ---- */
+window.addEventListener('DOMContentLoaded', function(){
+    document.getElementById('searchInput').addEventListener('input', function(){
+        clearTimeout(fs.timer);
+        fs.timer = setTimeout(applyFilters, 350);
+    });
+    document.getElementById('sortSelect').addEventListener('change', applyFilters);
+    applyFilters();
+});
+</script>
+
 </section>
-
 </body>
 </html>

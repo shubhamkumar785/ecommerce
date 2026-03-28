@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>Admin Dashboard | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-white border-r border-slate-100 shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative pt-8 pb-10 px-6 z-10 md:min-h-screen">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Admin Panel</h3>
+            
+            <nav class="space-y-1.5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-hide">
+                <a href="/admin/" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Dashboard</span>
+                </a>
+                <a href="/admin/category" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-layer-group w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Categories</span>
+                </a>
+                <a href="/admin/loadAddProduct" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-plus w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Add Product</span>
+                </a>
+                <a href="/admin/products" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-boxes-stacked w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Products</span>
+                </a>
+                <a href="/admin/orders" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-box-open w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Orders</span>
+                </a>
+                <div class="pt-4 mt-2 border-t border-slate-100 hidden md:block"></div>
+                <a href="/admin/users?type=1" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-users w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Users</span>
+                </a>
+                <a href="/admin/users?type=2" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
+                    <i class="fa-solid fa-user-shield w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Admins</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 w-full max-w-6xl mx-auto py-10 px-4 md:px-10">
+            <div class="mb-10 animate-[slideDown_0.3s_ease-out]">
+                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">Admin Dashboard 👑</h2>
+                <p class="text-slate-500 font-medium">Platform overview and management.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                
+                <!-- Total Customers -->
+                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
+                     <div>
+                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Customers</span>
+                         <span class="text-3xl font-black text-slate-800">[[${totalCustomers}]]</span>
+                     </div>
+                     <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-users"></i>
+                     </div>
+                </div>
+
+                <!-- Total Sellers -->
+                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
+                     <div>
+                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Sellers</span>
+                         <span class="text-3xl font-black text-slate-800">[[${totalSellers}]]</span>
+                     </div>
+                     <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-store"></i>
+                     </div>
+                </div>
+
+                <!-- Total Products -->
+                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
+                     <div>
+                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Products</span>
+                         <span class="text-3xl font-black text-slate-800">[[${totalProducts}]]</span>
+                     </div>
+                     <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-box"></i>
+                     </div>
+                </div>
+
+                <!-- Total Revenue -->
+                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
+                     <div>
+                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Revenue</span>
+                         <span class="text-2xl font-black text-slate-800">₹[[${totalRevenue}]]</span>
+                     </div>
+                     <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-indian-rupee-sign"></i>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Quick Access / Manage Grid -->
+            <div class="bg-white rounded-[40px] p-8 md:p-10 shadow-xl shadow-slate-200/50 border border-slate-50">
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight mb-8">Management Hub</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    
+                    <a href="/admin/category" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-blue-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-layer-group"></i></div>
+                        <h4 class="font-bold text-slate-800">Categories</h4>
+                    </a>
+
+                    <a href="/admin/loadAddProduct" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-orange-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-square-plus"></i></div>
+                        <h4 class="font-bold text-slate-800">Add Product</h4>
+                    </a>
+
+                    <a href="/admin/products" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-green-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-table-list"></i></div>
+                        <h4 class="font-bold text-slate-800">View Products</h4>
+                    </a>
+
+                    <a href="/admin/orders" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-yellow-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-box-open"></i></div>
+                        <h4 class="font-bold text-slate-800">Orders</h4>
+                    </a>
+
+                    <a href="/admin/users?type=1" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-indigo-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-users"></i></div>
+                        <h4 class="font-bold text-slate-800">Users</h4>
+                    </a>
+
+                    <a href="/admin/add-admin" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-purple-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-user-plus"></i></div>
+                        <h4 class="font-bold text-slate-800">Add Admin</h4>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        
+        <style>
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        </style>
+    </section>
+</body>
+</html>
