@@ -2,6 +2,7 @@ package com.ecommerce.config;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +21,9 @@ public class CustomUser implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+		String role = user.getRole() == null ? "" : user.getRole().trim().toUpperCase(Locale.ROOT);
+		String normalizedRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(normalizedRole);
 		return Arrays.asList(authority);
 	}
 
@@ -41,7 +44,7 @@ public class CustomUser implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return user.getAccountNonLocked();
+		return !Boolean.FALSE.equals(user.getAccountNonLocked());
 	}
 
 	@Override
@@ -51,7 +54,7 @@ public class CustomUser implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return user.getIsEnable();
+		return !Boolean.FALSE.equals(user.getIsEnable());
 	}
 
 }

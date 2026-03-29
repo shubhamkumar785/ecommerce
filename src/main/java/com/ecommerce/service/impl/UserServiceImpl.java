@@ -14,6 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.model.UserDtls;
@@ -47,7 +48,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDtls getUserByEmail(String email) {
-		return userRepository.findByEmail(email);
+		UserDtls user = userRepository.findByEmail(email);
+		return applyAccountDefaults(user);
 	}
 
 	@Override
@@ -72,6 +74,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void increaseFailedAttempt(UserDtls user) {
+		user = applyAccountDefaults(user);
 		int attempt = user.getFailedAttempt() + 1;
 		user.setFailedAttempt(attempt);
 		userRepository.save(user);
@@ -79,6 +82,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void userAccountLock(UserDtls user) {
+		user = applyAccountDefaults(user);
 		user.setAccountNonLocked(false);
 		user.setLockTime(new Date());
 		userRepository.save(user);
@@ -86,6 +90,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean unlockAccountTimeExpired(UserDtls user) {
+		user = applyAccountDefaults(user);
+		if (user.getLockTime() == null) {
+			user.setAccountNonLocked(true);
+			user.setFailedAttempt(0);
+			userRepository.save(user);
+			return true;
+		}
 
 		long lockTime = user.getLockTime().getTime();
 		long unLockTime = lockTime + AppConstant.UNLOCK_DURATION_TIME;
@@ -105,7 +116,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void resetAttempt(int userId) {
-
+		Optional<UserDtls> findByUser = userRepository.findById(userId);
+		if (findByUser.isPresent()) {
+			UserDtls userDtls = applyAccountDefaults(findByUser.get());
+			userDtls.setFailedAttempt(0);
+			userDtls.setAccountNonLocked(true);
+			userDtls.setLockTime(null);
+			userRepository.save(userDtls);
+		}
 	}
 
 	@Override
@@ -178,6 +196,55 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean existsEmail(String email) {
 		return userRepository.existsByEmail(email);
+	}
+
+	private UserDtls applyAccountDefaults(UserDtls user) {
+		if (user == null) {
+			return null;
+		}
+
+		boolean changed = false;
+
+		if (!StringUtils.hasText(user.getRole())) {
+			user.setRole(resolveLegacyRole(user));
+			changed = true;
+		}
+
+		if (user.getIsEnable() == null) {
+			user.setIsEnable(true);
+			changed = true;
+		}
+
+		if (user.getAccountNonLocked() == null) {
+			user.setAccountNonLocked(true);
+			changed = true;
+		}
+
+		if (user.getFailedAttempt() == null) {
+			user.setFailedAttempt(0);
+			changed = true;
+		}
+
+		if (changed) {
+			return userRepository.save(user);
+		}
+
+		return user;
+	}
+
+	private String resolveLegacyRole(UserDtls user) {
+		if (StringUtils.hasText(user.getStoreName()) || StringUtils.hasText(user.getStoreDescription())) {
+			return "ROLE_SELLER";
+		}
+
+		String email = user.getEmail() == null ? "" : user.getEmail().trim().toLowerCase();
+		String name = user.getName() == null ? "" : user.getName().trim().toLowerCase();
+
+		if (email.startsWith("admin") || email.contains("@admin") || name.contains("admin")) {
+			return "ROLE_ADMIN";
+		}
+
+		return "ROLE_USER";
 	}
 
 }

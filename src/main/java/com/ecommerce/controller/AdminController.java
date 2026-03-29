@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,6 @@ import com.ecommerce.service.ProductService;
 import com.ecommerce.service.UserService;
 import com.ecommerce.util.CommonUtil;
 import com.ecommerce.util.OrderStatus;
-
-import jakarta.servlet.http.HttpSession;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -80,19 +79,43 @@ public class AdminController {
 		m.addAttribute("categorys", allActiveCategory);
 	}
 
-	@GetMapping("/")
+	@GetMapping({ "", "/", "/dashboard" })
 	public String index(Model m) {
 		int totalCustomers = userService.getUsers("ROLE_USER").size();
 		int totalSellers = userService.getUsers("ROLE_SELLER").size();
-		long totalProducts = productService.getAllProductsPagination(0, 1).getTotalElements();
-		long totalOrders = orderService.getAllOrdersPagination(0, 1).getTotalElements();
-		
+		int totalAdmins = userService.getUsers("ROLE_ADMIN").size();
+		List<Category> categories = categoryService.getAllCategory();
+		List<Product> products = productService.getAllProducts();
+		List<ProductOrder> orders = orderService.getAllOrders();
+		long totalProducts = products.size();
+		long totalOrders = orders.size();
+		long activeCategories = categories.stream().filter(c -> !Boolean.FALSE.equals(c.getIsActive())).count();
+		long lowStockProducts = products.stream().filter(p -> p.getStock() <= 5).count();
+		long pendingOrders = orders.stream()
+				.filter(order -> OrderStatus.IN_PROGRESS.getName().equalsIgnoreCase(order.getStatus()))
+				.count();
+		long totalRevenue = Math.round(orders.stream()
+				.mapToDouble(order -> (order.getPrice() == null ? 0.0 : order.getPrice())
+						* (order.getQuantity() == null ? 0 : order.getQuantity()))
+				.sum());
+		List<ProductOrder> recentOrders = orders.stream()
+				.sorted(Comparator.comparing(ProductOrder::getOrderDate, Comparator.nullsLast(Comparator.reverseOrder()))
+						.thenComparing(ProductOrder::getId, Comparator.nullsLast(Comparator.reverseOrder())))
+				.limit(6)
+				.toList();
+
 		m.addAttribute("totalCustomers", totalCustomers);
 		m.addAttribute("totalSellers", totalSellers);
+		m.addAttribute("totalAdmins", totalAdmins);
 		m.addAttribute("totalProducts", totalProducts);
 		m.addAttribute("totalOrders", totalOrders);
-		m.addAttribute("totalRevenue", 125000); // MOCKED for UI
-		
+		m.addAttribute("totalCategories", categories.size());
+		m.addAttribute("activeCategories", activeCategories);
+		m.addAttribute("lowStockProducts", lowStockProducts);
+		m.addAttribute("pendingOrders", pendingOrders);
+		m.addAttribute("totalRevenue", totalRevenue);
+		m.addAttribute("recentOrders", recentOrders);
+
 		return "admin/index";
 	}
 

@@ -1,6 +1,8 @@
 package com.ecommerce.config;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
@@ -9,9 +11,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.stereotype.Component;
 
 import com.ecommerce.model.UserDtls;
-import com.ecommerce.repository.UserRepository;
 import com.ecommerce.service.UserService;
-import com.ecommerce.service.impl.UserServiceImpl;
 import com.ecommerce.util.AppConstant;
 
 import jakarta.servlet.ServletException;
@@ -22,32 +22,33 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AuthFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandler {
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private UserService userService;
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
+		String selectedRole = request.getParameter("role");
 
 		String email = request.getParameter("username");
 
-		UserDtls userDtls = userRepository.findByEmail(email);
+		UserDtls userDtls = userService.getUserByEmail(email);
 
-		if (exception.getMessage().equals("Invalid role selected for this account!")) {
-			super.setDefaultFailureUrl("/signin?error");
+		if ("Invalid role selected for this account!".equals(exception.getMessage())) {
+			super.setDefaultFailureUrl(buildFailureUrl(selectedRole));
 			super.onAuthenticationFailure(request, response, exception);
 			return;
 		}
 
 		if (userDtls != null) {
+			boolean isEnabled = !Boolean.FALSE.equals(userDtls.getIsEnable());
+			boolean isAccountNonLocked = !Boolean.FALSE.equals(userDtls.getAccountNonLocked());
+			int failedAttempt = userDtls.getFailedAttempt() == null ? 0 : userDtls.getFailedAttempt();
 
-			if (userDtls.getIsEnable()) {
+			if (isEnabled) {
 
-				if (userDtls.getAccountNonLocked()) {
+				if (isAccountNonLocked) {
 
-					if (userDtls.getFailedAttempt() < AppConstant.ATTEMPT_TIME) {
+					if (failedAttempt < AppConstant.ATTEMPT_TIME) {
 						userService.increaseFailedAttempt(userDtls);
 					} else {
 						userService.userAccountLock(userDtls);
@@ -69,8 +70,16 @@ public class AuthFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandle
 			exception = new LockedException("Email & password invalid");
 		}
 
-		super.setDefaultFailureUrl("/signin?error");
+		super.setDefaultFailureUrl(buildFailureUrl(selectedRole));
 		super.onAuthenticationFailure(request, response, exception);
+	}
+
+	private String buildFailureUrl(String selectedRole) {
+		String failureUrl = "/signin?error";
+		if (selectedRole != null && !selectedRole.isBlank()) {
+			failureUrl += "&role=" + URLEncoder.encode(selectedRole, StandardCharsets.UTF_8);
+		}
+		return failureUrl;
 	}
 
 }

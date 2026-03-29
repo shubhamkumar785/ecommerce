@@ -59,7 +59,7 @@
                 <a href="/" class="text-slate-900 font-semibold hover:text-orange-500 transition">Home</a>
             </th:block>
             <th:block th:unless="${user==null}">
-                <a th:if="${user.role=='ROLE_ADMIN'}" href="/admin/" class="hover:text-orange-500 transition">Dashboard</a>
+                <a th:if="${user.role=='ROLE_ADMIN'}" href="/admin/dashboard" class="hover:text-orange-500 transition">Dashboard</a>
                 <a th:if="${user.role=='ROLE_USER'}" href="/" class="text-slate-900 font-semibold hover:text-orange-500 transition">Home</a>
             </th:block>
             
@@ -119,21 +119,40 @@
                         
                         <!-- Menu Items -->
                         <div class="py-2">
-                             <a href="/user/profile" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
-                                 <i class="fa-regular fa-user w-5 text-center transition-transform"></i> My Profile
-                             </a>
-                             <a href="/user/user-orders" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
-                                 <i class="fa-solid fa-box-open w-5 text-center transition-transform"></i> My Orders
-                             </a>
-                             <a href="/user/wishlist" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
-                                 <i class="fa-regular fa-heart w-5 text-center transition-transform text-red-400"></i> Wishlist
-                             </a>
-                             <a href="/user/address" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
-                                 <i class="fa-solid fa-location-dot w-5 text-center transition-transform text-blue-400"></i> My Address
-                             </a>
-                             <a href="/user/settings" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
-                                 <i class="fa-solid fa-gear w-5 text-center transition-transform"></i> Settings
-                             </a>
+                             <th:block th:if="${user.role=='ROLE_USER'}">
+                                 <a href="/user/profile" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-regular fa-user w-5 text-center transition-transform"></i> My Profile
+                                 </a>
+                                 <a href="/user/user-orders" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-box-open w-5 text-center transition-transform"></i> My Orders
+                                 </a>
+                                 <a href="/user/wishlist" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-regular fa-heart w-5 text-center transition-transform text-red-400"></i> Wishlist
+                                 </a>
+                                 <a href="/user/address" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-location-dot w-5 text-center transition-transform text-blue-400"></i> My Address
+                                 </a>
+                                 <a href="/user/settings" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-gear w-5 text-center transition-transform"></i> Settings
+                                 </a>
+                             </th:block>
+                             <th:block th:if="${user.role=='ROLE_ADMIN'}">
+                                 <a href="/admin/dashboard" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-gauge-high w-5 text-center transition-transform"></i> Dashboard
+                                 </a>
+                                 <a href="/admin/orders" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-box-open w-5 text-center transition-transform"></i> Orders
+                                 </a>
+                                 <a href="/admin/users?type=1" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-users w-5 text-center transition-transform"></i> Users
+                                 </a>
+                                 <a href="/admin/add-admin" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-solid fa-user-plus w-5 text-center transition-transform"></i> Add Admin
+                                 </a>
+                                 <a href="/admin/profile" class="flex items-center gap-3 px-6 py-3 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-500 transition-colors">
+                                     <i class="fa-regular fa-user w-5 text-center transition-transform"></i> Profile
+                                 </a>
+                             </th:block>
                         </div>
                         
                         <!-- Logout -->
@@ -227,7 +246,7 @@
                  <a th:if="${user.role=='ROLE_USER'}" href="/user/profile" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
                      <i class="fa-regular fa-user text-xl"></i>
                  </a>
-                 <a th:if="${user.role=='ROLE_ADMIN'}" href="/admin/" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
+                 <a th:if="${user.role=='ROLE_ADMIN'}" href="/admin/dashboard" class="w-10 h-10 flex items-center justify-center relative text-white hover:text-orange-400 transition">
                      <i class="fa-solid fa-gauge text-xl"></i>
                  </a>
             </th:block>

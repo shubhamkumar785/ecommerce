@@ -5,145 +5,200 @@
 <title>Admin Dashboard | Ecom Store</title>
 </head>
 <body>
-    <section class="min-h-screen bg-pastel-bg flex flex-col md:flex-row">
-        <!-- Sidebar -->
-        <aside class="w-full md:w-64 bg-white border-r border-slate-100 shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative pt-8 pb-10 px-6 z-10 md:min-h-screen">
-            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Admin Panel</h3>
-            
-            <nav class="space-y-1.5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-hide">
-                <a href="/admin/" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-chart-line w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Dashboard</span>
-                </a>
-                <a href="/admin/category" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-layer-group w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Categories</span>
-                </a>
-                <a href="/admin/loadAddProduct" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-plus w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Add Product</span>
-                </a>
-                <a href="/admin/products" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-boxes-stacked w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Products</span>
-                </a>
-                <a href="/admin/orders" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-box-open w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Orders</span>
-                </a>
-                <div class="pt-4 mt-2 border-t border-slate-100 hidden md:block"></div>
-                <a href="/admin/users?type=1" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-users w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Users</span>
-                </a>
-                <a href="/admin/users?type=2" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-user-shield w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Admins</span>
-                </a>
-            </nav>
-        </aside>
+    <section class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,245,171,0.55),_transparent_30%),linear-gradient(180deg,_#fcfbfa_0%,_#f7f4ef_100%)] py-8 md:py-12">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
+                <div class="bg-[#1F223D] text-white rounded-[36px] p-8 md:p-10 shadow-[0_30px_80px_rgba(31,34,61,0.18)] overflow-hidden relative">
+                    <div class="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-white/10 blur-2xl"></div>
+                    <div class="absolute bottom-0 right-20 w-32 h-32 rounded-full bg-orange-300/20 blur-2xl"></div>
+                    <div class="relative z-10">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[11px] font-black tracking-[0.25em] uppercase">
+                            <i class="fa-solid fa-shield-halved text-orange-300"></i>
+                            Control Center
+                        </span>
+                        <h1 class="mt-6 text-3xl md:text-5xl font-heading font-bold leading-tight">Admin dashboard built for fast decisions.</h1>
+                        <p class="mt-4 max-w-2xl text-sm md:text-base text-slate-200 leading-relaxed">Monitor orders, inventory, categories, and team access from one place. This overview now pulls from live catalog and order data so admin sign-in lands on a useful control surface.</p>
 
-        <!-- Main Content -->
-        <div class="flex-1 w-full max-w-6xl mx-auto py-10 px-4 md:px-10">
-            <div class="mb-10 animate-[slideDown_0.3s_ease-out]">
-                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">Admin Dashboard 👑</h2>
-                <p class="text-slate-500 font-medium">Platform overview and management.</p>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                
-                <!-- Total Customers -->
-                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
-                     <div>
-                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Customers</span>
-                         <span class="text-3xl font-black text-slate-800">[[${totalCustomers}]]</span>
-                     </div>
-                     <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                         <i class="fa-solid fa-users"></i>
-                     </div>
+                        <div class="mt-8 grid gap-4 sm:grid-cols-3">
+                            <div class="rounded-[24px] bg-white/8 p-5 backdrop-blur-sm border border-white/10">
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-300 font-black">Pending Orders</p>
+                                <p class="mt-2 text-3xl font-black">[[${pendingOrders}]]</p>
+                                <p class="mt-2 text-xs text-slate-300">Orders waiting for the next fulfillment step.</p>
+                            </div>
+                            <div class="rounded-[24px] bg-white/8 p-5 backdrop-blur-sm border border-white/10">
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-300 font-black">Low Stock</p>
+                                <p class="mt-2 text-3xl font-black">[[${lowStockProducts}]]</p>
+                                <p class="mt-2 text-xs text-slate-300">Products at 5 units or fewer.</p>
+                            </div>
+                            <div class="rounded-[24px] bg-white/8 p-5 backdrop-blur-sm border border-white/10">
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-300 font-black">Live Categories</p>
+                                <p class="mt-2 text-3xl font-black">[[${activeCategories}]]</p>
+                                <p class="mt-2 text-xs text-slate-300">Storefront categories currently enabled.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Total Sellers -->
-                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
-                     <div>
-                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Sellers</span>
-                         <span class="text-3xl font-black text-slate-800">[[${totalSellers}]]</span>
-                     </div>
-                     <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                         <i class="fa-solid fa-store"></i>
-                     </div>
-                </div>
+                <div class="grid gap-6">
+                    <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[11px] uppercase tracking-[0.24em] font-black text-slate-400">Gross Revenue</p>
+                                <h2 class="mt-2 text-3xl font-black text-slate-900">Rs. [[${totalRevenue}]]</h2>
+                            </div>
+                            <div class="w-14 h-14 rounded-[20px] bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                        </div>
+                        <p class="mt-3 text-sm text-slate-500">Calculated from every order currently stored in the application.</p>
+                    </div>
 
-                <!-- Total Products -->
-                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
-                     <div>
-                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Products</span>
-                         <span class="text-3xl font-black text-slate-800">[[${totalProducts}]]</span>
-                     </div>
-                     <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                         <i class="fa-solid fa-box"></i>
-                     </div>
-                </div>
-
-                <!-- Total Revenue -->
-                <div class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 flex items-center justify-between group hover:-translate-y-1 transition-transform">
-                     <div>
-                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Revenue</span>
-                         <span class="text-2xl font-black text-slate-800">₹[[${totalRevenue}]]</span>
-                     </div>
-                     <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                         <i class="fa-solid fa-indian-rupee-sign"></i>
-                     </div>
+                    <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+                        <p class="text-[11px] uppercase tracking-[0.24em] font-black text-slate-400">Quick Actions</p>
+                        <div class="mt-5 grid grid-cols-2 gap-3">
+                            <a href="/admin/loadAddProduct" class="rounded-[22px] bg-slate-50 px-4 py-4 font-bold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                <i class="fa-solid fa-square-plus mr-2"></i>Add Product
+                            </a>
+                            <a href="/admin/category" class="rounded-[22px] bg-slate-50 px-4 py-4 font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                                <i class="fa-solid fa-layer-group mr-2"></i>Categories
+                            </a>
+                            <a href="/admin/orders" class="rounded-[22px] bg-slate-50 px-4 py-4 font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-600 transition">
+                                <i class="fa-solid fa-box-open mr-2"></i>Orders
+                            </a>
+                            <a href="/admin/add-admin" class="rounded-[22px] bg-slate-50 px-4 py-4 font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                                <i class="fa-solid fa-user-plus mr-2"></i>Add Admin
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Quick Access / Manage Grid -->
-            <div class="bg-white rounded-[40px] p-8 md:p-10 shadow-xl shadow-slate-200/50 border border-slate-50">
-                <h3 class="text-xl font-bold text-slate-900 tracking-tight mb-8">Management Hub</h3>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    
-                    <a href="/admin/category" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-blue-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-layer-group"></i></div>
-                        <h4 class="font-bold text-slate-800">Categories</h4>
-                    </a>
+            <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Customers</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-4xl font-black text-slate-900">[[${totalCustomers}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-blue-50 text-blue-500 flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Sellers</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-4xl font-black text-slate-900">[[${totalSellers}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-violet-50 text-violet-500 flex items-center justify-center text-xl"><i class="fa-solid fa-store"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Products</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-4xl font-black text-slate-900">[[${totalProducts}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-orange-50 text-orange-500 flex items-center justify-center text-xl"><i class="fa-solid fa-boxes-stacked"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Orders</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-4xl font-black text-slate-900">[[${totalOrders}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl"><i class="fa-solid fa-truck-fast"></i></span>
+                    </div>
+                </div>
+            </div>
 
-                    <a href="/admin/loadAddProduct" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-orange-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-square-plus"></i></div>
-                        <h4 class="font-bold text-slate-800">Add Product</h4>
-                    </a>
+            <div class="mt-6 grid gap-6 lg:grid-cols-[1.35fr_0.9fr]">
+                <div class="bg-white rounded-[34px] p-6 md:p-8 border border-slate-100 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Recent Orders</p>
+                            <h3 class="mt-2 text-2xl font-heading font-bold text-slate-900">Latest activity across the store</h3>
+                        </div>
+                        <a href="/admin/orders" class="text-sm font-bold text-orange-600 hover:text-orange-700 transition">View all</a>
+                    </div>
 
-                    <a href="/admin/products" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-green-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-table-list"></i></div>
-                        <h4 class="font-bold text-slate-800">View Products</h4>
-                    </a>
-
-                    <a href="/admin/orders" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-yellow-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-box-open"></i></div>
-                        <h4 class="font-bold text-slate-800">Orders</h4>
-                    </a>
-
-                    <a href="/admin/users?type=1" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-indigo-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-users"></i></div>
-                        <h4 class="font-bold text-slate-800">Users</h4>
-                    </a>
-
-                    <a href="/admin/add-admin" class="group flex flex-col items-center p-6 bg-slate-50 rounded-[24px] hover:bg-slate-100 transition border border-slate-100">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm text-purple-500 flex items-center justify-center text-2xl mb-4 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-user-plus"></i></div>
-                        <h4 class="font-bold text-slate-800">Add Admin</h4>
-                    </a>
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="w-full min-w-[640px] text-sm">
+                            <thead>
+                                <tr class="text-left text-slate-400 uppercase text-[11px] tracking-[0.18em]">
+                                    <th class="pb-4 font-black">Order</th>
+                                    <th class="pb-4 font-black">Customer</th>
+                                    <th class="pb-4 font-black">Product</th>
+                                    <th class="pb-4 font-black">Status</th>
+                                    <th class="pb-4 font-black">Date</th>
+                                    <th class="pb-4 font-black text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="order : ${recentOrders}" class="border-t border-slate-100">
+                                    <td class="py-4 font-bold text-slate-800" th:text="${order.orderId}">ORD-1</td>
+                                    <td class="py-4 text-slate-600" th:text="${order.orderAddress != null ? order.orderAddress.firstName + ' ' + order.orderAddress.lastName : order.user != null ? order.user.name : 'Guest'}">Customer</td>
+                                    <td class="py-4 text-slate-600" th:text="${order.product != null ? order.product.title : 'Product unavailable'}">Product</td>
+                                    <td class="py-4">
+                                        <span class="inline-flex rounded-full px-3 py-1 text-xs font-black"
+                                              th:classappend="${order.status == 'Delivered'} ? ' bg-emerald-50 text-emerald-600' : (${order.status == 'Cancelled'} ? ' bg-red-50 text-red-500' : ' bg-amber-50 text-amber-600')"
+                                              th:text="${order.status}">In Progress</span>
+                                    </td>
+                                    <td class="py-4 text-slate-500" th:text="${order.orderDate}">2026-03-29</td>
+                                    <td class="py-4 text-right font-bold text-slate-800" th:text="${'Rs. ' + #numbers.formatDecimal((order.price != null ? order.price : 0) * (order.quantity != null ? order.quantity : 0), 1, 'COMMA', 0, 'POINT')}">Rs. 0</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentOrders)}">
+                                    <td colspan="6" class="py-8 text-center text-slate-400 font-medium">No orders found yet. New admin activity will appear here once customers place orders.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
+                <div class="grid gap-6">
+                    <div class="bg-white rounded-[34px] p-6 md:p-8 border border-slate-100 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+                        <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Operations Snapshot</p>
+                        <div class="mt-6 space-y-4">
+                            <div class="rounded-[24px] bg-slate-50 p-5 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Admins</p>
+                                    <p class="mt-1 text-3xl font-black text-slate-900">[[${totalAdmins}]]</p>
+                                </div>
+                                <i class="fa-solid fa-user-shield text-2xl text-indigo-500"></i>
+                            </div>
+                            <div class="rounded-[24px] bg-slate-50 p-5 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Categories</p>
+                                    <p class="mt-1 text-3xl font-black text-slate-900">[[${totalCategories}]]</p>
+                                </div>
+                                <i class="fa-solid fa-tags text-2xl text-sky-500"></i>
+                            </div>
+                            <div class="rounded-[24px] bg-slate-50 p-5 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Catalog Risk</p>
+                                    <p class="mt-1 text-3xl font-black text-slate-900">[[${lowStockProducts}]]</p>
+                                </div>
+                                <i class="fa-solid fa-triangle-exclamation text-2xl text-orange-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[34px] p-6 md:p-8 border border-slate-100 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+                        <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Admin Shortcuts</p>
+                        <div class="mt-6 grid gap-3">
+                            <a href="/admin/products" class="flex items-center justify-between rounded-[22px] border border-slate-100 px-4 py-4 text-slate-700 font-bold hover:border-orange-200 hover:bg-orange-50 transition">
+                                Product catalog
+                                <i class="fa-solid fa-arrow-right-long text-slate-400"></i>
+                            </a>
+                            <a href="/admin/users?type=1" class="flex items-center justify-between rounded-[22px] border border-slate-100 px-4 py-4 text-slate-700 font-bold hover:border-blue-200 hover:bg-blue-50 transition">
+                                Customer accounts
+                                <i class="fa-solid fa-arrow-right-long text-slate-400"></i>
+                            </a>
+                            <a href="/admin/users?type=2" class="flex items-center justify-between rounded-[22px] border border-slate-100 px-4 py-4 text-slate-700 font-bold hover:border-indigo-200 hover:bg-indigo-50 transition">
+                                Admin accounts
+                                <i class="fa-solid fa-arrow-right-long text-slate-400"></i>
+                            </a>
+                            <a href="/admin/profile" class="flex items-center justify-between rounded-[22px] border border-slate-100 px-4 py-4 text-slate-700 font-bold hover:border-emerald-200 hover:bg-emerald-50 transition">
+                                Profile and password
+                                <i class="fa-solid fa-arrow-right-long text-slate-400"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <style>
-            @keyframes slideDown {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-            }
-            .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-        </style>
     </section>
 </body>
 </html>

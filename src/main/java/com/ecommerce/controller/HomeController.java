@@ -107,8 +107,8 @@ public class HomeController {
 		m.addAttribute("paramValue", category);
 		m.addAttribute("categories", categories);
 
-//		List<Product> products = productService.getAllActiveProducts(category);
-//		m.addAttribute("products", products);
+		// List<Product> products = productService.getAllActiveProducts(category);
+		// m.addAttribute("products", products);
 		Page<Product> page = null;
 		if (StringUtils.isEmpty(ch)) {
 			page = productService.getAllActiveProductPagination(pageNo, pageSize, category);
@@ -148,12 +148,12 @@ public class HomeController {
 		} else {
 			String imageName = file.isEmpty() ? "default.png" : file.getOriginalFilename();
 			user.setProfileImage(imageName);
-			
+
 			// If role is not set, default to ROLE_USER
 			if (ObjectUtils.isEmpty(user.getRole())) {
 				user.setRole("ROLE_USER");
 			}
-			
+
 			user.setIsEnable(true);
 			user.setAccountNonLocked(true);
 			user.setFailedAttempt(0);
@@ -169,13 +169,13 @@ public class HomeController {
 
 					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 				}
-				
+
 				try {
 					commonUtil.sendMailForRegister(saveUser);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				session.setAttribute("succMsg", "Registered successfully");
 			} else {
 				session.setAttribute("errorMsg", "Something went wrong on server");
@@ -185,7 +185,7 @@ public class HomeController {
 		return "redirect:/register";
 	}
 
-//	Forgot Password Code 
+	// Forgot Password Code
 
 	@GetMapping("/forgot-password")
 	public String showForgotPassword() {
@@ -193,8 +193,7 @@ public class HomeController {
 	}
 
 	@PostMapping("/forgot-password")
-	public String processForgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request)
-			throws UnsupportedEncodingException, MessagingException {
+	public String processForgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request) {
 
 		UserDtls userByEmail = userService.getUserByEmail(email);
 
@@ -210,12 +209,15 @@ public class HomeController {
 
 			String url = CommonUtil.generateUrl(request) + "/reset-password?token=" + resetToken;
 
-			Boolean sendMail = commonUtil.sendMail(url, email);
-
-			if (sendMail) {
+			try {
+				commonUtil.sendMail(url, email);
 				session.setAttribute("succMsg", "Please check your email..Password Reset link sent");
-			} else {
-				session.setAttribute("errorMsg", "Somethong wrong on server ! Email not send");
+				return "redirect:/signin";
+			} catch (UnsupportedEncodingException | MessagingException e) {
+				session.setAttribute("errorMsg",
+						"Reset email could not be sent. Check mail settings and try again.");
+				System.out.println("[DEV ONLY] Password reset link: " + url);
+				e.printStackTrace();
 			}
 		}
 
@@ -236,22 +238,25 @@ public class HomeController {
 	}
 
 	@PostMapping("/reset-password")
-	public String resetPassword(@RequestParam String token, @RequestParam String password, HttpSession session,
-			Model m) {
+	public String resetPassword(@RequestParam String token, @RequestParam String password,
+			@RequestParam String confirmPassword, HttpSession session, Model m) {
 
 		UserDtls userByToken = userService.getUserByToken(token);
 		if (userByToken == null) {
 			m.addAttribute("errorMsg", "Your link is invalid or expired !!");
 			return "message";
-		} else {
-			userByToken.setPassword(passwordEncoder.encode(password));
-			userByToken.setResetToken(null);
-			userService.updateUser(userByToken);
-			// session.setAttribute("succMsg", "Password change successfully");
-			m.addAttribute("msg", "Password change successfully");
-
-			return "message";
 		}
+
+		if (!password.equals(confirmPassword)) {
+			session.setAttribute("errorMsg", "Password and confirm password must match");
+			return "redirect:/reset-password?token=" + token;
+		}
+
+		userByToken.setPassword(passwordEncoder.encode(password));
+		userByToken.setResetToken(null);
+		userService.updateUser(userByToken);
+		session.setAttribute("succMsg", "Password changed successfully. Please sign in.");
+		return "redirect:/signin";
 
 	}
 

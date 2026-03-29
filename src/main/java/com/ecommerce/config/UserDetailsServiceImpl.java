@@ -7,18 +7,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.model.UserDtls;
-import com.ecommerce.repository.UserRepository;
+import com.ecommerce.service.UserService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserDtls user = userRepository.findByEmail(username);
+		UserDtls user = userService.getUserByEmail(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("user not found");

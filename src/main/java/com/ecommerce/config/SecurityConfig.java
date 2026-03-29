@@ -10,21 +10,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.ecommerce.config.CustomAuthenticationSuccessHandler;
 
 @Configuration
 public class SecurityConfig {
 
 	@Autowired
-	private AuthenticationSuccessHandler authenticationSuccessHandler;
-	
+	private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
 	@Autowired
 	@Lazy
 	private AuthFailureHandlerImpl authenticationFailureHandler;
 
 	@Autowired
 	private CustomWebAuthenticationDetailsSource customWebAuthenticationDetailsSource;
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -44,22 +45,26 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
-	{
-		http.csrf(csrf->csrf.disable()).cors(cors->cors.disable())
-				.authorizeHttpRequests(req->req.requestMatchers("/user/**").hasRole("USER")
-				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.requestMatchers("/seller/**").hasRole("SELLER")
-				.requestMatchers("/auth/google").permitAll()
-				.requestMatchers("/**").permitAll())
-				.formLogin(form->form.loginPage("/signin")
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
+				.authorizeHttpRequests(req -> req
+						.requestMatchers("/", "/signin", "/login", "/register", "/saveUser", "/products",
+								"/product/**", "/search", "/forgot-password", "/reset-password", "/auth/google",
+								"/css/**", "/js/**", "/img/**", "/static/**", "/error")
+						.permitAll()
+						.requestMatchers("/user/**").hasRole("USER")
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.requestMatchers("/seller/**").hasRole("SELLER")
+						.anyRequest().authenticated())
+				.formLogin(form -> form.loginPage("/signin")
 						.loginProcessingUrl("/login")
 						.authenticationDetailsSource(customWebAuthenticationDetailsSource)
-//						.defaultSuccessUrl("/")
+						// .defaultSuccessUrl("/")
 						.failureHandler(authenticationFailureHandler)
-						.successHandler(authenticationSuccessHandler))
-				.logout(logout->logout.permitAll());
-		
+						.successHandler(authenticationSuccessHandler)
+						.permitAll())
+				.logout(logout -> logout.permitAll());
+
 		return http.build();
 	}
 
