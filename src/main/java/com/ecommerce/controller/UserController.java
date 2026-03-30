@@ -33,6 +33,15 @@ import com.ecommerce.service.WishlistService;
 import com.ecommerce.util.CommonUtil;
 import com.ecommerce.util.OrderStatus;
 
+import com.ecommerce.service.ReturnRequestService;
+import com.ecommerce.model.ReturnRequest;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import org.springframework.core.io.ClassPathResource;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -60,6 +69,9 @@ public class UserController {
 
 	@Autowired
 	private WishlistService wishlistService;
+
+	@Autowired
+	private ReturnRequestService returnRequestService;
 
 	@GetMapping("/")
 	public String home() {
@@ -292,4 +304,40 @@ public class UserController {
 		return "/user/settings";
 	}
 
+	@GetMapping("/returns")
+	public String loadReturns(Principal p, Model m) {
+		UserDtls user = getLoggedInUserDetails(p);
+		List<ReturnRequest> returns = returnRequestService.getReturnRequestsByUser(user);
+		m.addAttribute("returns", returns);
+		return "/user/my_returns";
+	}
+
+	@PostMapping("/submit-return")
+	public String submitReturn(@ModelAttribute ReturnRequest returnRequest, @RequestParam("file") MultipartFile file,
+			Principal p, HttpSession session) throws Exception {
+		UserDtls user = getLoggedInUserDetails(p);
+		returnRequest.setUser(user);
+
+		if (!file.isEmpty()) {
+			String fileName = file.getOriginalFilename();
+			returnRequest.setProofImage(fileName);
+			
+			File saveFile = new ClassPathResource("static/img").getFile();
+			Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "proof_img" + File.separator + fileName);
+			
+			if(!Files.exists(path.getParent())) {
+				Files.createDirectories(path.getParent());
+			}
+			
+			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		}
+
+		ReturnRequest saveReturn = returnRequestService.saveReturnRequest(returnRequest);
+		if (saveReturn != null) {
+			session.setAttribute("succMsg", "Return Request Submitted Successfully");
+		} else {
+			session.setAttribute("errorMsg", "Something went wrong on server");
+		}
+		return "redirect:/user/user-orders";
+	}
 }

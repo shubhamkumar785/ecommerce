@@ -88,6 +88,12 @@
                                            CANCEL ORDER
                                        </a>
                                   </th:block>
+                                  <th:block th:if="${o.status == 'Delivered'}">
+                                        <button th:onclick="'openReturnModal(' + ${o.id} + ', \'' + ${o.orderId} + '\', ' + ${o.product.id} + ')'" 
+                                                class="px-6 py-2.5 bg-orange-50 text-orange-500 rounded-xl text-[11px] font-black hover:bg-orange-500 hover:text-white transition-all shadow-sm border border-orange-100 text-center">
+                                            RETURN / REFUND
+                                        </button>
+                                   </th:block>
                                   <a th:href="@{'/product/'+${o.product.id}}" class="px-6 py-2.5 bg-slate-50 text-slate-700 rounded-xl text-[11px] font-black hover:bg-slate-100 transition shadow-sm border border-slate-100 text-center">
                                       VIEW PRODUCT
                                   </a>
@@ -99,11 +105,115 @@
             </div>
 
         </div>
+
+        <!-- Return/Refund Modal -->
+        <div id="returnModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-[fadeIn_0.2s_ease-out]">
+            <div class="bg-white w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl animate-[scaleUp_0.3s_ease-out]">
+                <form action="/user/submit-return" method="post" enctype="multipart/form-data">
+                    <div class="p-8 border-b border-slate-50 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-900 leading-tight">Return Request</h3>
+                            <p class="text-[13px] font-medium text-slate-500">Order ID: <span id="modalOrderId" class="font-bold text-nav"></span></p>
+                        </div>
+                        <button type="button" onclick="closeReturnModal()" class="w-10 h-10 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-slate-100 transition">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-8 space-y-6">
+                        <input type="hidden" name="orderId" id="inputOrderId">
+                        <input type="hidden" name="product.id" id="inputProductId">
+                        
+                        <!-- Reason Selection -->
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Reason for return</label>
+                            <select name="reason" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-3.5 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition cursor-pointer">
+                                <option value="" disabled selected>Select a reason</option>
+                                <option value="damaged">Damaged product</option>
+                                <option value="wrong_item">Wrong item delivered</option>
+                                <option value="size_issue">Size issue (Fitment)</option>
+                                <option value="not_satisfied">Not satisfied with quality</option>
+                            </select>
+                        </div>
+
+                        <!-- Request Type -->
+                        <div class="space-y-4">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">How can we fix this?</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="relative group cursor-pointer">
+                                    <input type="radio" name="requestType" value="REFUND" class="peer hidden" checked>
+                                    <div class="p-4 rounded-2xl border-2 border-slate-100 bg-slate-50 flex flex-col items-center gap-2 group-hover:border-slate-200 peer-checked:border-orange-500 peer-checked:bg-orange-50 transition">
+                                        <i class="fa-solid fa-rotate-left text-lg text-slate-400 peer-checked:text-orange-500"></i>
+                                        <span class="text-xs font-black text-slate-900">REFUND</span>
+                                    </div>
+                                </label>
+                                <label class="relative group cursor-pointer">
+                                    <input type="radio" name="requestType" value="EXCHANGE" class="peer hidden">
+                                    <div class="p-4 rounded-2xl border-2 border-slate-100 bg-slate-50 flex flex-col items-center gap-2 group-hover:border-slate-200 peer-checked:border-orange-500 peer-checked:bg-orange-50 transition">
+                                        <i class="fa-solid fa-arrows-rotate text-lg text-slate-400 peer-checked:text-orange-500"></i>
+                                        <span class="text-xs font-black text-slate-900">EXCHANGE</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Proof Upload -->
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Upload Proof (Photo/Video)</label>
+                            <div class="relative">
+                                <input type="file" name="file" class="hidden" id="proofFile" onchange="updateFileName(this)">
+                                <label for="proofFile" class="w-full flex items-center gap-3 px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl cursor-pointer hover:bg-slate-100 transition border-dashed border-2">
+                                    <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-slate-400 shadow-sm">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    </div>
+                                    <span id="fileNameLabel" class="text-[13px] font-bold text-slate-500 truncate">Choose file or drag & drop</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-8 bg-slate-50 flex gap-4">
+                        <button type="button" onclick="closeReturnModal()" class="flex-1 py-4 text-slate-600 font-black text-[11px] uppercase tracking-widest hover:text-slate-900 transition">Cancel</button>
+                        <button type="submit" class="flex-[2] py-4 bg-nav text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-lg shadow-slate-200 hover:-translate-y-0.5 transition active:translate-y-0">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         
+        <script>
+            function openReturnModal(id, orderId, pid) {
+                document.getElementById('modalOrderId').innerText = '#' + orderId;
+                document.getElementById('inputOrderId').value = orderId;
+                document.getElementById('inputProductId').value = pid;
+                document.getElementById('returnModal').classList.remove('hidden');
+            }
+
+            function closeReturnModal() {
+                document.getElementById('returnModal').classList.add('hidden');
+            }
+
+            function updateFileName(input) {
+                const label = document.getElementById('fileNameLabel');
+                if (input.files && input.files.length > 0) {
+                    label.innerText = input.files[0].name;
+                    label.classList.remove('text-slate-500');
+                    label.classList.add('text-orange-500');
+                }
+            }
+        </script>
+
         <style>
              @keyframes slideDown {
                 from { opacity: 0; transform: translateY(-10px); }
                 to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes scaleUp {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
             }
         </style>
     </section>

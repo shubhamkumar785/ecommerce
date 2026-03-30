@@ -1,14 +1,12 @@
 package com.ecommerce.controller;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +28,15 @@ import com.ecommerce.model.Category;
 import com.ecommerce.model.Product;
 import com.ecommerce.model.ProductOrder;
 import com.ecommerce.model.UserDtls;
+import com.ecommerce.model.ReturnRequest;
 import com.ecommerce.service.CartService;
 import com.ecommerce.service.CategoryService;
 import com.ecommerce.service.OrderService;
 import com.ecommerce.service.ProductService;
 import com.ecommerce.service.UserService;
+import com.ecommerce.service.ReturnRequestService;
+import com.ecommerce.service.DashboardService;
+import com.ecommerce.dto.DashboardStats;
 import com.ecommerce.util.CommonUtil;
 import com.ecommerce.util.OrderStatus;
 
@@ -65,6 +67,12 @@ public class AdminController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private ReturnRequestService returnRequestService;
+
+	@Autowired
+	private DashboardService dashboardService;
+
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
 		if (p != null) {
@@ -80,43 +88,20 @@ public class AdminController {
 	}
 
 	@GetMapping({ "", "/", "/dashboard" })
-	public String index(Model m) {
-		int totalCustomers = userService.getUsers("ROLE_USER").size();
-		int totalSellers = userService.getUsers("ROLE_SELLER").size();
-		int totalAdmins = userService.getUsers("ROLE_ADMIN").size();
-		List<Category> categories = categoryService.getAllCategory();
-		List<Product> products = productService.getAllProducts();
-		List<ProductOrder> orders = orderService.getAllOrders();
-		long totalProducts = products.size();
-		long totalOrders = orders.size();
-		long activeCategories = categories.stream().filter(c -> !Boolean.FALSE.equals(c.getIsActive())).count();
-		long lowStockProducts = products.stream().filter(p -> p.getStock() <= 5).count();
-		long pendingOrders = orders.stream()
-				.filter(order -> OrderStatus.IN_PROGRESS.getName().equalsIgnoreCase(order.getStatus()))
-				.count();
-		long totalRevenue = Math.round(orders.stream()
-				.mapToDouble(order -> (order.getPrice() == null ? 0.0 : order.getPrice())
-						* (order.getQuantity() == null ? 0 : order.getQuantity()))
-				.sum());
-		List<ProductOrder> recentOrders = orders.stream()
-				.sorted(Comparator.comparing(ProductOrder::getOrderDate, Comparator.nullsLast(Comparator.reverseOrder()))
-						.thenComparing(ProductOrder::getId, Comparator.nullsLast(Comparator.reverseOrder())))
-				.limit(6)
-				.toList();
+	public String index(Principal principal, Model model) {
+		UserDtls admin = commonUtil.getLoggedInUserDetails(principal);
+		model.addAttribute("adminName", admin != null ? admin.getName() : "Admin");
+		model.addAttribute("adminEmail", admin != null ? admin.getEmail() : "");
+		
+		model.addAttribute("activeCategories", categoryService.getAllCategory().stream().filter(c -> c.getIsActive()).count());
 
-		m.addAttribute("totalCustomers", totalCustomers);
-		m.addAttribute("totalSellers", totalSellers);
-		m.addAttribute("totalAdmins", totalAdmins);
-		m.addAttribute("totalProducts", totalProducts);
-		m.addAttribute("totalOrders", totalOrders);
-		m.addAttribute("totalCategories", categories.size());
-		m.addAttribute("activeCategories", activeCategories);
-		m.addAttribute("lowStockProducts", lowStockProducts);
-		m.addAttribute("pendingOrders", pendingOrders);
-		m.addAttribute("totalRevenue", totalRevenue);
-		m.addAttribute("recentOrders", recentOrders);
+		DashboardStats stats = dashboardService.getGlobalStats();
+		model.addAttribute("totalOrders", stats.getTotalOrders());
+		model.addAttribute("totalRevenue", stats.getTotalRevenue());
+		model.addAttribute("totalProfit", stats.getTotalProfit());
+		model.addAttribute("totalQuantitySold", stats.getTotalQuantitySold());
 
-		return "admin/index";
+		return "admin/dashboard";
 	}
 
 	@GetMapping("/loadAddProduct")
@@ -129,7 +114,6 @@ public class AdminController {
 	@GetMapping("/category")
 	public String category(Model m, @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
-		// m.addAttribute("categorys", categoryService.getAllCategory());
 		Page<Category> page = categoryService.getAllCategorPagination(pageNo, pageSize);
 		List<Category> categorys = page.getContent();
 		m.addAttribute("categorys", categorys);
@@ -165,11 +149,11 @@ public class AdminController {
 
 				File saveFile = new ClassPathResource("static/img").getFile();
 
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
-						+ file.getOriginalFilename());
-
-				// System.out.println(path);
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				if (file != null && !file.isEmpty()) {
+					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
+							+ file.getOriginalFilename());
+					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				}
 
 				session.setAttribute("succMsg", "Saved successfully");
 			}
@@ -221,7 +205,6 @@ public class AdminController {
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
 						+ file.getOriginalFilename());
 
-				// System.out.println(path);
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
 
@@ -242,17 +225,21 @@ public class AdminController {
 		product.setImage(imageName);
 		product.setDiscount(0);
 		product.setDiscountPrice(product.getPrice());
+		if (product.getIsReturnable() == null) product.setIsReturnable(true);
+		if (product.getReturnWindow() == null) product.setReturnWindow(7);
+		
 		Product saveProduct = productService.saveProduct(product);
 
 		if (!ObjectUtils.isEmpty(saveProduct)) {
 
 			File saveFile = new ClassPathResource("static/img").getFile();
 
-			Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
-					+ image.getOriginalFilename());
+			if (image != null && !image.isEmpty()) {
+				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
+						+ image.getOriginalFilename());
 
-			// System.out.println(path);
-			Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+			}
 
 			session.setAttribute("succMsg", "Product Saved Success");
 		} else {
@@ -266,14 +253,6 @@ public class AdminController {
 	public String loadViewProduct(Model m, @RequestParam(defaultValue = "") String ch,
 			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
-
-//		List<Product> products = null;
-//		if (ch != null && ch.length() > 0) {
-//			products = productService.searchProduct(ch);
-//		} else {
-//			products = productService.getAllProducts();
-//		}
-//		m.addAttribute("products", products);
 
 		Page<Product> page = null;
 		if (ch != null && ch.length() > 0) {
@@ -355,9 +334,6 @@ public class AdminController {
 	@GetMapping("/orders")
 	public String getAllOrders(Model m, @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
-//		List<ProductOrder> allOrders = orderService.getAllOrders();
-//		m.addAttribute("orders", allOrders);
-//		m.addAttribute("srch", false);
 
 		Page<ProductOrder> page = orderService.getAllOrdersPagination(pageNo, pageSize);
 		m.addAttribute("orders", page.getContent());
@@ -419,9 +395,6 @@ public class AdminController {
 
 			m.addAttribute("srch", true);
 		} else {
-//			List<ProductOrder> allOrders = orderService.getAllOrders();
-//			m.addAttribute("orders", allOrders);
-//			m.addAttribute("srch", false);
 
 			Page<ProductOrder> page = orderService.getAllOrdersPagination(pageNo, pageSize);
 			m.addAttribute("orders", page);
@@ -459,7 +432,6 @@ public class AdminController {
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
 						+ file.getOriginalFilename());
 
-//				System.out.println(path);
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
 			session.setAttribute("succMsg", "Register successfully");
@@ -507,6 +479,25 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/profile";
+	}
+
+	@GetMapping("/returns")
+	public String getAllReturnRequests(Model m) {
+		List<ReturnRequest> allReturns = returnRequestService.getAllReturnRequests();
+		m.addAttribute("returns", allReturns);
+		return "/admin/returns";
+	}
+
+	@PostMapping("/update-return-status")
+	public String updateReturnStatus(@RequestParam Integer id, @RequestParam String status,
+			@RequestParam String adminComment, HttpSession session) {
+		ReturnRequest updateReturn = returnRequestService.updateReturnStatus(id, status, adminComment);
+		if (updateReturn != null) {
+			session.setAttribute("succMsg", "Return Status Updated");
+		} else {
+			session.setAttribute("errorMsg", "Status not updated");
+		}
+		return "redirect:/admin/returns";
 	}
 
 }

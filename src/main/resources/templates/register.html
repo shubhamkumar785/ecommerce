@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <form action="/saveUser" enctype="multipart/form-data" id="unifiedRegister" method="post" class="flex flex-col gap-6 md:gap-8">
+                <form id="unifiedRegister" class="flex flex-col gap-6 md:gap-8">
                     <input type="hidden" name="role" id="roleInput" value="ROLE_USER">
                     
                     <!-- Business Section (Dynamic) -->
@@ -138,7 +138,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" onclick="this.innerHTML='<i class=\'fa-solid fa-circle-notch fa-spin\'></i> Processing...'; this.classList.add('opacity-80', 'cursor-not-allowed')" class="w-full max-w-[340px] mx-auto bg-nav text-white rounded-[20px] py-3 px-8 mt-6 font-bold text-xl shadow-lg hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3">
+                    <button type="submit" id="submitBtn" class="w-full max-w-[340px] mx-auto bg-nav text-white rounded-[20px] py-3 px-8 mt-6 font-bold text-xl shadow-lg hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3">
                         <span id="btnText">Submit</span>
                         <i class="fa-solid fa-arrow-right-long text-xs opacity-50"></i>
                     </button>
@@ -209,6 +209,57 @@
             
             // Set initial active tab
             window.onload = () => selectRole('ROLE_USER', 0);
+
+            document.getElementById('unifiedRegister').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('submitBtn');
+                const originalHtml = btn.innerHTML;
+                
+                // Form Fields Check
+                const pass = document.getElementById('pass1').value;
+                const confirmPass = document.getElementById('pass2').value;
+                if (pass !== confirmPass) {
+                    showGlobalToast('Password and confirm password must match', 'error');
+                    return;
+                }
+
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+                btn.disabled = true;
+
+                const formData = new FormData(this);
+                
+                try {
+                    const response = await fetch('/api/auth/signup', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showGlobalToast('Registered successfully! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/signin';
+                        }, 1500);
+                    } else {
+                        showGlobalToast(data.message || 'Error occurred during registration', 'error');
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }
+                } catch (error) {
+                    showGlobalToast('An error occurred. Please try again.', 'error');
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            });
+
+            function showGlobalToast(message, type) {
+                const toast = document.createElement('div');
+                toast.className = `fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm animate-[bounce_0.5s_ease-out]`;
+                toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'} text-lg"></i> ${message}`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
         </script>
         
         <style>

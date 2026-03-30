@@ -1,0 +1,1544 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.3)
+
+2026-03-29T13:31:14.688+05:30  INFO 22560 --- [Shopping_Cart] [           main] com.ecommerce.ShoppingCartApplication    : Starting ShoppingCartApplication v0.0.1-SNAPSHOT using Java 25 with PID 22560 (C:\Users\Shubham Pathak\OneDrive\Documents\Project\Shopping_Cart\target\Shopping_Cart-0.0.1-SNAPSHOT.jar started by Shubham Pathak in C:\Users\Shubham Pathak\OneDrive\Documents\Project\Shopping_Cart)
+2026-03-29T13:31:14.695+05:30  INFO 22560 --- [Shopping_Cart] [           main] com.ecommerce.ShoppingCartApplication    : No active profile set, falling back to 1 default profile: "default"
+2026-03-29T13:31:14.697+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.boot.SpringApplication               : Loading source class com.ecommerce.ShoppingCartApplication
+2026-03-29T13:31:14.884+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] ConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@41f69e84
+2026-03-29T13:31:16.102+05:30  INFO 22560 --- [Shopping_Cart] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-29T13:31:16.130+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.a.AutoConfigurationPackages        : @EnableAutoConfiguration was declared on a class in the package 'com.ecommerce'. Automatic @Repository and @Entity scanning is enabled.
+2026-03-29T13:31:16.294+05:30  INFO 22560 --- [Shopping_Cart] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 179 ms. Found 7 JPA repository interfaces.
+2026-03-29T13:31:17.651+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : Code archive: C:\Users\Shubham Pathak\OneDrive\Documents\Project\Shopping_Cart\target\Shopping_Cart-0.0.1-SNAPSHOT.jar
+2026-03-29T13:31:17.652+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : Code archive: C:\Users\Shubham Pathak\OneDrive\Documents\Project\Shopping_Cart\target\Shopping_Cart-0.0.1-SNAPSHOT.jar
+2026-03-29T13:31:17.654+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] .s.b.w.e.t.TomcatServletWebServerFactory : None of the document roots [src/main/webapp, public, static] point to a directory and will be ignored.
+2026-03-29T13:31:17.694+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-29T13:31:17.719+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-29T13:31:17.720+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2026-03-29T13:31:17.794+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-29T13:31:17.795+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] w.s.c.ServletWebServerApplicationContext : Published root WebApplicationContext as ServletContext attribute with name [org.springframework.web.context.WebApplicationContext.ROOT]
+2026-03-29T13:31:17.797+05:30  INFO 22560 --- [Shopping_Cart] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2912 ms
+2026-03-29T13:31:18.115+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-29T13:31:18.281+05:30  INFO 22560 --- [Shopping_Cart] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-03-29T13:31:18.407+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-03-29T13:31:18.871+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-29T13:31:18.926+05:30  INFO 22560 --- [Shopping_Cart] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-29T13:31:19.773+05:30  INFO 22560 --- [Shopping_Cart] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7a2a7492
+2026-03-29T13:31:19.776+05:30  INFO 22560 --- [Shopping_Cart] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-29T13:31:19.873+05:30  WARN 22560 --- [Shopping_Cart] [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-29T13:31:21.285+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-29T13:31:21.584+05:30  INFO 22560 --- [Shopping_Cart] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-29T13:31:22.119+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-29T13:31:23.222+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: springSecurityFilterChain urls=[/*] order=-100, characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105, jwtAuthenticationFilter urls=[/*] order=2147483647
+2026-03-29T13:31:23.223+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2026-03-29T13:31:23.261+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.w.s.f.OrderedRequestContextFilter  : Filter 'requestContextFilter' configured for use
+2026-03-29T13:31:23.263+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] s.b.w.s.f.OrderedCharacterEncodingFilter : Filter 'characterEncodingFilter' configured for use
+2026-03-29T13:31:23.264+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] .DelegatingFilterProxyRegistrationBean$1 : Filter 'springSecurityFilterChain' configured for use
+2026-03-29T13:31:23.265+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.w.s.f.OrderedFormContentFilter     : Filter 'formContentFilter' configured for use
+2026-03-29T13:31:23.914+05:30  WARN 22560 --- [Shopping_Cart] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-29T13:31:24.106+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-03-29T13:31:24.250+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 74 mappings in 'requestMappingHandlerMapping'
+2026-03-29T13:31:24.391+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-03-29T13:31:24.471+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@17c83403, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@31e8949d, org.springframework.security.web.context.SecurityContextHolderFilter@28ec9c23, org.springframework.security.web.header.HeaderWriterFilter@2b515b5c, org.springframework.security.web.authentication.logout.LogoutFilter@76ed5e7e, com.ecommerce.config.JwtAuthenticationFilter@59cfabaf, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4e2abbac, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@68cacf8b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7b8247bc, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2a84aed7, org.springframework.security.web.access.ExceptionTranslationFilter@7997b8a7, org.springframework.security.web.access.intercept.AuthorizationFilter@7643c43]
+2026-03-29T13:31:24.573+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-03-29T13:31:24.648+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-03-29T13:31:24.986+05:30  INFO 22560 --- [Shopping_Cart] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-03-29T13:31:25.015+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+
+============================
+CONDITIONS EVALUATION REPORT
+============================
+
+
+Positive matches:
+-----------------
+
+   AopAutoConfiguration matched:
+      - @ConditionalOnProperty (spring.aop.auto=true) matched (OnPropertyCondition)
+
+   AopAutoConfiguration.AspectJAutoProxyingConfiguration matched:
+      - @ConditionalOnClass found required class 'org.aspectj.weaver.Advice' (OnClassCondition)
+
+   AopAutoConfiguration.AspectJAutoProxyingConfiguration.CglibAutoProxyConfiguration matched:
+      - @ConditionalOnProperty (spring.aop.proxy-target-class=true) matched (OnPropertyCondition)
+
+   ApplicationAvailabilityAutoConfiguration#applicationAvailability matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.availability.ApplicationAvailability; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   DataSourceAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'javax.sql.DataSource', 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType' (OnClassCondition)
+      - @ConditionalOnMissingBean (types: io.r2dbc.spi.ConnectionFactory; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   DataSourceAutoConfiguration.PooledDataSourceConfiguration matched:
+      - AnyNestedCondition 1 matched 1 did not; NestedCondition on DataSourceAutoConfiguration.PooledDataSourceCondition.PooledDataSourceAvailable PooledDataSource found supported DataSource; NestedCondition on DataSourceAutoConfiguration.PooledDataSourceCondition.ExplicitType @ConditionalOnProperty (spring.datasource.type) did not find property 'type' (DataSourceAutoConfiguration.PooledDataSourceCondition)
+      - @ConditionalOnMissingBean (types: javax.sql.DataSource,javax.sql.XADataSource; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   DataSourceAutoConfiguration.PooledDataSourceConfiguration#jdbcConnectionDetails matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.jdbc.JdbcConnectionDetails; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   DataSourceConfiguration.Hikari matched:
+      - @ConditionalOnClass found required class 'com.zaxxer.hikari.HikariDataSource' (OnClassCondition)
+      - @ConditionalOnProperty (spring.datasource.type=com.zaxxer.hikari.HikariDataSource) matched (OnPropertyCondition)
+      - @ConditionalOnMissingBean (types: javax.sql.DataSource; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   DataSourceInitializationConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.jdbc.datasource.init.DatabasePopulator' (OnClassCondition)
+      - @ConditionalOnSingleCandidate (types: javax.sql.DataSource; SearchStrategy: all) found a single bean 'dataSource'; @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDatabaseInitializer,org.springframework.boot.autoconfigure.sql.init.SqlR2dbcScriptDatabaseInitializer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   DataSourceJmxConfiguration matched:
+      - @ConditionalOnProperty (spring.jmx.enabled=true) matched (OnPropertyCondition)
+
+   DataSourceJmxConfiguration.Hikari matched:
+      - @ConditionalOnClass found required class 'com.zaxxer.hikari.HikariDataSource' (OnClassCondition)
+      - @ConditionalOnSingleCandidate (types: javax.sql.DataSource; SearchStrategy: all) found a single bean 'dataSource' (OnBeanCondition)
+
+   DataSourcePoolMetadataProvidersConfiguration.HikariPoolDataSourceMetadataProviderConfiguration matched:
+      - @ConditionalOnClass found required class 'com.zaxxer.hikari.HikariDataSource' (OnClassCondition)
+
+   DataSourceTransactionManagerAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.springframework.jdbc.core.JdbcTemplate', 'org.springframework.transaction.TransactionManager' (OnClassCondition)
+
+   DataSourceTransactionManagerAutoConfiguration.JdbcTransactionManagerConfiguration matched:
+      - @ConditionalOnSingleCandidate (types: javax.sql.DataSource; SearchStrategy: all) found a single bean 'dataSource' (OnBeanCondition)
+
+   DispatcherServletAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.web.servlet.DispatcherServlet' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+
+   DispatcherServletAutoConfiguration.DispatcherServletConfiguration matched:
+      - @ConditionalOnClass found required class 'jakarta.servlet.ServletRegistration' (OnClassCondition)
+      - Default DispatcherServlet did not find dispatcher servlet beans (DispatcherServletAutoConfiguration.DefaultDispatcherServletCondition)
+
+   DispatcherServletAutoConfiguration.DispatcherServletRegistrationConfiguration matched:
+      - @ConditionalOnClass found required class 'jakarta.servlet.ServletRegistration' (OnClassCondition)
+      - DispatcherServlet Registration did not find servlet registration bean (DispatcherServletAutoConfiguration.DispatcherServletRegistrationCondition)
+
+   DispatcherServletAutoConfiguration.DispatcherServletRegistrationConfiguration#dispatcherServletRegistration matched:
+      - @ConditionalOnBean (names: dispatcherServlet types: org.springframework.web.servlet.DispatcherServlet; SearchStrategy: all) found bean 'dispatcherServlet' (OnBeanCondition)
+
+   EmbeddedWebServerFactoryCustomizerAutoConfiguration matched:
+      - @ConditionalOnWebApplication (required) found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnWarDeployment the application is not deployed as a WAR file. (OnWarDeploymentCondition)
+
+   EmbeddedWebServerFactoryCustomizerAutoConfiguration.TomcatWebServerFactoryCustomizerConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.apache.catalina.startup.Tomcat', 'org.apache.coyote.UpgradeProtocol' (OnClassCondition)
+
+   ErrorMvcAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'jakarta.servlet.Servlet', 'org.springframework.web.servlet.DispatcherServlet' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+
+   ErrorMvcAutoConfiguration#basicErrorController matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.web.servlet.error.ErrorController; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration#errorAttributes matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.web.servlet.error.ErrorAttributes; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration.DefaultErrorViewResolverConfiguration#conventionErrorViewResolver matched:
+      - @ConditionalOnBean (types: org.springframework.web.servlet.DispatcherServlet; SearchStrategy: all) found bean 'dispatcherServlet'; @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration matched:
+      - @ConditionalOnProperty (server.error.whitelabel.enabled) matched (OnPropertyCondition)
+      - ErrorTemplate Missing did not find error template view (ErrorMvcAutoConfiguration.ErrorTemplateMissingCondition)
+
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration#beanNameViewResolver matched:
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.view.BeanNameViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration#defaultErrorView matched:
+      - @ConditionalOnMissingBean (names: error; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   GenericCacheConfiguration matched:
+      - Cache org.springframework.boot.autoconfigure.cache.GenericCacheConfiguration automatic cache type (CacheCondition)
+
+   HibernateJpaAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean', 'jakarta.persistence.EntityManager', 'org.hibernate.engine.spi.SessionImplementor' (OnClassCondition)
+
+   HibernateJpaConfiguration matched:
+      - @ConditionalOnSingleCandidate (types: javax.sql.DataSource; SearchStrategy: all) found a single bean 'dataSource' (OnBeanCondition)
+
+   HttpEncodingAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.web.filter.CharacterEncodingFilter' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnProperty (server.servlet.encoding.enabled) matched (OnPropertyCondition)
+
+   HttpEncodingAutoConfiguration#characterEncodingFilter matched:
+      - @ConditionalOnMissingBean (types: org.springframework.web.filter.CharacterEncodingFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   HttpMessageConvertersAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.http.converter.HttpMessageConverter' (OnClassCondition)
+      - NoneNestedConditions 0 matched 1 did not; NestedCondition on HttpMessageConvertersAutoConfiguration.NotReactiveWebApplicationCondition.ReactiveWebApplication did not find reactive web application classes (HttpMessageConvertersAutoConfiguration.NotReactiveWebApplicationCondition)
+
+   HttpMessageConvertersAutoConfiguration#messageConverters matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.http.HttpMessageConverters; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   HttpMessageConvertersAutoConfiguration.StringHttpMessageConverterConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.http.converter.StringHttpMessageConverter' (OnClassCondition)
+
+   HttpMessageConvertersAutoConfiguration.StringHttpMessageConverterConfiguration#stringHttpMessageConverter matched:
+      - @ConditionalOnMissingBean (types: org.springframework.http.converter.StringHttpMessageConverter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JacksonAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'com.fasterxml.jackson.databind.ObjectMapper' (OnClassCondition)
+
+   JacksonAutoConfiguration.Jackson2ObjectMapperBuilderCustomizerConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.http.converter.json.Jackson2ObjectMapperBuilder' (OnClassCondition)
+
+   JacksonAutoConfiguration.JacksonObjectMapperBuilderConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.http.converter.json.Jackson2ObjectMapperBuilder' (OnClassCondition)
+
+   JacksonAutoConfiguration.JacksonObjectMapperBuilderConfiguration#jacksonObjectMapperBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.http.converter.json.Jackson2ObjectMapperBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JacksonAutoConfiguration.JacksonObjectMapperConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.http.converter.json.Jackson2ObjectMapperBuilder' (OnClassCondition)
+
+   JacksonAutoConfiguration.JacksonObjectMapperConfiguration#jacksonObjectMapper matched:
+      - @ConditionalOnMissingBean (types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JacksonAutoConfiguration.ParameterNamesModuleConfiguration matched:
+      - @ConditionalOnClass found required class 'com.fasterxml.jackson.module.paramnames.ParameterNamesModule' (OnClassCondition)
+
+   JacksonAutoConfiguration.ParameterNamesModuleConfiguration#parameterNamesModule matched:
+      - @ConditionalOnMissingBean (types: com.fasterxml.jackson.module.paramnames.ParameterNamesModule; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JacksonHttpMessageConvertersConfiguration.MappingJackson2HttpMessageConverterConfiguration matched:
+      - @ConditionalOnClass found required class 'com.fasterxml.jackson.databind.ObjectMapper' (OnClassCondition)
+      - @ConditionalOnProperty (spring.mvc.converters.preferred-json-mapper=jackson) matched (OnPropertyCondition)
+      - @ConditionalOnBean (types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) found bean 'jacksonObjectMapper' (OnBeanCondition)
+
+   JacksonHttpMessageConvertersConfiguration.MappingJackson2HttpMessageConverterConfiguration#mappingJackson2HttpMessageConverter matched:
+      - @ConditionalOnMissingBean (types: org.springframework.http.converter.json.MappingJackson2HttpMessageConverter ignored: org.springframework.hateoas.server.mvc.TypeConstrainedMappingJackson2HttpMessageConverter,org.springframework.data.rest.webmvc.alps.AlpsJsonHttpMessageConverter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JdbcClientAutoConfiguration matched:
+      - @ConditionalOnSingleCandidate (types: org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate; SearchStrategy: all) found a single bean 'namedParameterJdbcTemplate'; @ConditionalOnMissingBean (types: org.springframework.jdbc.core.simple.JdbcClient; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JdbcTemplateAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'javax.sql.DataSource', 'org.springframework.jdbc.core.JdbcTemplate' (OnClassCondition)
+      - @ConditionalOnSingleCandidate (types: javax.sql.DataSource; SearchStrategy: all) found a single bean 'dataSource' (OnBeanCondition)
+
+   JdbcTemplateConfiguration matched:
+      - @ConditionalOnMissingBean (types: org.springframework.jdbc.core.JdbcOperations; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration#entityManagerFactory matched:
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean,jakarta.persistence.EntityManagerFactory; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration#entityManagerFactoryBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration#jpaVendorAdapter matched:
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.JpaVendorAdapter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration#transactionManager matched:
+      - @ConditionalOnMissingBean (types: org.springframework.transaction.TransactionManager; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration.JpaWebConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.web.servlet.config.annotation.WebMvcConfigurer' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnProperty (spring.jpa.open-in-view=true) matched (OnPropertyCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor,org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration.PersistenceManagedTypesConfiguration matched:
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean,jakarta.persistence.EntityManagerFactory; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration.PersistenceManagedTypesConfiguration#persistenceManagedTypes matched:
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaRepositoriesAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.data.jpa.repository.JpaRepository' (OnClassCondition)
+      - @ConditionalOnProperty (spring.data.jpa.repositories.enabled=true) matched (OnPropertyCondition)
+      - @ConditionalOnBean (types: javax.sql.DataSource; SearchStrategy: all) found bean 'dataSource'; @ConditionalOnMissingBean (types: org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean,org.springframework.data.jpa.repository.config.JpaRepositoryConfigExtension; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JtaAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'jakarta.transaction.Transaction' (OnClassCondition)
+      - @ConditionalOnProperty (spring.jta.enabled) matched (OnPropertyCondition)
+
+   LifecycleAutoConfiguration#defaultLifecycleProcessor matched:
+      - @ConditionalOnMissingBean (names: lifecycleProcessor; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+   MailSenderAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'jakarta.mail.internet.MimeMessage', 'jakarta.activation.MimeType', 'org.springframework.mail.MailSender' (OnClassCondition)
+      - AnyNestedCondition 1 matched 1 did not; NestedCondition on MailSenderAutoConfiguration.MailSenderCondition.JndiNameProperty @ConditionalOnProperty (spring.mail.jndi-name) did not find property 'jndi-name'; NestedCondition on MailSenderAutoConfiguration.MailSenderCondition.HostProperty @ConditionalOnProperty (spring.mail.host) matched (MailSenderAutoConfiguration.MailSenderCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.mail.MailSender; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   MailSenderPropertiesConfiguration matched:
+      - @ConditionalOnProperty (spring.mail.host) matched (OnPropertyCondition)
+
+   MailSenderPropertiesConfiguration#mailSender matched:
+      - @ConditionalOnMissingBean (types: org.springframework.mail.javamail.JavaMailSender; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   MultipartAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'jakarta.servlet.Servlet', 'org.springframework.web.multipart.support.StandardServletMultipartResolver', 'jakarta.servlet.MultipartConfigElement' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnProperty (spring.servlet.multipart.enabled) matched (OnPropertyCondition)
+
+   MultipartAutoConfiguration#multipartConfigElement matched:
+      - @ConditionalOnMissingBean (types: jakarta.servlet.MultipartConfigElement; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   MultipartAutoConfiguration#multipartResolver matched:
+      - @ConditionalOnMissingBean (types: org.springframework.web.multipart.MultipartResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   NamedParameterJdbcTemplateConfiguration matched:
+      - @ConditionalOnSingleCandidate (types: org.springframework.jdbc.core.JdbcTemplate; SearchStrategy: all) found a single bean 'jdbcTemplate'; @ConditionalOnMissingBean (types: org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   NoOpCacheConfiguration matched:
+      - Cache org.springframework.boot.autoconfigure.cache.NoOpCacheConfiguration automatic cache type (CacheCondition)
+
+   PersistenceExceptionTranslationAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor' (OnClassCondition)
+
+   PersistenceExceptionTranslationAutoConfiguration#persistenceExceptionTranslationPostProcessor matched:
+      - @ConditionalOnProperty (spring.dao.exceptiontranslation.enabled) matched (OnPropertyCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   PropertyPlaceholderAutoConfiguration#propertySourcesPlaceholderConfigurer matched:
+      - @ConditionalOnMissingBean (types: org.springframework.context.support.PropertySourcesPlaceholderConfigurer; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+   RestClientAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.web.client.RestClient' (OnClassCondition)
+      - NoneNestedConditions 0 matched 1 did not; NestedCondition on NotReactiveWebApplicationCondition.ReactiveWebApplication did not find reactive web application classes (NotReactiveWebApplicationCondition)
+
+   RestClientAutoConfiguration#httpMessageConvertersRestClientCustomizer matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.client.HttpMessageConvertersRestClientCustomizer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   RestClientAutoConfiguration#restClientBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.web.client.RestClient$Builder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   RestClientAutoConfiguration#restClientBuilderConfigurer matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   RestClientAutoConfiguration#restClientSsl matched:
+      - @ConditionalOnBean (types: org.springframework.boot.ssl.SslBundles; SearchStrategy: all) found bean 'sslBundleRegistry'; @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.client.RestClientSsl; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   RestTemplateAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.web.client.RestTemplate' (OnClassCondition)
+      - NoneNestedConditions 0 matched 1 did not; NestedCondition on NotReactiveWebApplicationCondition.ReactiveWebApplication did not find reactive web application classes (NotReactiveWebApplicationCondition)
+
+   RestTemplateAutoConfiguration#restTemplateBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.web.client.RestTemplateBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   SecurityAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.authentication.DefaultAuthenticationEventPublisher' (OnClassCondition)
+
+   SecurityAutoConfiguration#authenticationEventPublisher matched:
+      - @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationEventPublisher; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   SecurityFilterAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer', 'org.springframework.security.config.http.SessionCreationPolicy' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+
+   SecurityFilterAutoConfiguration#securityFilterChainRegistration matched:
+      - @ConditionalOnBean (names: springSecurityFilterChain; SearchStrategy: all) found bean 'springSecurityFilterChain' (OnBeanCondition)
+
+   ServletWebServerFactoryAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'jakarta.servlet.ServletRequest' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+
+   ServletWebServerFactoryAutoConfiguration#tomcatServletWebServerFactoryCustomizer matched:
+      - @ConditionalOnClass found required class 'org.apache.catalina.startup.Tomcat' (OnClassCondition)
+
+   ServletWebServerFactoryConfiguration.EmbeddedTomcat matched:
+      - @ConditionalOnClass found required classes 'jakarta.servlet.Servlet', 'org.apache.catalina.startup.Tomcat', 'org.apache.coyote.UpgradeProtocol' (OnClassCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.boot.web.servlet.server.ServletWebServerFactory; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+   SimpleCacheConfiguration matched:
+      - Cache org.springframework.boot.autoconfigure.cache.SimpleCacheConfiguration automatic cache type (CacheCondition)
+
+   SpringBootWebSecurityConfiguration matched:
+      - found 'session' scope (OnWebApplicationCondition)
+
+   SpringBootWebSecurityConfiguration.WebSecurityEnablerConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.config.annotation.web.configuration.EnableWebSecurity' (OnClassCondition)
+      - @ConditionalOnMissingBean (names: springSecurityFilterChain; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   SpringDataWebAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.springframework.data.web.PageableHandlerMethodArgumentResolver', 'org.springframework.web.servlet.config.annotation.WebMvcConfigurer' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.data.web.PageableHandlerMethodArgumentResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   SpringDataWebAutoConfiguration#pageableCustomizer matched:
+      - @ConditionalOnMissingBean (types: org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   SpringDataWebAutoConfiguration#sortCustomizer matched:
+      - @ConditionalOnMissingBean (types: org.springframework.data.web.config.SortHandlerMethodArgumentResolverCustomizer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   SqlInitializationAutoConfiguration matched:
+      - @ConditionalOnProperty (spring.sql.init.enabled) matched (OnPropertyCondition)
+      - NoneNestedConditions 0 matched 1 did not; NestedCondition on SqlInitializationAutoConfiguration.SqlInitializationModeCondition.ModeIsNever @ConditionalOnProperty (spring.sql.init.mode=never) did not find property 'mode' (SqlInitializationAutoConfiguration.SqlInitializationModeCondition)
+
+   SslAutoConfiguration#sslBundleRegistry matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.ssl.SslBundleRegistry,org.springframework.boot.ssl.SslBundles; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TaskExecutionAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor' (OnClassCondition)
+
+   TaskExecutorConfigurations.SimpleAsyncTaskExecutorBuilderConfiguration#simpleAsyncTaskExecutorBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+      - @ConditionalOnThreading found PLATFORM (OnThreadingCondition)
+
+   TaskExecutorConfigurations.TaskExecutorBuilderConfiguration#taskExecutorBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.task.TaskExecutorBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TaskExecutorConfigurations.TaskExecutorConfiguration matched:
+      - @ConditionalOnMissingBean (types: java.util.concurrent.Executor; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TaskExecutorConfigurations.TaskExecutorConfiguration#applicationTaskExecutor matched:
+      - @ConditionalOnThreading found PLATFORM (OnThreadingCondition)
+
+   TaskExecutorConfigurations.ThreadPoolTaskExecutorBuilderConfiguration#threadPoolTaskExecutorBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.task.TaskExecutorBuilder,org.springframework.boot.task.ThreadPoolTaskExecutorBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TaskSchedulingAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler' (OnClassCondition)
+
+   TaskSchedulingConfigurations.SimpleAsyncTaskSchedulerBuilderConfiguration#simpleAsyncTaskSchedulerBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+      - @ConditionalOnThreading found PLATFORM (OnThreadingCondition)
+
+   TaskSchedulingConfigurations.TaskSchedulerBuilderConfiguration#taskSchedulerBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.task.TaskSchedulerBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TaskSchedulingConfigurations.ThreadPoolTaskSchedulerBuilderConfiguration#threadPoolTaskSchedulerBuilder matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.task.TaskSchedulerBuilder,org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TemplateEngineConfigurations.DefaultTemplateEngineConfiguration#templateEngine matched:
+      - @ConditionalOnMissingBean (types: org.thymeleaf.spring6.ISpringTemplateEngine; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   ThymeleafAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.thymeleaf.templatemode.TemplateMode', 'org.thymeleaf.spring6.SpringTemplateEngine' (OnClassCondition)
+
+   ThymeleafAutoConfiguration.DefaultTemplateResolverConfiguration matched:
+      - @ConditionalOnMissingBean (names: defaultTemplateResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration matched:
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnProperty (spring.thymeleaf.enabled) matched (OnPropertyCondition)
+
+   ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration.ThymeleafViewResolverConfiguration#thymeleafViewResolver matched:
+      - @ConditionalOnMissingBean (names: thymeleafViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TransactionAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.transaction.PlatformTransactionManager' (OnClassCondition)
+
+   TransactionAutoConfiguration.EnableTransactionManagementConfiguration matched:
+      - @ConditionalOnBean (types: org.springframework.transaction.TransactionManager; SearchStrategy: all) found bean 'transactionManager'; @ConditionalOnMissingBean (types: org.springframework.transaction.annotation.AbstractTransactionManagementConfiguration; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TransactionAutoConfiguration.EnableTransactionManagementConfiguration.CglibAutoProxyConfiguration matched:
+      - @ConditionalOnProperty (spring.aop.proxy-target-class=true) matched (OnPropertyCondition)
+
+   TransactionAutoConfiguration.TransactionTemplateConfiguration matched:
+      - @ConditionalOnSingleCandidate (types: org.springframework.transaction.PlatformTransactionManager; SearchStrategy: all) found a single bean 'transactionManager' (OnBeanCondition)
+
+   TransactionAutoConfiguration.TransactionTemplateConfiguration#transactionTemplate matched:
+      - @ConditionalOnMissingBean (types: org.springframework.transaction.support.TransactionOperations; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TransactionManagerCustomizationAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.transaction.PlatformTransactionManager' (OnClassCondition)
+
+   TransactionManagerCustomizationAutoConfiguration#platformTransactionManagerCustomizers matched:
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'jakarta.servlet.Servlet', 'org.springframework.web.servlet.DispatcherServlet', 'org.springframework.web.servlet.config.annotation.WebMvcConfigurer' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration#formContentFilter matched:
+      - @ConditionalOnProperty (spring.mvc.formcontent.filter.enabled) matched (OnPropertyCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.web.filter.FormContentFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.EnableWebMvcConfiguration#flashMapManager matched:
+      - @ConditionalOnMissingBean (names: flashMapManager; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.EnableWebMvcConfiguration#localeResolver matched:
+      - @ConditionalOnMissingBean (names: localeResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.EnableWebMvcConfiguration#themeResolver matched:
+      - @ConditionalOnMissingBean (names: themeResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#defaultViewResolver matched:
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.view.InternalResourceViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#requestContextFilter matched:
+      - @ConditionalOnMissingBean (types: org.springframework.web.context.request.RequestContextListener,org.springframework.web.filter.RequestContextFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#viewResolver matched:
+      - @ConditionalOnBean (types: org.springframework.web.servlet.ViewResolver; SearchStrategy: all) found beans 'defaultViewResolver', 'beanNameViewResolver', 'mvcViewResolver'; @ConditionalOnMissingBean (names: viewResolver types: org.springframework.web.servlet.view.ContentNegotiatingViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   WebSocketServletAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'jakarta.servlet.Servlet', 'jakarta.websocket.server.ServerContainer' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+
+   WebSocketServletAutoConfiguration.TomcatWebSocketConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.apache.catalina.startup.Tomcat', 'org.apache.tomcat.websocket.server.WsSci' (OnClassCondition)
+
+   WebSocketServletAutoConfiguration.TomcatWebSocketConfiguration#websocketServletWebServerCustomizer matched:
+      - @ConditionalOnMissingBean (names: websocketServletWebServerCustomizer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+   ActiveMQAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'jakarta.jms.ConnectionFactory' (OnClassCondition)
+
+   AopAutoConfiguration.AspectJAutoProxyingConfiguration.JdkDynamicAutoProxyConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.aop.proxy-target-class=false) did not find property 'proxy-target-class' (OnPropertyCondition)
+
+   AopAutoConfiguration.ClassProxyingConfiguration:
+      Did not match:
+         - @ConditionalOnMissingClass found unwanted class 'org.aspectj.weaver.Advice' (OnClassCondition)
+
+   ArtemisAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'jakarta.jms.ConnectionFactory' (OnClassCondition)
+
+   BatchAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.batch.core.launch.JobLauncher' (OnClassCondition)
+
+   Cache2kCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.cache2k.Cache2kBuilder' (OnClassCondition)
+
+   CacheAutoConfiguration:
+      Did not match:
+         - @ConditionalOnBean (types: org.springframework.cache.interceptor.CacheAspectSupport; SearchStrategy: all) did not find any beans of type org.springframework.cache.interceptor.CacheAspectSupport (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.cache.CacheManager' (OnClassCondition)
+
+   CacheAutoConfiguration.CacheManagerEntityManagerFactoryDependsOnPostProcessor:
+      Did not match:
+         - Ancestor org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration did not match (ConditionEvaluationReport.AncestorsMatchedCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean' (OnClassCondition)
+
+   CaffeineCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.github.benmanes.caffeine.cache.Caffeine' (OnClassCondition)
+
+   CassandraAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.datastax.oss.driver.api.core.CqlSession' (OnClassCondition)
+
+   CassandraDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.datastax.oss.driver.api.core.CqlSession' (OnClassCondition)
+
+   CassandraReactiveDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.datastax.oss.driver.api.core.CqlSession' (OnClassCondition)
+
+   CassandraReactiveRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.cassandra.ReactiveSession' (OnClassCondition)
+
+   CassandraRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.datastax.oss.driver.api.core.CqlSession' (OnClassCondition)
+
+   ClientHttpConnectorAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.function.client.WebClient' (OnClassCondition)
+
+   CodecsAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.function.client.WebClient' (OnClassCondition)
+
+   CouchbaseAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.couchbase.client.java.Cluster' (OnClassCondition)
+
+   CouchbaseCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.couchbase.client.java.Cluster' (OnClassCondition)
+
+   CouchbaseDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.couchbase.client.java.Bucket' (OnClassCondition)
+
+   CouchbaseReactiveDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.couchbase.client.java.Cluster' (OnClassCondition)
+
+   CouchbaseReactiveRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.couchbase.client.java.Cluster' (OnClassCondition)
+
+   CouchbaseRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.couchbase.client.java.Bucket' (OnClassCondition)
+
+   DataSourceAutoConfiguration.EmbeddedDatabaseConfiguration:
+      Did not match:
+         - EmbeddedDataSource spring.datasource.url is set (DataSourceAutoConfiguration.EmbeddedDatabaseCondition)
+
+   DataSourceCheckpointRestoreConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.crac.Resource' (OnClassCondition)
+
+   DataSourceConfiguration.Dbcp2:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.commons.dbcp2.BasicDataSource' (OnClassCondition)
+
+   DataSourceConfiguration.Generic:
+      Did not match:
+         - @ConditionalOnProperty (spring.datasource.type) did not find property 'spring.datasource.type' (OnPropertyCondition)
+
+   DataSourceConfiguration.OracleUcp:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'oracle.ucp.jdbc.PoolDataSourceImpl', 'oracle.jdbc.OracleConnection' (OnClassCondition)
+
+   DataSourceConfiguration.Tomcat:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.tomcat.jdbc.pool.DataSource' (OnClassCondition)
+
+   DataSourceJmxConfiguration.TomcatDataSourceJmxConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.tomcat.jdbc.pool.DataSourceProxy' (OnClassCondition)
+
+   DataSourcePoolMetadataProvidersConfiguration.CommonsDbcp2PoolDataSourceMetadataProviderConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.commons.dbcp2.BasicDataSource' (OnClassCondition)
+
+   DataSourcePoolMetadataProvidersConfiguration.OracleUcpPoolDataSourceMetadataProviderConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'oracle.ucp.jdbc.PoolDataSource', 'oracle.jdbc.OracleConnection' (OnClassCondition)
+
+   DataSourcePoolMetadataProvidersConfiguration.TomcatDataSourcePoolMetadataProviderConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.tomcat.jdbc.pool.DataSource' (OnClassCondition)
+
+   DataSourceTransactionManagerAutoConfiguration.JdbcTransactionManagerConfiguration#transactionManager:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.transaction.TransactionManager; SearchStrategy: all) found beans of type 'org.springframework.transaction.TransactionManager' transactionManager (OnBeanCondition)
+
+   DispatcherServletAutoConfiguration.DispatcherServletConfiguration#multipartResolver:
+      Did not match:
+         - @ConditionalOnBean (types: org.springframework.web.multipart.MultipartResolver; SearchStrategy: all) did not find any beans of type org.springframework.web.multipart.MultipartResolver (OnBeanCondition)
+
+   ElasticsearchClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'co.elastic.clients.elasticsearch.ElasticsearchClient' (OnClassCondition)
+
+   ElasticsearchDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate' (OnClassCondition)
+
+   ElasticsearchRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.elasticsearch.repository.ElasticsearchRepository' (OnClassCondition)
+
+   ElasticsearchRestClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.elasticsearch.client.RestClientBuilder' (OnClassCondition)
+
+   EmbeddedLdapAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.unboundid.ldap.listener.InMemoryDirectoryServer' (OnClassCondition)
+
+   EmbeddedWebServerFactoryCustomizerAutoConfiguration.JettyWebServerFactoryCustomizerConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'org.eclipse.jetty.server.Server', 'org.eclipse.jetty.util.Loader', 'org.eclipse.jetty.ee10.webapp.WebAppContext' (OnClassCondition)
+
+   EmbeddedWebServerFactoryCustomizerAutoConfiguration.NettyWebServerFactoryCustomizerConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'reactor.netty.http.server.HttpServer' (OnClassCondition)
+
+   EmbeddedWebServerFactoryCustomizerAutoConfiguration.TomcatWebServerFactoryCustomizerConfiguration#tomcatVirtualThreadsProtocolHandlerCustomizer:
+      Did not match:
+         - @ConditionalOnThreading did not find VIRTUAL (OnThreadingCondition)
+
+   EmbeddedWebServerFactoryCustomizerAutoConfiguration.UndertowWebServerFactoryCustomizerConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'io.undertow.Undertow', 'org.xnio.SslClientAuthMode' (OnClassCondition)
+
+   ErrorWebFluxAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.config.WebFluxConfigurer' (OnClassCondition)
+
+   FlywayAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.flywaydb.core.Flyway' (OnClassCondition)
+
+   FreeMarkerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'freemarker.template.Configuration' (OnClassCondition)
+
+   GraphQlAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlQueryByExampleAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlQuerydslAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.querydsl.core.Query' (OnClassCondition)
+
+   GraphQlRSocketAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlReactiveQueryByExampleAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlReactiveQuerydslAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.querydsl.core.Query' (OnClassCondition)
+
+   GraphQlWebFluxAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlWebFluxSecurityAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlWebMvcAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GraphQlWebMvcSecurityAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   GroovyTemplateAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'groovy.text.markup.MarkupTemplateEngine' (OnClassCondition)
+
+   GsonAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.google.gson.Gson' (OnClassCondition)
+
+   GsonHttpMessageConvertersConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.google.gson.Gson' (OnClassCondition)
+
+   H2ConsoleAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.h2.server.web.JakartaWebServlet' (OnClassCondition)
+
+   HazelcastAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.hazelcast.core.HazelcastInstance' (OnClassCondition)
+
+   HazelcastCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.hazelcast.core.HazelcastInstance' (OnClassCondition)
+
+   HazelcastJpaDependencyAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.hazelcast.core.HazelcastInstance' (OnClassCondition)
+
+   HttpHandlerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.DispatcherHandler' (OnClassCondition)
+
+   HypermediaAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.hateoas.EntityModel' (OnClassCondition)
+
+   InfinispanCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.infinispan.spring.embedded.provider.SpringEmbeddedCacheManager' (OnClassCondition)
+
+   InfluxDbAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.influxdb.InfluxDB' (OnClassCondition)
+
+   IntegrationAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.integration.config.EnableIntegration' (OnClassCondition)
+
+   JCacheCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'javax.cache.Caching' (OnClassCondition)
+
+   JacksonHttpMessageConvertersConfiguration.MappingJackson2XmlHttpMessageConverterConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.fasterxml.jackson.dataformat.xml.XmlMapper' (OnClassCondition)
+
+   JdbcRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration' (OnClassCondition)
+
+   JerseyAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.glassfish.jersey.server.spring.SpringComponentProvider' (OnClassCondition)
+
+   JmsAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'jakarta.jms.Message' (OnClassCondition)
+
+   JmxAutoConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.jmx.enabled=true) did not find property 'enabled' (OnPropertyCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.jmx.export.MBeanExporter' (OnClassCondition)
+
+   JndiConnectionFactoryAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.jms.core.JmsTemplate' (OnClassCondition)
+
+   JndiDataSourceAutoConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.datasource.jndi-name) did not find property 'jndi-name' (OnPropertyCondition)
+      Matched:
+         - @ConditionalOnClass found required classes 'javax.sql.DataSource', 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType' (OnClassCondition)
+
+   JndiJtaConfiguration:
+      Did not match:
+         - @ConditionalOnJndi JNDI environment is not available (OnJndiCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.transaction.jta.JtaTransactionManager' (OnClassCondition)
+
+   JooqAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.jooq.DSLContext' (OnClassCondition)
+
+   JpaRepositoriesAutoConfiguration#entityManagerFactoryBootstrapExecutorCustomizer:
+      Did not match:
+         - AnyNestedCondition 0 matched 2 did not; NestedCondition on JpaRepositoriesAutoConfiguration.BootstrapExecutorCondition.LazyBootstrapMode @ConditionalOnProperty (spring.data.jpa.repositories.bootstrap-mode=lazy) did not find property 'bootstrap-mode'; NestedCondition on JpaRepositoriesAutoConfiguration.BootstrapExecutorCondition.DeferredBootstrapMode @ConditionalOnProperty (spring.data.jpa.repositories.bootstrap-mode=deferred) did not find property 'bootstrap-mode' (JpaRepositoriesAutoConfiguration.BootstrapExecutorCondition)
+
+   JsonbAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'jakarta.json.bind.Jsonb' (OnClassCondition)
+
+   JsonbHttpMessageConvertersConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'jakarta.json.bind.Jsonb' (OnClassCondition)
+
+   KafkaAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.kafka.core.KafkaTemplate' (OnClassCondition)
+
+   LdapAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.ldap.core.ContextSource' (OnClassCondition)
+
+   LdapRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.ldap.repository.LdapRepository' (OnClassCondition)
+
+   LiquibaseAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'liquibase.change.DatabaseChange' (OnClassCondition)
+
+   MailSenderJndiConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.mail.jndi-name) did not find property 'jndi-name' (OnPropertyCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'jakarta.mail.Session' (OnClassCondition)
+
+   MailSenderValidatorAutoConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.mail.test-connection) did not find property 'test-connection' (OnPropertyCondition)
+
+   MessageSourceAutoConfiguration:
+      Did not match:
+         - ResourceBundle did not find bundle with basename messages (MessageSourceAutoConfiguration.ResourceBundleCondition)
+
+   MongoAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.mongodb.client.MongoClient' (OnClassCondition)
+
+   MongoDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.mongodb.client.MongoClient' (OnClassCondition)
+
+   MongoReactiveAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.mongodb.reactivestreams.client.MongoClient' (OnClassCondition)
+
+   MongoReactiveDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.mongodb.reactivestreams.client.MongoClient' (OnClassCondition)
+
+   MongoReactiveRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.mongodb.reactivestreams.client.MongoClient' (OnClassCondition)
+
+   MongoRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.mongodb.client.MongoClient' (OnClassCondition)
+
+   MustacheAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.samskivert.mustache.Mustache' (OnClassCondition)
+
+   Neo4jAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.neo4j.driver.Driver' (OnClassCondition)
+
+   Neo4jDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.neo4j.driver.Driver' (OnClassCondition)
+
+   Neo4jReactiveDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.neo4j.driver.Driver' (OnClassCondition)
+
+   Neo4jReactiveRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.neo4j.driver.Driver' (OnClassCondition)
+
+   Neo4jRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.neo4j.driver.Driver' (OnClassCondition)
+
+   NettyAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.netty.util.NettyRuntime' (OnClassCondition)
+
+   OAuth2AuthorizationServerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.oauth2.server.authorization.OAuth2Authorization' (OnClassCondition)
+
+   OAuth2AuthorizationServerJwtAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.oauth2.server.authorization.OAuth2Authorization' (OnClassCondition)
+
+   OAuth2ClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.oauth2.client.registration.ClientRegistration' (OnClassCondition)
+
+   OAuth2ResourceServerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken' (OnClassCondition)
+
+   ProjectInfoAutoConfiguration#buildProperties:
+      Did not match:
+         - @ConditionalOnResource did not find resource '${spring.info.build.location:classpath:META-INF/build-info.properties}' (OnResourceCondition)
+
+   ProjectInfoAutoConfiguration#gitProperties:
+      Did not match:
+         - GitResource did not find git info at classpath:git.properties (ProjectInfoAutoConfiguration.GitResourceAvailableCondition)
+
+   PulsarAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.pulsar.client.api.PulsarClient' (OnClassCondition)
+
+   PulsarReactiveAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.apache.pulsar.client.api.PulsarClient' (OnClassCondition)
+
+   QuartzAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.quartz.Scheduler' (OnClassCondition)
+
+   R2dbcAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.r2dbc.spi.ConnectionFactory' (OnClassCondition)
+
+   R2dbcDataAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.r2dbc.core.R2dbcEntityTemplate' (OnClassCondition)
+
+   R2dbcInitializationConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'io.r2dbc.spi.ConnectionFactory', 'org.springframework.r2dbc.connection.init.DatabasePopulator' (OnClassCondition)
+
+   R2dbcRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.r2dbc.spi.ConnectionFactory' (OnClassCondition)
+
+   R2dbcTransactionManagerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.r2dbc.connection.R2dbcTransactionManager' (OnClassCondition)
+
+   RSocketGraphQlClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'graphql.GraphQL' (OnClassCondition)
+
+   RSocketMessagingAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.rsocket.RSocket' (OnClassCondition)
+
+   RSocketRequesterAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.rsocket.RSocket' (OnClassCondition)
+
+   RSocketSecurityAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.rsocket.core.SecuritySocketAcceptorInterceptor' (OnClassCondition)
+
+   RSocketServerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.rsocket.core.RSocketServer' (OnClassCondition)
+
+   RSocketStrategiesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.netty.buffer.PooledByteBufAllocator' (OnClassCondition)
+
+   RabbitAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.rabbitmq.client.Channel' (OnClassCondition)
+
+   ReactiveElasticsearchClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'co.elastic.clients.transport.ElasticsearchTransport' (OnClassCondition)
+
+   ReactiveElasticsearchRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient' (OnClassCondition)
+
+   ReactiveMultipartAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.config.WebFluxConfigurer' (OnClassCondition)
+
+   ReactiveOAuth2ClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'reactor.core.publisher.Flux' (OnClassCondition)
+
+   ReactiveOAuth2ResourceServerAutoConfiguration:
+      Did not match:
+         - @ConditionalOnWebApplication did not find reactive web application classes (OnWebApplicationCondition)
+
+   ReactiveSecurityAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'reactor.core.publisher.Flux' (OnClassCondition)
+
+   ReactiveUserDetailsServiceAutoConfiguration:
+      Did not match:
+         - AnyNestedCondition 0 matched 2 did not; NestedCondition on ReactiveUserDetailsServiceAutoConfiguration.RSocketEnabledOrReactiveWebApplication.ReactiveWebApplicationCondition did not find reactive web application classes; NestedCondition on ReactiveUserDetailsServiceAutoConfiguration.RSocketEnabledOrReactiveWebApplication.RSocketSecurityEnabledCondition @ConditionalOnBean (types: org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler; SearchStrategy: all) did not find any beans of type org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler (ReactiveUserDetailsServiceAutoConfiguration.RSocketEnabledOrReactiveWebApplication)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.authentication.ReactiveAuthenticationManager' (OnClassCondition)
+         - AnyNestedCondition 1 matched 2 did not; NestedCondition on ReactiveUserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.PasswordConfigured @ConditionalOnProperty (spring.security.user.password) did not find property 'password'; NestedCondition on ReactiveUserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.NameConfigured @ConditionalOnProperty (spring.security.user.name) did not find property 'name'; NestedCondition on ReactiveUserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.MissingAlternative @ConditionalOnMissingClass did not find unwanted classes 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository', 'org.springframework.security.oauth2.server.resource.introspection.ReactiveOpaqueTokenIntrospector' (ReactiveUserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured)
+
+   ReactiveWebServerFactoryAutoConfiguration:
+      Did not match:
+         - @ConditionalOnWebApplication did not find reactive web application classes (OnWebApplicationCondition)
+
+   ReactorAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'reactor.core.publisher.Hooks' (OnClassCondition)
+
+   RedisAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.redis.core.RedisOperations' (OnClassCondition)
+
+   RedisCacheConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.redis.connection.RedisConnectionFactory' (OnClassCondition)
+
+   RedisReactiveAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'reactor.core.publisher.Flux' (OnClassCondition)
+
+   RedisRepositoriesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.redis.repository.configuration.EnableRedisRepositories' (OnClassCondition)
+
+   RepositoryRestMvcAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration' (OnClassCondition)
+
+   Saml2RelyingPartyAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository' (OnClassCondition)
+
+   SecurityDataConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.security.data.repository.query.SecurityEvaluationContextExtension' (OnClassCondition)
+
+   SendGridAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.sendgrid.SendGrid' (OnClassCondition)
+
+   ServletWebServerFactoryAutoConfiguration.ForwardedHeaderFilterConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (server.forward-headers-strategy=framework) did not find property 'server.forward-headers-strategy' (OnPropertyCondition)
+
+   ServletWebServerFactoryConfiguration.EmbeddedJetty:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'org.eclipse.jetty.server.Server', 'org.eclipse.jetty.util.Loader', 'org.eclipse.jetty.ee10.webapp.WebAppContext' (OnClassCondition)
+
+   ServletWebServerFactoryConfiguration.EmbeddedUndertow:
+      Did not match:
+         - @ConditionalOnClass did not find required classes 'io.undertow.Undertow', 'org.xnio.SslClientAuthMode' (OnClassCondition)
+
+   SessionAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.session.Session' (OnClassCondition)
+
+   SpringApplicationAdminJmxAutoConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.application.admin.enabled=true) did not find property 'enabled' (OnPropertyCondition)
+
+   SpringBootWebSecurityConfiguration.SecurityFilterChainConfiguration:
+      Did not match:
+         - AllNestedConditions 1 matched 1 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) found beans of type 'org.springframework.security.web.SecurityFilterChain' filterChain; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+
+   TaskExecutorConfigurations.SimpleAsyncTaskExecutorBuilderConfiguration#simpleAsyncTaskExecutorBuilderVirtualThreads:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder; SearchStrategy: all) found beans of type 'org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder' simpleAsyncTaskExecutorBuilder (OnBeanCondition)
+
+   TaskExecutorConfigurations.TaskExecutorConfiguration#applicationTaskExecutorVirtualThreads:
+      Did not match:
+         - @ConditionalOnThreading did not find VIRTUAL (OnThreadingCondition)
+
+   TaskSchedulingAutoConfiguration#scheduledBeanLazyInitializationExcludeFilter:
+      Did not match:
+         - @ConditionalOnBean (names: org.springframework.context.annotation.internalScheduledAnnotationProcessor; SearchStrategy: all) did not find any beans named org.springframework.context.annotation.internalScheduledAnnotationProcessor (OnBeanCondition)
+
+   TaskSchedulingConfigurations.SimpleAsyncTaskSchedulerBuilderConfiguration#simpleAsyncTaskSchedulerBuilderVirtualThreads:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder; SearchStrategy: all) found beans of type 'org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder' simpleAsyncTaskSchedulerBuilder (OnBeanCondition)
+
+   TaskSchedulingConfigurations.TaskSchedulerConfiguration:
+      Did not match:
+         - @ConditionalOnBean (names: org.springframework.context.annotation.internalScheduledAnnotationProcessor; SearchStrategy: all) did not find any beans named org.springframework.context.annotation.internalScheduledAnnotationProcessor (OnBeanCondition)
+
+   TemplateEngineConfigurations.ReactiveTemplateEngineConfiguration:
+      Did not match:
+         - did not find reactive web application classes (OnWebApplicationCondition)
+
+   ThymeleafAutoConfiguration.DataAttributeDialectConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect' (OnClassCondition)
+
+   ThymeleafAutoConfiguration.ThymeleafSecurityDialectConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect' (OnClassCondition)
+
+   ThymeleafAutoConfiguration.ThymeleafWebFluxConfiguration:
+      Did not match:
+         - did not find reactive web application classes (OnWebApplicationCondition)
+
+   ThymeleafAutoConfiguration.ThymeleafWebLayoutConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect' (OnClassCondition)
+
+   ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration#resourceUrlEncodingFilter:
+      Did not match:
+         - @ConditionalOnEnabledResourceChain did not find class org.webjars.WebJarAssetLocator (OnEnabledResourceChainCondition)
+
+   TransactionAutoConfiguration#transactionalOperator:
+      Did not match:
+         - @ConditionalOnSingleCandidate (types: org.springframework.transaction.ReactiveTransactionManager; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TransactionAutoConfiguration.AspectJTransactionManagementConfiguration:
+      Did not match:
+         - @ConditionalOnBean (types: org.springframework.transaction.aspectj.AbstractTransactionAspect; SearchStrategy: all) did not find any beans of type org.springframework.transaction.aspectj.AbstractTransactionAspect (OnBeanCondition)
+
+   TransactionAutoConfiguration.EnableTransactionManagementConfiguration.JdkDynamicAutoProxyConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.aop.proxy-target-class=false) did not find property 'proxy-target-class' (OnPropertyCondition)
+
+   UserDetailsServiceAutoConfiguration:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,org.springframework.security.oauth2.jwt.JwtDecoder; SearchStrategy: all) found beans of type 'org.springframework.security.authentication.AuthenticationManager' authenticationManager and found beans of type 'org.springframework.security.core.userdetails.UserDetailsService' userDetailsServiceImpl, userDetailsService and found beans of type 'org.springframework.security.authentication.AuthenticationProvider' authenticationProvider (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+         - AnyNestedCondition 1 matched 2 did not; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.PasswordConfigured @ConditionalOnProperty (spring.security.user.password) did not find property 'password'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.NameConfigured @ConditionalOnProperty (spring.security.user.name) did not find property 'name'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.MissingAlternative @ConditionalOnMissingClass did not find unwanted classes 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository', 'org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector', 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository' (UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured)
+
+   ValidationAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'jakarta.validation.executable.ExecutableValidator' (OnClassCondition)
+
+   WebClientAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.function.client.WebClient' (OnClassCondition)
+
+   WebFluxAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.reactive.config.WebFluxConfigurer' (OnClassCondition)
+
+   WebMvcAutoConfiguration#hiddenHttpMethodFilter:
+      Did not match:
+         - @ConditionalOnProperty (spring.mvc.hiddenmethod.filter.enabled) did not find property 'enabled' (OnPropertyCondition)
+
+   WebMvcAutoConfiguration.ProblemDetailsErrorHandlingConfiguration:
+      Did not match:
+         - @ConditionalOnProperty (spring.mvc.problemdetails.enabled=true) did not find property 'enabled' (OnPropertyCondition)
+
+   WebMvcAutoConfiguration.ResourceChainCustomizerConfiguration:
+      Did not match:
+         - @ConditionalOnEnabledResourceChain did not find class org.webjars.WebJarAssetLocator (OnEnabledResourceChainCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#beanNameViewResolver:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.web.servlet.view.BeanNameViewResolver; SearchStrategy: all) found beans of type 'org.springframework.web.servlet.view.BeanNameViewResolver' beanNameViewResolver (OnBeanCondition)
+
+   WebServiceTemplateAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.oxm.Marshaller' (OnClassCondition)
+
+   WebServicesAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.ws.transport.http.MessageDispatcherServlet' (OnClassCondition)
+
+   WebSessionIdResolverAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'reactor.core.publisher.Mono' (OnClassCondition)
+
+   WebSocketMessagingAutoConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer' (OnClassCondition)
+
+   WebSocketReactiveAutoConfiguration:
+      Did not match:
+         - @ConditionalOnWebApplication did not find reactive web application classes (OnWebApplicationCondition)
+
+   WebSocketServletAutoConfiguration.JettyWebSocketConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer' (OnClassCondition)
+
+   WebSocketServletAutoConfiguration.UndertowWebSocketConfiguration:
+      Did not match:
+         - @ConditionalOnClass did not find required class 'io.undertow.websockets.jsr.Bootstrap' (OnClassCondition)
+
+   XADataSourceAutoConfiguration:
+      Did not match:
+         - @ConditionalOnBean (types: org.springframework.boot.jdbc.XADataSourceWrapper; SearchStrategy: all) did not find any beans of type org.springframework.boot.jdbc.XADataSourceWrapper (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required classes 'javax.sql.DataSource', 'jakarta.transaction.TransactionManager', 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType' (OnClassCondition)
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration
+
+    org.springframework.boot.autoconfigure.ssl.SslAutoConfiguration
+
+    org.springframework.boot.autoconfigure.context.LifecycleAutoConfiguration
+
+    org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration
+
+    org.springframework.boot.autoconfigure.availability.ApplicationAvailabilityAutoConfiguration
+
+    org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration
+
+
+
+2026-03-29T13:31:25.054+05:30  INFO 22560 --- [Shopping_Cart] [           main] com.ecommerce.ShoppingCartApplication    : Started ShoppingCartApplication in 11.42 seconds (process running for 12.366)
+2026-03-29T13:31:25.061+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2026-03-29T13:31:25.282+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.357+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.400+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.419+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.427+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.437+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.444+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.451+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.461+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.469+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.476+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.486+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.494+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.500+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.508+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.516+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.521+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.529+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.536+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.542+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.550+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.557+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.564+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.572+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.580+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.587+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.596+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.604+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.611+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.618+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.624+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.629+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.636+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.642+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.647+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.655+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.662+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id from category c1_0 where c1_0.name=? limit ?
+Hibernate: select c1_0.id from category c1_0 where c1_0.name=? limit ?
+2026-03-29T13:31:25.667+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0
+2026-03-29T13:31:25.674+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.id=?
+2026-03-29T13:31:25.692+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.704+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.709+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.716+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.723+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.730+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.739+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.745+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.753+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.759+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.766+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.773+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.779+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.785+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.790+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.795+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.800+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.805+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.809+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.814+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.819+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.824+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.829+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.834+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.841+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.847+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.852+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.856+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.862+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.867+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.872+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.879+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.885+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.892+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.897+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.901+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.907+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.914+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.919+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.925+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.930+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.936+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.940+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.946+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.951+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.957+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.963+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.969+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.975+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.981+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+2026-03-29T13:31:25.986+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] org.hibernate.SQL                        : select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+Hibernate: select p1_0.id,p1_0.category,p1_0.color,p1_0.description,p1_0.discount,p1_0.discount_price,p1_0.image,p1_0.is_active,p1_0.price,p1_0.rating,p1_0.seller_id,p1_0.size,p1_0.stock,p1_0.title from product p1_0 where upper(p1_0.title) like upper(?) escape '\\' or upper(p1_0.category) like upper(?) escape '\\'
+[DataInitializer] All sample products already exist, skipping.
+2026-03-29T13:31:25.992+05:30 DEBUG 22560 --- [Shopping_Cart] [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2026-03-29T13:31:54.256+05:30  INFO 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-29T13:31:54.257+05:30  INFO 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-29T13:31:54.258+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-03-29T13:31:54.259+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-03-29T13:31:54.260+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-03-29T13:31:54.263+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@64b3ba13
+2026-03-29T13:31:54.264+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@526ee5e6
+2026-03-29T13:31:54.266+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-03-29T13:31:54.268+05:30  INFO 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2026-03-29T13:31:54.521+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+2026-03-29T13:31:54.674+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+2026-03-29T13:31:54.691+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+2026-03-29T13:31:54.702+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+2026-03-29T13:32:12.505+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+2026-03-29T13:32:12.646+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+2026-03-29T13:32:12.653+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+2026-03-29T13:32:12.661+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.id=?
+2026-03-29T13:32:23.061+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/stats", parameters={}
+2026-03-29T13:32:23.063+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminApiController#getStats()
+2026-03-29T13:32:23.150+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] org.hibernate.SQL                        : select coalesce(sum(case when status <> 'Cancelled' then price * quantity else 0 end), 0)
+from product_order
+
+Hibernate: select coalesce(sum(case when status <> 'Cancelled' then price * quantity else 0 end), 0)
+from product_order
+
+2026-03-29T13:32:23.212+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/admin/dashboard", parameters={}
+2026-03-29T13:32:23.213+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminController#index(Principal, Model)
+2026-03-29T13:32:23.238+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+2026-03-29T13:32:23.246+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] org.hibernate.SQL                        : select count(ud1_0.id) from user_dtls ud1_0 where ud1_0.role=?
+Hibernate: select count(ud1_0.id) from user_dtls ud1_0 where ud1_0.role=?
+2026-03-29T13:32:23.251+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] org.hibernate.SQL                        : select count(ud1_0.id) from user_dtls ud1_0 where ud1_0.role=?
+Hibernate: select count(ud1_0.id) from user_dtls ud1_0 where ud1_0.role=?
+2026-03-29T13:32:23.253+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] org.hibernate.SQL                        : select count(c1_0.id) from cart c1_0 left join user_dtls u1_0 on u1_0.id=c1_0.user_id where u1_0.id=?
+Hibernate: select count(c1_0.id) from cart c1_0 left join user_dtls u1_0 on u1_0.id=c1_0.user_id where u1_0.id=?
+2026-03-29T13:32:23.270+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] org.hibernate.SQL                        : select count(*) from product p1_0
+Hibernate: select count(*) from product p1_0
+2026-03-29T13:32:23.281+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] org.hibernate.SQL                        : select count(*) from product_order po1_0
+Hibernate: select count(*) from product_order po1_0
+2026-03-29T13:32:23.319+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] org.hibernate.SQL                        : select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.is_active
+Hibernate: select c1_0.id,c1_0.image_name,c1_0.is_active,c1_0.name from category c1_0 where c1_0.is_active
+2026-03-29T13:32:23.331+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where ud1_0.email=?
+2026-03-29T13:32:23.385+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-03-29T13:32:23.392+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2026-03-29T13:32:23.396+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Writing [AdminStatsResponse[totalUsers=2, totalSellers=0, totalProducts=61, totalOrders=0, totalRevenue=0.0]]
+2026-03-29T13:32:23.433+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-03-29T13:32:24.221+05:30 DEBUG 22560 --- [Shopping_Cart] [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-03-29T13:32:39.347+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/users-by-state", parameters={}
+2026-03-29T13:32:39.349+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminApiController#getUsersByState()
+2026-03-29T13:32:39.352+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-4] org.hibernate.SQL                        : select coalesce(nullif(state, ''), 'Unknown') as state_name, count(*) as total
+from user_dtls
+where role = 'ROLE_USER'
+group by coalesce(nullif(state, ''), 'Unknown')
+order by total desc, state_name asc
+
+Hibernate: select coalesce(nullif(state, ''), 'Unknown') as state_name, count(*) as total
+from user_dtls
+where role = 'ROLE_USER'
+group by coalesce(nullif(state, ''), 'Unknown')
+order by total desc, state_name asc
+
+2026-03-29T13:32:39.363+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-03-29T13:32:39.365+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/monthly-revenue", parameters={}
+2026-03-29T13:32:39.366+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminApiController#getMonthlyRevenue()
+2026-03-29T13:32:39.368+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] org.hibernate.SQL                        : select date_format(coalesce(order_date, current_date), '%Y-%m') as month_label,
+       coalesce(sum(case when status <> 'Cancelled' then price * quantity else 0 end), 0) as total
+from product_order
+group by date_format(coalesce(order_date, current_date), '%Y-%m')
+order by month_label
+
+Hibernate: select date_format(coalesce(order_date, current_date), '%Y-%m') as month_label,
+       coalesce(sum(case when status <> 'Cancelled' then price * quantity else 0 end), 0) as total
+from product_order
+group by date_format(coalesce(order_date, current_date), '%Y-%m')
+order by month_label
+
+2026-03-29T13:32:39.369+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Writing [[StateCountResponse[state=Unknown, count=2]]]
+2026-03-29T13:32:39.377+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-03-29T13:32:39.403+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-03-29T13:32:39.410+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ChartPointResponse[label=Oct 2025, value=0.0], ChartPointResponse[label=Nov 2025, value=0.0], Chart (truncated)...]
+2026-03-29T13:32:39.414+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/user-growth", parameters={}
+2026-03-29T13:32:39.416+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminApiController#getUserGrowth()
+2026-03-29T13:32:39.416+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-03-29T13:32:39.418+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-3] org.hibernate.SQL                        : select date_format(coalesce(created_at, current_timestamp), '%Y-%m') as month_label, count(*) as total
+from user_dtls
+where role = 'ROLE_USER'
+group by date_format(coalesce(created_at, current_timestamp), '%Y-%m')
+order by month_label
+
+Hibernate: select date_format(coalesce(created_at, current_timestamp), '%Y-%m') as month_label, count(*) as total
+from user_dtls
+where role = 'ROLE_USER'
+group by date_format(coalesce(created_at, current_timestamp), '%Y-%m')
+order by month_label
+
+2026-03-29T13:32:39.424+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-03-29T13:32:39.425+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ChartPointResponse[label=Oct 2025, value=0.0], ChartPointResponse[label=Nov 2025, value=0.0], Chart (truncated)...]
+2026-03-29T13:32:39.428+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-03-29T13:32:39.510+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/users?role=ROLE_USER&page=0&size=2", parameters={masked}
+2026-03-29T13:32:39.511+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminApiController#getUsers(String, String, Integer, Integer)
+2026-03-29T13:32:39.550+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] org.hibernate.SQL                        : select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where (? is null or ud1_0.role=?) and (? is null or ?='' or lower(coalesce(ud1_0.name,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.email,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.state,'')) like lower(concat('%',?,'%')) escape '') limit ?,?
+Hibernate: select ud1_0.id,ud1_0.account_non_locked,ud1_0.address,ud1_0.city,ud1_0.created_at,ud1_0.email,ud1_0.failed_attempt,ud1_0.is_enable,ud1_0.lock_time,ud1_0.mobile_number,ud1_0.name,ud1_0.password,ud1_0.pincode,ud1_0.profile_image,ud1_0.reset_token,ud1_0.role,ud1_0.state,ud1_0.store_description,ud1_0.store_name from user_dtls ud1_0 where (? is null or ud1_0.role=?) and (? is null or ?='' or lower(coalesce(ud1_0.name,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.email,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.state,'')) like lower(concat('%',?,'%')) escape '') limit ?,?
+2026-03-29T13:32:39.569+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] org.hibernate.SQL                        : select count(ud1_0.id) from user_dtls ud1_0 where (? is null or ud1_0.role=?) and (? is null or ?='' or lower(coalesce(ud1_0.name,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.email,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.state,'')) like lower(concat('%',?,'%')) escape '')
+Hibernate: select count(ud1_0.id) from user_dtls ud1_0 where (? is null or ud1_0.role=?) and (? is null or ?='' or lower(coalesce(ud1_0.name,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.email,'')) like lower(concat('%',?,'%')) escape '' or lower(coalesce(ud1_0.state,'')) like lower(concat('%',?,'%')) escape '')
+2026-03-29T13:32:39.586+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-03-29T13:32:39.611+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [PaginatedResponse[content=[AdminUserRowResponse[id=1, name=shubham kumar, email=shubhammpathak566@gm (truncated)...]
+2026-03-29T13:32:39.622+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-03-29T13:32:50.417+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/orders-growth", parameters={}
+2026-03-29T13:32:50.418+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ecommerce.controller.AdminApiController#getOrdersGrowth()
+2026-03-29T13:32:50.420+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] org.hibernate.SQL                        : select date_format(coalesce(order_date, current_date), '%Y-%m') as month_label, count(*) as total
+from product_order
+group by date_format(coalesce(order_date, current_date), '%Y-%m')
+order by month_label
+
+Hibernate: select date_format(coalesce(order_date, current_date), '%Y-%m') as month_label, count(*) as total
+from product_order
+group by date_format(coalesce(order_date, current_date), '%Y-%m')
+order by month_label
+
+2026-03-29T13:32:50.425+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-03-29T13:32:50.426+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing [[ChartPointResponse[label=Oct 2025, value=0.0], ChartPointResponse[label=Nov 2025, value=0.0], Chart (truncated)...]
+2026-03-29T13:32:50.428+05:30 DEBUG 22560 --- [Shopping_Cart] [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK

@@ -7,24 +7,8 @@
 <body>
     <section class="min-h-screen bg-pastel-bg flex flex-col md:flex-row">
         <!-- Sidebar -->
-        <aside class="w-full md:w-64 bg-white border-r border-slate-100 shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative pt-8 pb-10 px-6 z-10 md:min-h-screen">
-            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Seller Portal</h3>
-            
-            <nav class="space-y-1.5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-hide">
-                <a href="/seller/dashboard" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Overview</span>
-                </a>
-                <a href="/seller/loadAddProduct" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-plus w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Add Product</span>
-                </a>
-                <a href="/seller/products" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-boxes-stacked w-5 text-center"></i> <span class="hidden xl:inline md:inline block">My Products</span>
-                </a>
-                <a href="/seller/orders" class="flex shrink-0 items-center justify-center md:justify-start gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-bold transition">
-                    <i class="fa-solid fa-receipt w-5 text-center"></i> <span class="hidden xl:inline md:inline block">Orders</span>
-                </a>
-            </nav>
-        </aside>
+        <!-- Sidebar Fragment -->
+        <aside th:replace="~{base_modern :: sellerSideBar('overview')}"></aside>
 
         <!-- Main Content -->
         <div class="flex-1 w-full max-w-5xl mx-auto py-10 px-4 md:px-10">
@@ -34,18 +18,18 @@
             </div>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 <!-- Total Products -->
                 <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
                      <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-400 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
                          <i class="fa-solid fa-box"></i>
                      </div>
-                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Products</span>
+                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Live Products</span>
                      <span class="text-4xl font-black text-slate-800">[[${totalProducts}]]</span>
                 </div>
 
                 <!-- Total Orders -->
-                <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
+                <div class="bg-white rounded-[28px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
                      <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
                          <i class="fa-solid fa-cart-shopping"></i>
                      </div>
@@ -56,10 +40,19 @@
                 <!-- Revenue -->
                 <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
                      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                         <i class="fa-solid fa-indian-rupee-sign"></i>
+                         <i class="fa-solid fa-wallet"></i>
                      </div>
                      <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Revenue</span>
-                     <span class="text-4xl font-black text-slate-800">₹[[${totalRevenue}]]</span>
+                     <span class="text-3xl font-black text-slate-800">₹ [[${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')}]]</span>
+                </div>
+
+                <!-- Profit -->
+                <div class="bg-white rounded-[32px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 flex flex-col group hover:-translate-y-1 transition-transform">
+                     <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                         <i class="fa-solid fa-chart-line"></i>
+                     </div>
+                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Profit</span>
+                     <span class="text-3xl font-black text-indigo-600">₹ [[${#numbers.formatDecimal(totalProfit, 1, 'COMMA', 0, 'POINT')}]]</span>
                 </div>
             </div>
 

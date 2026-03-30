@@ -47,6 +47,12 @@ public class Product {
 	
 	private Boolean isActive;
 	
+	private Boolean isReturnable;
+	
+	private Integer returnWindow;
+	
+	private Double costPrice;
+
 	@jakarta.persistence.ManyToOne
 	private UserDtls seller;
 	
@@ -172,5 +178,29 @@ public class Product {
 
 	public void setRating(Double rating) {
 		this.rating = rating;
+	}
+
+	public Boolean getIsReturnable() {
+		return isReturnable;
+	}
+
+	public void setIsReturnable(Boolean isReturnable) {
+		this.isReturnable = isReturnable;
+	}
+
+	public Integer getReturnWindow() {
+		return returnWindow;
+	}
+
+	public void setReturnWindow(Integer returnWindow) {
+		this.returnWindow = returnWindow;
+	}
+
+	public Double getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
 	}
 }

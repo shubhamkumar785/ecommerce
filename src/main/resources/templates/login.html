@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <form action="/login" method="post" id="loginForm" class="flex flex-col gap-6">
+                <form id="loginForm" class="flex flex-col gap-6">
                     <input type="hidden" name="role" id="roleInput" th:value="${param.role != null ? param.role[0] : 'ROLE_USER'}" value="ROLE_USER">
 
                     <!-- Email Input -->
@@ -109,7 +109,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" onclick="this.innerHTML='<i class=\'fa-solid fa-circle-notch fa-spin\'></i> Processing...'; this.classList.add('opacity-80')" class="w-full max-w-[340px] mx-auto bg-nav text-white rounded-[20px] py-3 px-8 mt-4 font-bold text-xl shadow-lg hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3">
+                    <button type="submit" id="submitBtn" class="w-full max-w-[340px] mx-auto bg-nav text-white rounded-[20px] py-3 px-8 mt-4 font-bold text-xl shadow-lg hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3">
                         Submit
                         <i class="fa-solid fa-arrow-right-long text-xs opacity-50"></i>
                     </button>
@@ -219,6 +219,53 @@
                 const index = currentRole === 'ROLE_ADMIN' ? 2 : currentRole === 'ROLE_SELLER' ? 1 : 0;
                 selectRole(currentRole, index);
             };
+
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('submitBtn');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+                btn.disabled = true;
+                
+                const email = document.querySelector('input[name="username"]').value;
+                const password = document.getElementById('passField').value;
+                
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, password: password })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        const toast = document.createElement('div');
+                        toast.className = 'fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 bg-green-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm animate-[bounce_0.5s_ease-out]';
+                        toast.innerHTML = '<i class="fa-solid fa-circle-check text-lg"></i> Login successful!';
+                        document.body.appendChild(toast);
+                        setTimeout(() => {
+                            window.location.href = data.redirectUrl;
+                        }, 1000);
+                    } else {
+                        const toast = document.createElement('div');
+                        toast.className = 'fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm animate-[bounce_0.5s_ease-out]';
+                        toast.innerHTML = `<i class="fa-solid fa-circle-exclamation text-lg"></i> ${data.message || 'Invalid credentials'}`;
+                        document.body.appendChild(toast);
+                        setTimeout(() => toast.remove(), 3000);
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }
+                } catch (error) {
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm animate-[bounce_0.5s_ease-out]';
+                    toast.innerHTML = '<i class="fa-solid fa-circle-exclamation text-lg"></i> Error occurred. Please try again.';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            });
         </script>
     </section>
 </body>

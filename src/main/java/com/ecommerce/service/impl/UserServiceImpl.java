@@ -148,29 +148,33 @@ public class UserServiceImpl implements UserService {
 
 		UserDtls dbUser = userRepository.findById(user.getId()).get();
 
-		if (!img.isEmpty()) {
+		if (img != null && !img.isEmpty()) {
 			dbUser.setProfileImage(img.getOriginalFilename());
 		}
 
 		if (!ObjectUtils.isEmpty(dbUser)) {
-
 			dbUser.setName(user.getName());
 			dbUser.setMobileNumber(user.getMobileNumber());
 			dbUser.setAddress(user.getAddress());
 			dbUser.setCity(user.getCity());
 			dbUser.setState(user.getState());
 			dbUser.setPincode(user.getPincode());
+			dbUser.setStoreName(user.getStoreName());
+			dbUser.setStoreDescription(user.getStoreDescription());
 			dbUser = userRepository.save(dbUser);
 		}
 
 		try {
-			if (!img.isEmpty()) {
+			if (img != null && !img.isEmpty()) {
 				File saveFile = new ClassPathResource("static/img").getFile();
 
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
 						+ img.getOriginalFilename());
 
-//			System.out.println(path);
+				if (!Files.exists(path.getParent())) {
+					Files.createDirectories(path.getParent());
+				}
+
 				Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
 		} catch (Exception e) {

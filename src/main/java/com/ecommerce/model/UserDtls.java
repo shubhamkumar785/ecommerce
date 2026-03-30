@@ -1,7 +1,11 @@
 package com.ecommerce.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -55,6 +59,10 @@ public class UserDtls {
 	private String storeName;
 	
 	private String storeDescription;
+
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
 
 	// Getter and Setter for id
 	public Integer getId() {
@@ -216,5 +224,13 @@ public class UserDtls {
 
 	public void setResetToken(String resetToken) {
 	    this.resetToken = resetToken;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 }

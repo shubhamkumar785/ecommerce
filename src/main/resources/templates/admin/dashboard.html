@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Ecom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}" href="/css/admin-dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body class="admin-body" th:attr="data-admin-name=${adminName},data-admin-email=${adminEmail}">
+    <div class="admin-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__brand">
+                <!-- <div class="sidebar__logo">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div> -->
+                <div>
+                    <p class="eyebrow">Secure Workspace</p>
+                    <h1>Ecom Admin</h1>
+                </div>
+            </div>
+
+            <div class="sidebar__profile">
+                <div class="avatar">
+                    <span th:text="${adminName != null and !#strings.isEmpty(adminName) ? #strings.substring(adminName,0,1) : 'A'}">A</span>
+                </div>
+                <div>
+                    <p class="sidebar__name" th:text="${adminName}">Admin</p>
+                    <p class="sidebar__email" th:text="${adminEmail}">admin@example.com</p>
+                </div>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/" class="nav-link soft-card" style="margin-bottom: 8px;">
+                    <i class="fa-solid fa-house"></i><span>Home</span>
+                </a>
+                <button type="button" class="nav-link is-active" data-section-target="dashboard">
+                    <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                </button>
+                <button type="button" class="nav-link" data-section-target="users">
+                    <i class="fa-solid fa-users"></i><span>Users</span>
+                </button>
+                <button type="button" class="nav-link" data-section-target="sellers">
+                    <i class="fa-solid fa-store"></i><span>Sellers</span>
+                </button>
+                <button type="button" class="nav-link" data-section-target="products">
+                    <i class="fa-solid fa-boxes-stacked"></i><span>Products</span>
+                </button>
+                <button type="button" class="nav-link" data-section-target="analytics">
+                    <i class="fa-solid fa-wave-square"></i><span>Analytics</span>
+                </button>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a class="sidebar__logout soft-card" href="/logout" style="display:flex;align-items:center;gap:14px;justify-content:center;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <div class="main-shell">
+            <header class="topbar">
+                <div class="topbar__left">
+                    <button type="button" class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div>
+                        <p class="eyebrow">Production Control Panel</p>
+                        <h2>Live commerce analytics for India</h2>
+                    </div>
+                </div>
+
+            </header>
+
+            <main class="dashboard-content">
+                <section class="content-panel is-active" id="section-dashboard">
+                    <div class="hero-card">
+                        <div class="hero-card__copy">
+                            <p class="eyebrow">Admin Dashboard</p>
+                            <h3>Measure growth, manage accounts, and keep operations moving.</h3>
+                            <p>The dashboard is connected to live admin APIs with analytics and quick controls for users, sellers, and catalog operations.</p>
+                        </div>
+                        <div class="hero-card__meta">
+                            <div class="hero-stat">
+                                <span>Access level</span>
+                                <strong>Administrator</strong>
+                            </div>
+                            <div class="hero-stat">
+                                <span>Environment</span>
+                                <strong>Production-ready</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <article class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--blue"><i class="fa-solid fa-users"></i></div>
+                            <div><p>Total Users</p><strong id="statTotalUsers">0</strong></div>
+                        </article>
+                        <article class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--purple"><i class="fa-solid fa-store"></i></div>
+                            <div><p>Total Sellers</p><strong id="statTotalSellers">0</strong></div>
+                        </article>
+                        <article class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--orange"><i class="fa-solid fa-boxes-stacked"></i></div>
+                            <div><p>Total Products</p><strong id="statTotalProducts">0</strong></div>
+                        </article>
+                        <article class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--green"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                            <div><p>Total Revenue</p><strong id="statTotalRevenue">&#8377;0</strong></div>
+                        </article>
+                    </div>
+
+                    <div class="summary-row">
+                        <article class="summary-card">
+                            <p>Orders processed</p>
+                            <strong id="statTotalOrders">0</strong>
+                            <span>Live total orders across the platform.</span>
+                        </article>
+                        <article class="summary-card">
+                            <p>Customer states tracked</p>
+                            <strong id="trackedStates">0</strong>
+                            <span>Active user geography across India.</span>
+                        </article>
+                        <article class="summary-card">
+                            <p>Best-performing state</p>
+                            <strong id="topStateName">-</strong>
+                            <span id="topStateCount">No state data available yet.</span>
+                        </article>
+                    </div>
+
+                    <div class="charts-grid">
+                        <article class="chart-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Chart 01</p>
+                                    <h3>User Growth</h3>
+                                </div>
+                                <span class="pill">Last 6 months</span>
+                            </div>
+                            <canvas id="userGrowthChart"></canvas>
+                        </article>
+
+                        <article class="chart-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Chart 02</p>
+                                    <h3>Revenue Trend</h3>
+                                </div>
+                                <span class="pill">Monthly revenue</span>
+                            </div>
+                            <canvas id="revenueChart"></canvas>
+                        </article>
+
+                        <article class="chart-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Chart 03</p>
+                                    <h3>Orders Trend</h3>
+                                </div>
+                                <span class="pill">Order volume</span>
+                            </div>
+                            <canvas id="ordersChart"></canvas>
+                        </article>
+
+                        <article class="chart-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Chart 04</p>
+                                    <h3>Users By State</h3>
+                                </div>
+                                <span class="pill">India analytics</span>
+                            </div>
+                            <canvas id="stateUsersChart"></canvas>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="content-panel" id="section-users">
+                    <div class="panel-card">
+                        <div class="section-head section-head--wrap">
+                            <div>
+                                <p class="eyebrow">User Management</p>
+                                <h3>Customers</h3>
+                                <p class="section-copy">Search, export, block, or remove customer accounts with protected admin actions.</p>
+                            </div>
+                            <div class="toolbar">
+                                <form class="toolbar__search" id="usersSearchForm">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="search" id="usersSearchInput" placeholder="Search by name, email, or state">
+                                </form>
+                                <button type="button" class="toolbar__button" id="usersExportBtn">
+                                    <i class="fa-solid fa-file-arrow-down"></i><span>Export CSV</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-shell">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th><th>Email</th><th>Role</th><th>State</th><th>Status</th><th>Created</th><th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <tr><td colspan="7" class="table-empty">Loading users...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination">
+                            <button type="button" class="pagination__button" id="usersPrevBtn">Previous</button>
+                            <p id="usersPaginationLabel">Page 1 of 1</p>
+                            <button type="button" class="pagination__button" id="usersNextBtn">Next</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-panel" id="section-sellers">
+                    <div class="panel-card">
+                        <div class="section-head section-head--wrap">
+                            <div>
+                                <p class="eyebrow">Seller Management</p>
+                                <h3>Sellers</h3>
+                                <p class="section-copy">Track approved sellers, review their regions, and control access without leaving the dashboard.</p>
+                            </div>
+                            <div class="toolbar">
+                                <form class="toolbar__search" id="sellersSearchForm">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="search" id="sellersSearchInput" placeholder="Search by seller, email, or state">
+                                </form>
+                                <button type="button" class="toolbar__button" id="sellersExportBtn">
+                                    <i class="fa-solid fa-file-arrow-down"></i><span>Export CSV</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-shell">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th><th>Email</th><th>Role</th><th>State</th><th>Status</th><th>Created</th><th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sellersTableBody">
+                                    <tr><td colspan="7" class="table-empty">Loading sellers...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination">
+                            <button type="button" class="pagination__button" id="sellersPrevBtn">Previous</button>
+                            <p id="sellersPaginationLabel">Page 1 of 1</p>
+                            <button type="button" class="pagination__button" id="sellersNextBtn">Next</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-panel" id="section-products">
+                    <div class="products-layout">
+                        <article class="panel-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Catalog Operations</p>
+                                    <h3>Product workflow</h3>
+                                </div>
+                                <span class="pill" id="productsBadge">0 Products</span>
+                            </div>
+                            <div class="shortcut-grid">
+                                <a class="shortcut-card" href="/admin/loadAddProduct">
+                                    <i class="fa-solid fa-square-plus"></i>
+                                    <div><strong>Add Product</strong><span>Create a new catalog listing.</span></div>
+                                </a>
+                                <a class="shortcut-card" href="/admin/products">
+                                    <i class="fa-solid fa-box"></i>
+                                    <div><strong>Manage Products</strong><span>Open full product administration.</span></div>
+                                </a>
+                                <a class="shortcut-card" href="/admin/category">
+                                    <i class="fa-solid fa-tags"></i>
+                                    <div><strong>Categories</strong><span>Update storefront categories.</span></div>
+                                </a>
+                                <a class="shortcut-card" href="/admin/orders">
+                                    <i class="fa-solid fa-truck-fast"></i>
+                                    <div><strong>Orders</strong><span>Review and fulfill purchases.</span></div>
+                                </a>
+                            </div>
+                        </article>
+
+                        <article class="panel-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Operational Snapshot</p>
+                                    <h3>Commerce metrics</h3>
+                                </div>
+                            </div>
+                            <div class="product-metrics">
+                                <div class="metric-row"><span>Products live</span><strong id="productsMetric">0</strong></div>
+                                <div class="metric-row"><span>Orders in system</span><strong id="ordersMetric">0</strong></div>
+                                <div class="metric-row"><span>Revenue generated</span><strong id="revenueMetric">&#8377;0</strong></div>
+                                <div class="metric-row"><span>Active sellers</span><strong id="sellersMetric">0</strong></div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="content-panel" id="section-analytics">
+                    <div class="analytics-layout">
+                        <article class="panel-card">
+                            <div class="section-head section-head--wrap">
+                                <div>
+                                    <p class="eyebrow">India User Analytics</p>
+                                    <h3>Users per state</h3>
+                                    <p class="section-copy">A state-by-state snapshot of customer concentration for localized growth planning.</p>
+                                </div>
+                                <button type="button" class="toolbar__button" id="analyticsRefreshBtn">
+                                    <i class="fa-solid fa-rotate-right"></i><span>Refresh</span>
+                                </button>
+                            </div>
+                            <div class="table-shell">
+                                <table class="data-table">
+                                    <thead><tr><th>State</th><th>Users</th></tr></thead>
+                                    <tbody id="stateTableBody">
+                                        <tr><td colspan="2" class="table-empty">Loading state analytics...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </article>
+
+                        <article class="panel-card">
+                            <div class="section-head">
+                                <div>
+                                    <p class="eyebrow">Insight Summary</p>
+                                    <h3>Performance notes</h3>
+                                </div>
+                            </div>
+                            <div class="insight-stack">
+                                <div class="insight-card"><span>Leading state</span><strong id="analyticsTopState">-</strong></div>
+                                <div class="insight-card"><span>Tracked regions</span><strong id="analyticsTrackedStates">0</strong></div>
+                                <div class="insight-card"><span>Total customers</span><strong id="analyticsTotalUsers">0</strong></div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div class="toast" id="dashboardToast" role="status" aria-live="polite"></div>
+
+    <script th:src="@{/js/admin-dashboard.js}" src="/js/admin-dashboard.js" defer></script>
+</body>
+</html>

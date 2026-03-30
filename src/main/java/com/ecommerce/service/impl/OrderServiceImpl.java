@@ -1,7 +1,6 @@
 package com.ecommerce.service.impl;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
 
 			order.setProduct(cart.getProduct());
 			order.setPrice(cart.getProduct().getDiscountPrice());
+			order.setCostPrice(cart.getProduct().getCostPrice());
 
 			order.setQuantity(cart.getQuantity());
 			order.setUser(cart.getUser());
@@ -105,6 +105,12 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public ProductOrder getOrdersByOrderId(String orderId) {
 		return orderRepository.findByOrderId(orderId);
+	}
+
+	@Override
+	public Page<ProductOrder> getOrdersBySeller(Integer sellerId, Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		return orderRepository.findByProductSellerId(sellerId, pageable);
 	}
 
 }

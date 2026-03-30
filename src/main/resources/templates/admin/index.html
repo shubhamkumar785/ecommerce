@@ -75,31 +75,31 @@
 
             <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                 <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
-                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Customers</p>
-                    <div class="mt-4 flex items-center justify-between">
-                        <p class="text-4xl font-black text-slate-900">[[${totalCustomers}]]</p>
-                        <span class="w-12 h-12 rounded-[18px] bg-blue-50 text-blue-500 flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></span>
-                    </div>
-                </div>
-                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
-                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Sellers</p>
-                    <div class="mt-4 flex items-center justify-between">
-                        <p class="text-4xl font-black text-slate-900">[[${totalSellers}]]</p>
-                        <span class="w-12 h-12 rounded-[18px] bg-violet-50 text-violet-500 flex items-center justify-center text-xl"><i class="fa-solid fa-store"></i></span>
-                    </div>
-                </div>
-                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
-                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Products</p>
-                    <div class="mt-4 flex items-center justify-between">
-                        <p class="text-4xl font-black text-slate-900">[[${totalProducts}]]</p>
-                        <span class="w-12 h-12 rounded-[18px] bg-orange-50 text-orange-500 flex items-center justify-center text-xl"><i class="fa-solid fa-boxes-stacked"></i></span>
-                    </div>
-                </div>
-                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
-                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Orders</p>
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Total Orders</p>
                     <div class="mt-4 flex items-center justify-between">
                         <p class="text-4xl font-black text-slate-900">[[${totalOrders}]]</p>
-                        <span class="w-12 h-12 rounded-[18px] bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl"><i class="fa-solid fa-truck-fast"></i></span>
+                        <span class="w-12 h-12 rounded-[18px] bg-blue-50 text-blue-500 flex items-center justify-center text-xl"><i class="fa-solid fa-truck-fast"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Gross Revenue</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-3xl font-black text-slate-900">₹ [[${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl"><i class="fa-solid fa-wallet"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Products Sold</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-4xl font-black text-slate-900">[[${totalQuantitySold}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-orange-50 text-orange-500 flex items-center justify-center text-xl"><i class="fa-solid fa-boxes-packing"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                    <p class="text-[11px] uppercase tracking-[0.22em] font-black text-slate-400">Total Profit</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-3xl font-black text-indigo-600">₹ [[${#numbers.formatDecimal(totalProfit, 1, 'COMMA', 0, 'POINT')}]]</p>
+                        <span class="w-12 h-12 rounded-[18px] bg-indigo-50 text-indigo-500 flex items-center justify-center text-xl"><i class="fa-solid fa-chart-line"></i></span>
                     </div>
                 </div>
             </div>

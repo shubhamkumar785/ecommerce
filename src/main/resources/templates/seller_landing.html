@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Hub | Grow Your Business</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            bg: '#FCFBFA',
+                            blue: '#D2F5F5',
+                            purple: '#DFD5F5',
+                            yellow: '#FFF5AB',
+                            lightBlue: '#D5E6FF',
+                        },
+                        nav: '#1F223D',
+                        brand: '#2874F0', // Flipkart-like blue for accents where needed
+                        brandYellow: '#FFC200',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FCFBFA; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hero-gradient { background: linear-gradient(180deg, rgba(235, 245, 255, 0.4) 0%, rgba(252, 251, 250, 1) 100%); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased font-sans flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm px-6 py-4 flex items-center justify-between">
+        <!-- Brand -->
+        <a href="/" class="flex items-center gap-2 group">
+            <div class="w-10 h-10 bg-brandYellow rounded-lg flex items-center justify-center text-slate-900 group-hover:scale-105 transition-transform shadow-sm">
+                <i class="fa-solid fa-shop text-xl"></i>
+            </div>
+            <div class="flex flex-col leading-none">
+                <span class="text-xs font-black text-brand tracking-wider">ECOM</span>
+                <span class="text-xl font-heading font-black text-nav tracking-tight">Seller Hub</span>
+            </div>
+        </a>
+
+        <!-- Main Links (Desktop) -->
+        <div class="hidden lg:flex items-center gap-8 text-[13px] font-bold text-slate-600">
+            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Sell Online <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
+            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Fees and Commission <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
+            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Grow <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
+            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Learn <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
+            <a href="#" class="hover:text-brand transition">Shopsy</a>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-4">
+            <a href="/signin" class="text-[13px] font-bold text-slate-600 hover:text-brand transition px-4 py-2 hidden sm:block">Login</a>
+            <a href="/register" class="bg-brandYellow text-slate-900 px-8 py-3 rounded-md font-black text-[13px] hover:bg-yellow-400 transition shadow hover:shadow-md active:scale-95">Start Selling</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        
+        <!-- Hero Section -->
+        <section class="hero-gradient pt-20 pb-24 px-6 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                
+                <!-- Left Content -->
+                <div class="w-full lg:w-3/5 space-y-8 relative z-10">
+                    <div>
+                        <h1 class="text-4xl lg:text-5xl xl:text-6xl font-heading font-black text-slate-900 leading-[1.15] mb-6">
+                            Why do <span class="text-brand">sellers love</span> selling on Ecom Store?
+                        </h1>
+                        <p class="text-slate-500 font-medium text-lg leading-relaxed max-w-2xl">
+                            45 crore+ customers across India trust Ecom Store to be their number 1 online shopping destination. It is no surprise that more than a million sellers trust their products to be made available 24x7 on our platform.
+                        </p>
+                    </div>
+
+                    <!-- Feature Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+                        <!-- Card 1 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-binoculars"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-800 mb-3">Opportunity</h3>
+                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">45 crore+ of customers across 19000+ pincodes, and access to shopping festivals like The Big Billion Days, and more.</p>
+                        </div>
+                        
+                        <!-- Card 2 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-handshake-simple"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-800 mb-3">Ease of Doing Business</h3>
+                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">Create your Ecom seller account in under 10 minutes with just 1 product and a valid GSTIN number.</p>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-800 mb-3">Growth</h3>
+                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">Sellers see an average 2.8X spike in growth, 2.3X more visibility, and up to 5X growth in Sale events.</p>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-800 mb-3">Additional Support</h3>
+                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">Account management services, exclusive training programs, business insights, catalogue support, and more.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Image -->
+                <div class="w-full lg:w-2/5 flex justify-center lg:justify-end relative">
+                    <!-- Decor -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-100/40 rounded-full blur-3xl -z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=800" alt="Successful Seller" class="max-w-md w-full h-auto object-cover rounded-3xl shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform duration-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- Journey Section -->
+        <section class="py-24 px-6 bg-white border-t border-slate-100">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-left mb-16">
+                    <h2 class="text-4xl font-heading font-black text-slate-800 mb-4"><span class="text-brand">Your Journey</span> on Ecom Store</h2>
+                    <p class="text-slate-500 font-medium">Starting your online business with Ecom Store is easy. 14 lakh+ sellers trust us with their business.</p>
+                </div>
+
+                <!-- Steps Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col group">
+                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
+                            <i class="fa-solid fa-id-card text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-slate-800 mb-3">Create</h4>
+                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Register in just 10 mins with valid GST, address, & bank details.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col group">
+                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
+                            <i class="fa-solid fa-rectangle-list text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-slate-800 mb-3">List</h4>
+                        <p class="text-xs font-medium text-slate-500 leading-relaxed">List your products (min 1 no.) that you want to sell on Ecom Store.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex flex-col group">
+                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
+                            <i class="fa-solid fa-box-open text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-slate-800 mb-3">Orders</h4>
+                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Receive orders from over 45 crore+ Ecom Store customers.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex flex-col group">
+                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
+                            <i class="fa-solid fa-truck-fast text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-slate-800 mb-3">Shipment</h4>
+                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Ecom ensures stress-free delivery of your products.</p>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="flex flex-col group">
+                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
+                            <i class="fa-solid fa-building-columns text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-slate-800 mb-3">Payment</h4>
+                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Receive payment 7 days* from the date of dispatch of your order.</p>
+                    </div>
+                </div>
+
+                <div class="mt-16 flex justify-center">
+                    <a href="#" class="px-8 py-3 border-2 border-brand text-brand font-bold rounded-lg hover:bg-brand hover:text-white transition-colors">Download Launch Kit</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sneak Peek Section -->
+        <section class="py-24 px-6 bg-slate-50 border-t border-slate-100 relative overflow-hidden">
+            <div class="absolute right-0 top-0 w-1/3 h-full bg-blue-50/50 rounded-l-[100px] -z-10"></div>
+            
+            <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+                <h2 class="text-4xl font-heading font-black text-slate-800 mb-16">
+                    Take a sneak peek into <span class="text-brand">our platform</span>
+                </h2>
+
+                <div class="w-full bg-white rounded-[40px] shadow-2xl shadow-blue-900/5 p-8 md:p-12 border border-blue-50 relative group">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <!-- Text Area -->
+                        <div class="lg:col-span-4 text-left space-y-6">
+                            <h3 class="text-2xl font-black text-brand leading-tight">Easy listing with Ecom Store</h3>
+                            <p class="text-slate-500 font-medium text-sm leading-relaxed">
+                                Our listing feature makes it effortless for sellers, whether they have a single product or multiple products. Manage your inventory seamlessly.
+                            </p>
+                            <a href="#" class="inline-block mt-4 px-6 py-2.5 border-2 border-brand text-brand font-bold rounded-lg hover:bg-brand hover:text-white transition-colors text-[13px]">Explore All Features</a>
+                        </div>
+                        
+                        <!-- Image Area -->
+                        <div class="lg:col-span-8 relative flex justify-center lg:justify-end items-center">
+                            <!-- Laptop Frame Mockup -->
+                            <div class="relative w-full max-w-3xl translate-x-4">
+                                <div class="bg-slate-800 p-2 sm:p-3 rounded-t-xl rounded-b-md sm:rounded-t-2xl sm:rounded-b-lg shadow-2xl">
+                                    <div class="aspect-video bg-white rounded sm:rounded-md overflow-hidden relative">
+                                        <!-- Dashboard screenshot replacement -->
+                                        <div class="absolute inset-0 bg-slate-50 flex flex-col">
+                                            <div class="h-8 bg-blue-600 w-full flex items-center px-4 gap-4">
+                                                <div class="w-6 h-6 bg-white/20 rounded"></div>
+                                                <div class="h-2 w-24 bg-white/40 rounded"></div>
+                                            </div>
+                                            <div class="flex-1 p-6 grid grid-cols-4 gap-6">
+                                                <div class="col-span-1 border-r border-slate-200 pr-4 space-y-4">
+                                                    <div class="h-8 w-full bg-slate-200 rounded"></div>
+                                                    <div class="h-8 w-full bg-slate-200 rounded"></div>
+                                                    <div class="h-8 w-full bg-slate-200 rounded"></div>
+                                                </div>
+                                                <div class="col-span-3 space-y-4">
+                                                    <div class="h-32 w-full bg-blue-50/50 border border-blue-100 rounded-xl"></div>
+                                                    <div class="h-48 w-full bg-slate-100 rounded-xl"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="h-3 sm:h-4 w-full bg-slate-400 rounded-b-xl sm:rounded-b-3xl mt-0 shadow-lg relative flex items-center justify-center">
+                                    <div class="w-16 h-1 bg-slate-300 rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mobile Frame Overlay Mockup -->
+                            <div class="absolute -right-4 -bottom-8 w-32 sm:w-48 bg-slate-800 p-1.5 sm:p-2.5 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border-2 sm:border-4 border-slate-700">
+                                <div class="aspect-[9/19] bg-white rounded-[1rem] sm:rounded-[1.5rem] overflow-hidden relative flex flex-col">
+                                    <div class="h-6 w-full bg-blue-600 flex justify-center items-center">
+                                        <div class="w-12 h-1 bg-black/20 rounded-b-lg absolute top-0"></div>
+                                    </div>
+                                    <div class="flex-1 p-3 space-y-3">
+                                        <div class="w-full h-16 bg-slate-100 rounded-lg"></div>
+                                        <div class="w-full h-16 bg-slate-100 rounded-lg"></div>
+                                        <div class="w-full h-10 bg-slate-100 rounded-lg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slider Navigation (Visual only) -->
+                    <div class="absolute top-1/2 -left-6 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-400 cursor-pointer hover:text-brand hover:scale-105 transition">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </div>
+                    <div class="absolute top-1/2 -right-6 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-400 cursor-pointer hover:text-brand hover:scale-105 transition">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </div>
+                    
+                    <!-- Slider Dots -->
+                    <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                        <div class="w-6 h-2 rounded-full bg-brand"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Help Section -->
+        <section class="py-24 px-6 bg-white">
+            <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+                
+                <!-- Left Form -->
+                <div class="w-full lg:w-1/2">
+                    <h2 class="text-4xl font-heading font-black text-slate-800 mb-4">
+                        We are happy to <span class="text-brand">help you</span>
+                    </h2>
+                    <p class="text-slate-500 font-medium mb-10 text-sm leading-relaxed max-w-lg">
+                        Still have questions or queries that are left unanswered? Share your thoughts below which will help us improve your website experience.
+                    </p>
+
+                    <form action="#" method="get" class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Enter Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="John Doe" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Enter Mobile Number / Email ID <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="name@company.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Select A Topic</label>
+                            <div class="relative">
+                                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all appearance-none cursor-pointer">
+                                    <option>Registration Query</option>
+                                    <option>Fee Structure</option>
+                                    <option>Listing Issue</option>
+                                    <option>Other</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Type Your Message <span class="text-red-500">*</span></label>
+                            <textarea rows="4" placeholder="How can we help you today?" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all resize-none"></textarea>
+                        </div>
+
+                        <button type="button" class="bg-brand text-white px-8 py-3.5 rounded-xl font-bold text-[13px] hover:bg-blue-600 transition shadow-lg shadow-brand/30 active:scale-95">Send Query</button>
+                    </form>
+                </div>
+
+                <!-- Right Illustration Area -->
+                <div class="w-full lg:w-1/2 relative flex justify-center items-center">
+                    <div class="absolute inset-0 bg-blue-50/60 blur-3xl rounded-[100px] -z-10 scale-90"></div>
+                     <div class="relative w-full max-w-lg aspect-square">
+                        <!-- We construct a clean CSS illustration abstracting the agent from the screenshot -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-64 h-64 bg-slate-100 rounded-full relative shadow-xl overflow-hidden flex items-end justify-center">
+                                <!-- Person Silhouette -->
+                                <div class="w-32 h-32 bg-slate-800 rounded-full absolute top-8 mr-4 z-10">
+                                    <!-- Headset -->
+                                    <div class="absolute top-1/2 right-0 w-4 h-4 rounded-full bg-slate-400 -translate-y-1/2 translate-x-2"></div>
+                                    <div class="absolute top-1/2 right-2 w-8 h-12 border-r-2 border-b-2 border-slate-400 rounded-br-2xl -translate-y-1/2 translate-y-6"></div>
+                                </div>
+                                <div class="w-56 h-36 bg-brand rounded-t-[50px] relative z-20"></div>
+                                <!-- Monitor -->
+                                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-48 h-32 bg-white rounded-lg shadow-2xl z-30 border border-slate-100 flex flex-col overflow-hidden">
+                                     <div class="flex-1 bg-slate-50 flex items-center justify-center px-4">
+                                        <div class="w-full h-1/2 border-2 border-slate-200 rounded-lg"></div>
+                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Floating Elements -->
+                            <div class="absolute top-4 right-10 w-16 h-16 bg-white rounded-full shadow-lg border border-slate-50 flex items-center justify-center text-slate-400 text-xl animate-bounce" style="animation-duration: 3s;"><i class="fa-regular fa-envelope"></i></div>
+                            <div class="absolute top-16 left-12 w-14 h-14 bg-white rounded-full shadow-lg border border-slate-50 flex items-center justify-center text-slate-400 text-lg animate-bounce" style="animation-duration: 4s;"><i class="fa-solid fa-phone"></i></div>
+                            <div class="absolute top-32 right-0 w-12 h-12 bg-white rounded-full shadow-lg border border-slate-50 flex items-center justify-center text-slate-600 font-bold text-xs">24/7</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-nav text-slate-300 py-12 px-6 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-brandYellow rounded border border-yellow-500/20 flex items-center justify-center text-slate-900 shadow">
+                    <i class="fa-solid fa-shop text-sm"></i>
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-[9px] font-black text-brandYellow tracking-wider">ECOM</span>
+                    <span class="text-sm font-heading font-black text-white tracking-tight">Seller Hub</span>
+                </div>
+            </div>
+            
+            <p class="text-[11px] font-medium opacity-60">© 2026 Ecom Store. All rights reserved.</p>
+            
+            <div class="flex gap-4">
+                <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:text-white transition"><i class="fa-brands fa-twitter text-xs"></i></a>
+                <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:text-white transition"><i class="fa-brands fa-facebook text-xs"></i></a>
+                <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:text-white transition"><i class="fa-brands fa-linkedin text-xs"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fixed 'Go to Top' Button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed right-8 bottom-24 bg-white border border-slate-200 text-brand px-4 py-2 rounded-full font-bold text-[11px] shadow-xl hover:-translate-y-1 transition active:translate-y-0 hidden sm:flex items-center gap-2 group">
+        <i class="fa-solid fa-arrow-up group-hover:-translate-y-1 transition"></i> Go to Top
+    </button>
+
+    <!-- AI Chat Assistant -->
+    <div class="fixed right-8 bottom-8 z-[100] group flex flex-col items-end gap-3 translate-y-2 opacity-0 animate-[fade-up_0.5s_ease-out_forwards]">
+        <!-- Welcome Tooltip -->
+        <div class="bg-white border border-slate-100 shadow-2xl rounded-2xl px-5 py-3 text-[13px] font-bold text-slate-700 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all -translate-x-2 pointer-events-none relative shadow-brand/10">
+            Hey! How can I help you grow today?
+            <div class="absolute right-6 -bottom-1 w-2 h-2 bg-white border-r border-b border-slate-100 rotate-45"></div>
+        </div>
+        <!-- Bubble Button -->
+        <button class="w-14 h-14 bg-brand rounded-full shadow-2xl shadow-brand/40 flex items-center justify-center text-white text-xl hover:scale-110 active:scale-95 transition-all relative overflow-hidden group/btn">
+            <div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent"></div>
+            <i class="fa-solid fa-wand-magic-sparkles group-hover/btn:rotate-12 transition-transform"></i>
+            <!-- Pulse Effect -->
+            <div class="absolute inset-0 border-4 border-white/30 rounded-full animate-ping opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </button>
+        <!-- Notification Badge -->
+        <div class="absolute top-10 right-0 w-4 h-4 bg-red-500 border-2 border-white rounded-full"></div>
+    </div>
+
+    <style>
+        @keyframes fade-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</body>
+</html>

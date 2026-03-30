@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Shop Profile | Seller Dashboard</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg flex flex-col md:flex-row">
+        <!-- Sidebar Fragment -->
+        <aside th:replace="~{base_modern :: sellerSideBar('shop_profile')}"></aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 w-full max-w-5xl mx-auto py-10 px-4 md:px-10">
+            
+            <div class="mb-12 animate-[slideDown_0.3s_ease-out]">
+                <h2 class="text-3xl font-heading font-black text-slate-900 tracking-tight mb-2">Shop Performance Insight 💎</h2>
+                <p class="text-slate-500 font-medium tracking-tight">Your brand identity and customer feedback analysis.</p>
+            </div>
+
+            <!-- Shop Brand Card -->
+            <div class="bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-slate-200/50 border border-slate-50 mb-10 overflow-hidden relative group">
+                <!-- Decorative background -->
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-50 group-hover:scale-110 transition-transform duration-700"></div>
+                
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
+                    <!-- Store Logo/Initial -->
+                    <div class="w-32 h-32 rounded-[40px] bg-indigo-600 flex items-center justify-center text-white text-5xl font-black shadow-2xl shadow-indigo-100 border-4 border-white transform hover:rotate-3 transition-transform">
+                         <span th:if="${user.storeName != null && !user.storeName.empty}">[[${#strings.substring(user.storeName,0,1)}]]</span>
+                         <span th:unless="${user.storeName != null && !user.storeName.empty}">S</span>
+                    </div>
+                    
+                    <div class="flex-1 text-center md:text-left">
+                        <div class="flex flex-col md:flex-row md:items-center gap-2 mb-3">
+                            <h3 class="text-3xl font-black text-slate-900 tracking-tighter">[[${user.storeName != null ? user.storeName : 'Brand Not Set'}]]</h3>
+                            <span class="inline-flex max-w-fit mx-auto md:mx-0 items-center gap-1.5 px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+                                <i class="fa-solid fa-circle-check"></i> Verified Partner
+                            </span>
+                        </div>
+                        <p class="text-slate-500 font-medium text-sm leading-relaxed mb-6 max-w-xl">[[${user.storeDescription != null ? user.storeDescription : 'No description provided yet. Update your profile settings to showcase your brand story.'}]]</p>
+                        
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-8">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Average Rating</span>
+                                <div class="flex items-center gap-2">
+                                     <span class="text-2xl font-black text-slate-900">[[${avgRating}]]</span>
+                                     <div class="flex text-orange-400 text-xs">
+                                         <i class="fa-solid fa-star"></i>
+                                         <i class="fa-solid fa-star"></i>
+                                         <i class="fa-solid fa-star"></i>
+                                         <i class="fa-solid fa-star"></i>
+                                         <i class="fa-solid fa-star-half-stroke"></i>
+                                     </div>
+                                </div>
+                            </div>
+                            <div class="w-[1px] h-10 bg-slate-100 hidden sm:block"></div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Feedback</span>
+                                <span class="text-2xl font-black text-slate-900">[[${totalReviews}]] Reviews</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Feed -->
+            <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-8 ml-2 flex items-center gap-4">
+                 <div class="w-10 h-[2px] bg-slate-100"></div>
+                 Customer Feedback Stream
+            </h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Review Card -->
+                <th:block th:if="${reviews.size() > 0}">
+                    <div th:each="r : ${reviews}" class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-pastel-blue flex items-center justify-center text-slate-600 font-bold text-xs border-2 border-white shadow-sm overflow-hidden">
+                                     <img th:if="${r.user.profileImage != null}" th:src="@{'/img/profile_img/'+${r.user.profileImage}}" class="w-full h-full object-cover">
+                                     <span th:unless="${r.user.profileImage != null}">[[${#strings.substring(r.user.name,0,1)}]]</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-800">[[${r.user.name}]]</span>
+                                    <span class="text-[10px] font-bold text-slate-400 italic">[[${#temporals.format(r.createdAt, 'dd MMM yyyy')}]]</span>
+                                </div>
+                            </div>
+                             <div class="flex text-orange-400 text-[10px] gap-0.5">
+                                 <i th:each="star : ${#numbers.sequence(1, 5)}" 
+                                    th:classappend="${star <= r.rating} ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
+                             </div>
+                        </div>
+                        
+                        <p class="text-slate-600 text-[13px] font-medium leading-relaxed italic mb-8">"[[${r.comment}]]"</p>
+                        
+                        <div class="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center p-1 overflow-hidden shrink-0">
+                                     <img th:src="@{'/img/product_img/'+${r.product.image}}" class="w-full h-full object-contain">
+                                </div>
+                                <span class="text-[11px] font-black text-slate-400 truncate w-32">[[${r.product.title}]]</span>
+                            </div>
+                            <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">Verified Sale</span>
+                        </div>
+                    </div>
+                </th:block>
+                
+                <div th:unless="${reviews.size() > 0}" class="col-span-full py-20 bg-white rounded-[40px] border border-dashed border-slate-200 flex flex-col items-center opacity-40">
+                     <i class="fa-solid fa-comments text-5xl mb-4"></i>
+                     <p class="font-bold">Waiting for your first review...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+</body>
+</html>

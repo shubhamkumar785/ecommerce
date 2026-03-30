@@ -44,6 +44,8 @@ public class ProductOrder {
 
 	private String paymentType;
 
+	private Double costPrice;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private OrderAddress orderAddress;
 	
@@ -135,6 +137,14 @@ public class ProductOrder {
 
 	public void setOrderAddress(OrderAddress orderAddress) {
 	    this.orderAddress = orderAddress;
+	}
+
+	public Double getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
 	}
 
 }
