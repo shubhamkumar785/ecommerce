@@ -46,14 +46,8 @@
             <!-- Right Side: Registration Form -->
             <div class="w-full md:w-[65%] p-8 md:p-14 lg:p-20 flex flex-col justify-center bg-white relative z-20">
                 
-                <!-- Role Switcher -->
+                <!-- Role Switcher Removed -->
                 <div class="mb-10">
-                    <div class="flex items-center justify-center p-1 bg-slate-100 rounded-[24px] w-full max-w-[450px] mx-auto mb-10 overflow-hidden relative">
-                        <div id="roleSlider" class="absolute left-1 top-1 w-1/2 h-[calc(100%-8px)] bg-white rounded-[20px] shadow-md transition-all duration-500 ease-out"></div>
-                        <button type="button" onclick="selectRole('ROLE_USER', 0)" class="flex-1 py-3 text-sm font-black text-slate-400 relative z-10 transition-colors duration-300 hover:text-slate-600 active:scale-95">Customer</button>
-                        <button type="button" onclick="selectRole('ROLE_SELLER', 1)" class="flex-1 py-3 text-sm font-black text-slate-400 relative z-10 transition-colors duration-300 hover:text-slate-600 active:scale-95">Seller</button>
-                    </div>
-
                     <div class="text-center">
                         <h3 id="formTitle" class="text-[26px] md:text-[32px] font-heading font-bold text-[#1F223D] mb-2 tracking-tight">Create an account</h3>
                         <p id="formDesc" class="text-sm md:text-[15px] text-slate-500 font-medium">Please fill in the details below to register.</p>
@@ -61,29 +55,8 @@
                 </div>
 
                 <form id="unifiedRegister" class="flex flex-col gap-6 md:gap-8">
+                    <!-- Hidden Default Role -->
                     <input type="hidden" name="role" id="roleInput" value="ROLE_USER">
-                    
-                    <!-- Business Section (Dynamic) -->
-                    <div id="sellerFields" class="hidden animate-[slideDown_0.4s_ease-out] space-y-6 bg-orange-50/50 p-6 md:p-10 rounded-[32px] border border-orange-100">
-                        <div class="flex items-center gap-3 mb-2">
-                             <div class="w-8 h-[2px] bg-orange-400"></div>
-                             <span class="text-xs font-bold text-orange-600 uppercase tracking-[0.2em]">Store Settings</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-                            <div class="flex flex-col gap-2">
-                                <label class="text-[13px] font-bold text-slate-700 ml-1">Store Name</label>
-                                <div class="relative flex items-center group">
-                                    <i class="fa-solid fa-shop absolute left-4 text-slate-300 group-focus-within:text-orange-400 transition-colors"></i>
-                                    <input class="w-full bg-white text-slate-800 text-sm font-medium rounded-2xl pl-12 pr-4 py-3.5 border border-slate-200 outline-none focus:ring-2 focus:ring-orange-200 transition" name="storeName" type="text" placeholder="Mega Store">
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-2">
-                                <label class="text-[13px] font-bold text-slate-700 ml-1">Store Category / Type</label>
-                                <input class="w-full bg-white text-slate-800 text-sm font-medium rounded-2xl px-5 py-3.5 border border-slate-200 outline-none focus:ring-2 focus:ring-orange-200 transition" name="storeDescription" type="text" placeholder="Fashion, Tech, etc.">
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Personal Section -->
                     <div class="space-y-6">
@@ -152,48 +125,8 @@
         </div>
 
         <script>
-            function selectRole(role, index) {
-                const slider = document.getElementById('roleSlider');
-                const roleInput = document.getElementById('roleInput');
-                const sellerFields = document.getElementById('sellerFields');
-                const bannerTitle = document.getElementById('bannerTitle');
-                const bannerDesc = document.getElementById('bannerDesc');
-                const bannerImg = document.getElementById('bannerImg');
-                const roleLabel = document.getElementById('roleLabel');
-                const sideBanner = document.getElementById('sideBanner');
-                const btnText = document.getElementById('btnText');
-                
-                // Move slider
-                slider.style.left = (index * 50) + 1 + '%';
-                roleInput.value = role;
-
-                // Update UI based on role
-                if (role === 'ROLE_SELLER') {
-                    sellerFields.classList.remove('hidden');
-                    roleLabel.innerText = "Seller";
-                    bannerTitle.innerHTML = "Become a <br/> Digital Seller";
-                    bannerDesc.innerText = "Start your business today. Reach millions of customers and grow fast.";
-                    bannerImg.src = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=500&fit=crop";
-                    sideBanner.style.backgroundColor = "#D5E6FF"; // Light Blue
-                    btnText.innerText = "Submit";
-                // ...existing code...
-                } else {
-                    sellerFields.classList.add('hidden');
-                    roleLabel.innerText = "Customer";
-                    bannerTitle.innerHTML = "Join Our <br/> Community";
-                    bannerDesc.innerText = "Create an account to unlock exclusive features and faster checkout.";
-                    bannerImg.src = "/img/category_img/pant.png";
-                    sideBanner.style.backgroundColor = "#FFF5AB"; // Yellow
-                    btnText.innerText = "Submit";
-                }
-
-                // Update tab colors
-                const buttons = slider.parentElement.querySelectorAll('button');
-                buttons.forEach((btn, i) => {
-                    if (i === index) btn.classList.add('text-nav');
-                    else btn.classList.remove('text-nav');
-                });
-            }
+            // Simplified script (removed role selection)
+            const currentRole = 'ROLE_USER';
 
             function togglePass(fid, bid) {
                 const f = document.getElementById(fid);
@@ -207,8 +140,10 @@
                 }
             }
             
-            // Set initial active tab
-            window.onload = () => selectRole('ROLE_USER', 0);
+            // Initial setup
+            window.onload = () => {
+                document.getElementById('roleInput').value = 'ROLE_USER';
+            };
 
             document.getElementById('unifiedRegister').addEventListener('submit', async function(e) {
                 e.preventDefault();

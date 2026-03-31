@@ -1,428 +1,1148 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout (~{::section})}">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Hub | Grow Your Business</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        pastel: {
-                            bg: '#FCFBFA',
-                            blue: '#D2F5F5',
-                            purple: '#DFD5F5',
-                            yellow: '#FFF5AB',
-                            lightBlue: '#D5E6FF',
-                        },
-                        nav: '#1F223D',
-                        brand: '#2874F0', // Flipkart-like blue for accents where needed
-                        brandYellow: '#FFC200',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #FCFBFA; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .hero-gradient { background: linear-gradient(180deg, rgba(235, 245, 255, 0.4) 0%, rgba(252, 251, 250, 1) 100%); }
-    </style>
+    <title>Become a Seller | Ecom Store</title>
 </head>
-<body class="text-slate-800 antialiased font-sans flex flex-col min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm px-6 py-4 flex items-center justify-between">
-        <!-- Brand -->
-        <a href="/" class="flex items-center gap-2 group">
-            <div class="w-10 h-10 bg-brandYellow rounded-lg flex items-center justify-center text-slate-900 group-hover:scale-105 transition-transform shadow-sm">
-                <i class="fa-solid fa-shop text-xl"></i>
-            </div>
-            <div class="flex flex-col leading-none">
-                <span class="text-xs font-black text-brand tracking-wider">ECOM</span>
-                <span class="text-xl font-heading font-black text-nav tracking-tight">Seller Hub</span>
-            </div>
-        </a>
+<body>
+    <section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
-        <!-- Main Links (Desktop) -->
-        <div class="hidden lg:flex items-center gap-8 text-[13px] font-bold text-slate-600">
-            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Sell Online <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
-            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Fees and Commission <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
-            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Grow <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
-            <a href="#" class="hover:text-brand transition flex items-center gap-1 group">Learn <i class="fa-solid fa-chevron-down text-[10px] group-hover:-rotate-180 transition-transform"></i></a>
-            <a href="#" class="hover:text-brand transition">Shopsy</a>
+        <!-- Seller Hub Toolbar -->
+        <div class="seller-hub-toolbar flex items-center justify-between py-4 border-b border-slate-100 mb-6 bg-white sticky top-0 z-40 px-4 -mx-4 rounded-b-2xl shadow-sm md:shadow-none">
+            <div class="flex items-center gap-6 overflow-x-auto hide-scrollbar whitespace-nowrap text-sm font-bold text-slate-500">
+                <a href="#" class="text-orange-500 border-b-2 border-orange-500 pb-1">Sell Online</a>
+                <a href="#" class="hover:text-orange-500 transition">Fees and Commission</a>
+                <a href="#" class="hover:text-orange-500 transition">Grow</a>
+                <a href="#" class="hover:text-orange-500 transition">Learn</a>
+                <a href="#" class="hover:text-orange-500 transition">Shopsy</a>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <button onclick="openLoginModal()" class="text-sm font-bold text-slate-700 hover:text-orange-500 transition">Login</button>
+                <button onclick="openRegisterModal()"
+                    class="bg-[#FFC200] text-nav px-6 py-2 rounded-lg font-black text-sm hover:shadow-lg transition active:scale-95 shadow-orange-200 shadow-sm uppercase tracking-tight">Start
+                    Selling</button>
+            </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex items-center gap-4">
-            <a href="/signin" class="text-[13px] font-bold text-slate-600 hover:text-brand transition px-4 py-2 hidden sm:block">Login</a>
-            <a href="/register" class="bg-brandYellow text-slate-900 px-8 py-3 rounded-md font-black text-[13px] hover:bg-yellow-400 transition shadow hover:shadow-md active:scale-95">Start Selling</a>
-        </div>
-    </nav>
-
-    <main class="flex-grow">
-        
         <!-- Hero Section -->
-        <section class="hero-gradient pt-20 pb-24 px-6 relative overflow-hidden">
-            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-                
-                <!-- Left Content -->
-                <div class="w-full lg:w-3/5 space-y-8 relative z-10">
+        <div class="relative min-h-[450px] rounded-[32px] overflow-hidden mb-12 group shadow-xl">
+            <!-- Background Image -->
+            <img src="/img/seller/hero.png" alt="Sell Online"
+                class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition duration-1000">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+
+            <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-20 max-w-2xl py-16">
+                <nav class="flex text-[11px] font-black uppercase tracking-widest text-slate-400 mb-6 gap-2">
+                    <a href="/" class="hover:text-orange-500">Home</a>
+                    <span>/</span>
+                    <span class="text-slate-800">Sell Online</span>
+                </nav>
+                <h1 class="text-5xl md:text-7xl font-heading font-black text-nav mb-8 leading-[1.1]">Sell Online <br />
+                    with <span class="text-orange-500">Ecom</span></h1>
+                <p class="text-lg md:text-xl text-slate-600 font-medium mb-10 leading-relaxed">Join India's fastest
+                    growing community of entrepreneurs and reach millions of customers instantly.</p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="openRegisterModal()"
+                        class="bg-[#FFC200] text-nav px-10 py-4 rounded-xl font-black text-lg hover:shadow-2xl hover:scale-105 transition-all active:scale-95 text-center">Start
+                        Selling</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Benefits Quick Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-20">
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center gap-4 group">
+                <div
+                    class="w-14 h-14 bg-pastel-blue rounded-2xl flex items-center justify-center text-blue-500 text-xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-black text-nav">1.5 Cr+</p>
+                    <p class="text-xs font-bold text-slate-400">Ecom customers</p>
+                </div>
+            </div>
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center gap-4 group">
+                <div
+                    class="w-14 h-14 bg-pastel-purple rounded-2xl flex items-center justify-center text-purple-500 text-xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-black text-nav">7 Days*</p>
+                    <p class="text-xs font-bold text-slate-400">Secure Payments</p>
+                </div>
+            </div>
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center gap-4 group">
+                <div
+                    class="w-14 h-14 bg-pastel-yellow rounded-2xl flex items-center justify-center text-yellow-600 text-xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-percent"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-black text-nav">0% Comm.</p>
+                    <p class="text-xs font-bold text-slate-400">Low cost business</p>
+                </div>
+            </div>
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center gap-4 group">
+                <div
+                    class="w-14 h-14 bg-pastel-lightBlue rounded-2xl flex items-center justify-center text-indigo-500 text-xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-black text-nav">24/7</p>
+                    <p class="text-xs font-bold text-slate-400">Seller Support</p>
+                </div>
+            </div>
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center gap-4 group hidden md:flex">
+                <div
+                    class="w-14 h-14 bg-pastel-bg rounded-2xl flex items-center justify-center text-slate-600 border border-slate-100 text-xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-black text-nav">Big Deals</p>
+                    <p class="text-xs font-bold text-slate-400">Festival Access</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Stories Preview -->
+        <div class="mb-20">
+            <h2 class="text-3xl font-heading font-black text-nav mb-8 tracking-tight">Seller <span
+                    class="text-blue-500">Success</span> Stories</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="bg-sky-50 rounded-[40px] p-8 flex flex-col md:flex-row gap-8 items-center border border-sky-100 shadow-sm hover:shadow-lg transition">
+                    <div class="w-32 h-32 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop"
+                            class="w-full h-full object-cover">
+                    </div>
                     <div>
-                        <h1 class="text-4xl lg:text-5xl xl:text-6xl font-heading font-black text-slate-900 leading-[1.15] mb-6">
-                            Why do <span class="text-brand">sellers love</span> selling on Ecom Store?
-                        </h1>
-                        <p class="text-slate-500 font-medium text-lg leading-relaxed max-w-2xl">
-                            45 crore+ customers across India trust Ecom Store to be their number 1 online shopping destination. It is no surprise that more than a million sellers trust their products to be made available 24x7 on our platform.
+                        <h4 class="text-lg font-black text-nav mb-2">Vinay Garg, Activa & Digi Smart</h4>
+                        <p class="text-sm text-slate-600 leading-relaxed italic">"When moving from offline to online
+                            business, our aim was to sell 300 orders per month. Today, we sell over 30,000 orders every
+                            month on Ecom!"</p>
+                    </div>
+                </div>
+                <div
+                    class="bg-purple-50 rounded-[40px] p-8 flex flex-col md:flex-row gap-8 items-center border border-purple-100 shadow-sm hover:shadow-lg transition">
+                    <div class="w-32 h-32 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-black text-nav mb-2">Priya Sharma, Pure Cotton Co.</h4>
+                        <p class="text-sm text-slate-600 leading-relaxed italic">"Ecom's reach is unparalleled. Within 3
+                            months, we expanded from 1 city to panic-India delivery. The 7-day payment cycle is a
+                            life-saver for SMEs."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it Works section -->
+        <div class="bg-white rounded-[48px] shadow-2xl border border-slate-50 overflow-hidden mb-32 relative">
+            <div class="flex flex-col md:flex-row min-h-[600px]">
+
+                <!-- Left Sidebar Navigation -->
+                <div class="w-full md:w-80 bg-slate-50/50 p-8 border-r border-slate-100">
+                    <h3 class="text-xl font-black text-nav mb-8">How it Works</h3>
+                    <div class="space-y-2 flex flex-col" id="sellerTabs">
+                        <button onclick="switchTab('create-account')"
+                            class="seller-tab-btn flex items-center justify-between px-6 py-4 rounded-2xl font-bold transition-all text-left group active-tab"
+                            data-target="create-account">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-user-plus w-5"></i> <span>Create Account</span>
+                            </div>
+                            <i
+                                class="fa-solid fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition"></i>
+                        </button>
+                        <button onclick="switchTab('list-products')"
+                            class="seller-tab-btn flex items-center justify-between px-6 py-4 rounded-2xl font-bold transition-all text-left group text-slate-500 hover:bg-white hover:text-nav"
+                            data-target="list-products">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-boxes-stacked w-5"></i> <span>List Products</span>
+                            </div>
+                            <i
+                                class="fa-solid fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition"></i>
+                        </button>
+                        <button onclick="switchTab('shipping')"
+                            class="seller-tab-btn flex items-center justify-between px-6 py-4 rounded-2xl font-bold transition-all text-left group text-slate-500 hover:bg-white hover:text-nav"
+                            data-target="shipping">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-truck-fast w-5"></i> <span>Storage & Shipping</span>
+                            </div>
+                            <i
+                                class="fa-solid fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition"></i>
+                        </button>
+                        <button onclick="switchTab('payments')"
+                            class="seller-tab-btn flex items-center justify-between px-6 py-4 rounded-2xl font-bold transition-all text-left group text-slate-500 hover:bg-white hover:text-nav"
+                            data-target="payments">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-dollar-sign w-5"></i> <span>Receive Payments</span>
+                            </div>
+                            <i
+                                class="fa-solid fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition"></i>
+                        </button>
+                        <button onclick="switchTab('grow')"
+                            class="seller-tab-btn flex items-center justify-between px-6 py-4 rounded-2xl font-bold transition-all text-left group text-slate-500 hover:bg-white hover:text-nav"
+                            data-target="grow">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-arrow-trend-up w-5"></i> <span>Grow Faster</span>
+                            </div>
+                            <i
+                                class="fa-solid fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Content Area -->
+                <div class="flex-1 p-8 md:p-16 overflow-hidden">
+
+                    <!-- Create Account Content -->
+                    <div id="create-account-content"
+                        class="seller-tab-content block animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <h2 class="text-4xl font-heading font-black text-nav mb-6 leading-tight">Create Account</h2>
+                        <div class="w-12 h-1 bg-blue-500 rounded-full mb-8"></div>
+                        <p class="text-slate-600 text-lg mb-8 leading-relaxed">Creating your Ecom seller account is a
+                            quick process, taking less than 10 minutes, and requires only 3 documents. Follow the
+                            checklist to ensure a seamless account creation experience.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                            <div class="flex items-start gap-4 p-5 bg-slate-50 rounded-2xl">
+                                <i class="fa-solid fa-id-card text-blue-500 mt-1"></i>
+                                <div>
+                                    <h5 class="font-bold text-nav">GSTIN</h5>
+                                    <p class="text-xs text-slate-500">Required for most categories</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-5 bg-slate-50 rounded-2xl">
+                                <i class="fa-solid fa-building-columns text-emerald-500 mt-1"></i>
+                                <div>
+                                    <h5 class="font-bold text-nav">Bank Account</h5>
+                                    <p class="text-xs text-slate-500">For secure payments</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50/50 p-8 rounded-3xl border border-blue-100">
+                            <h5 class="font-bold text-nav mb-4">Don't have a GSTIN?</h5>
+                            <p class="text-sm text-slate-600 mb-6">You can still register and submit your GST enrollment
+                                application later. We guide you through the process.</p>
+                            <a href="/register"
+                                class="inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all">Get
+                                Guided Setup <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- List Products Content -->
+                    <div id="list-products-content"
+                        class="seller-tab-content hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <h2 class="text-4xl font-heading font-black text-nav mb-6 leading-tight">List Products</h2>
+                        <div class="w-12 h-1 bg-yellow-500 rounded-full mb-8"></div>
+                        <p class="text-slate-600 text-lg mb-8 leading-relaxed">Listing refers to the process of
+                            registering your product on the Ecom platform. A well-crafted listing attracts potential
+                            customers and facilitates sales.</p>
+
+                        <div class="relative rounded-3xl overflow-hidden border border-slate-100 shadow-xl mb-10">
+                            <img src="/img/seller/app_mockup.png" class="w-full h-auto object-cover">
+                        </div>
+
+                        <div class="flex items-center gap-4 text-sm font-bold text-slate-500">
+                            <span class="flex items-center gap-2"><i
+                                    class="fa-solid fa-circle-check text-emerald-500"></i> Easy Uploads</span>
+                            <span class="flex items-center gap-2"><i
+                                    class="fa-solid fa-circle-check text-emerald-500"></i> AI Enhancements</span>
+                            <span class="flex items-center gap-2"><i
+                                    class="fa-solid fa-circle-check text-emerald-500"></i> Bulk Listing</span>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Content -->
+                    <div id="shipping-content"
+                        class="seller-tab-content hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <h2 class="text-4xl font-heading font-black text-nav mb-6 leading-tight">Storage & Shipping</h2>
+                        <div class="w-12 h-1 bg-emerald-500 rounded-full mb-8"></div>
+                        <p class="text-slate-600 text-lg mb-8 leading-relaxed">Relax while we handle the heavy lifting.
+                            Our fulfillment network ensures your products reach customers safely and on time.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="p-6 rounded-2xl border border-slate-100 hover:border-emerald-200 transition">
+                                <h5 class="font-bold text-nav mb-2">Eco-Express</h5>
+                                <p class="text-sm text-slate-500">Ship in 24 hours. We pick up from your doorstep and
+                                    deliver to the customer.</p>
+                            </div>
+                            <div class="p-6 rounded-2xl border border-slate-100 hover:border-emerald-200 transition">
+                                <h5 class="font-bold text-nav mb-2">Smart Fullfilment</h5>
+                                <p class="text-sm text-slate-500">Store your products in our warehouse. We handle
+                                    picking, packing, and shipping.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments Content -->
+                    <div id="payments-content"
+                        class="seller-tab-content hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <h2 class="text-4xl font-heading font-black text-nav mb-6 leading-tight">Receive Payments</h2>
+                        <div class="w-12 h-1 bg-indigo-500 rounded-full mb-8"></div>
+                        <p class="text-slate-600 text-lg mb-8 leading-relaxed">Transparency is our priority. Get paid
+                            directly into your bank account within 7 days of dispatch.</p>
+
+                        <div class="flex items-center gap-10 p-10 bg-indigo-50 rounded-[40px]">
+                            <div
+                                class="w-24 h-24 rounded-full bg-white flex items-center justify-center text-indigo-600 text-3xl shadow-sm border border-indigo-100 shrink-0">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-nav mb-2">7-Day Payments</h4>
+                                <p class="text-slate-500">Ecom ensures timely payments directly into your registered
+                                    bank account, enabling steady cash flow for your business.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grow Faster Content -->
+                    <div id="grow-content"
+                        class="seller-tab-content hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <h2 class="text-4xl font-heading font-black text-nav mb-6 leading-tight">Grow Faster</h2>
+                        <div class="w-12 h-1 bg-orange-500 rounded-full mb-8"></div>
+                        <p class="text-slate-600 text-lg mb-8 leading-relaxed">Unlock advanced tools and analytics to
+                            scale your business to the next level.</p>
+
+                        <div class="relative rounded-[40px] overflow-hidden group shadow-2xl mb-10">
+                            <img src="/img/seller/growth.png"
+                                class="w-full h-auto object-cover group-hover:scale-110 transition duration-1000">
+                            <div
+                                class="absolute inset-0 bg-nav/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="openRegisterModal()" class="bg-white text-nav px-8 py-3 rounded-full font-black text-sm">View
+                                    Growth Tools</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <span class="flex items-center gap-2 font-bold text-sm text-slate-700"><i
+                                    class="fa-solid fa-check text-orange-500"></i> Smart Pricing</span>
+                            <span class="flex items-center gap-2 font-bold text-sm text-slate-700"><i
+                                    class="fa-solid fa-check text-orange-500"></i> Ads Manager</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global CTA Section -->
+        <div class="bg-nav rounded-[64px] p-12 md:p-24 text-center text-white relative overflow-hidden mb-32 shadow-2xl mt-32">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-400/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <h2 class="text-4xl md:text-6xl font-heading font-black mb-8 leading-tight">Ready to build your <span class="text-[#FFC200]">Empire?</span></h2>
+                <p class="text-slate-400 text-lg mb-12 font-medium">Join over 1 million sellers who have chosen Ecom for their business growth. setup takes less than 5 minutes.</p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <button onclick="openRegisterModal()" class="w-full sm:w-auto bg-[#FFC200] text-nav px-12 py-5 rounded-2xl font-black text-xl hover:shadow-[0_20px_50px_rgba(255,194,0,0.3)] transition-all transform hover:-translate-y-1 active:scale-95">START SELLING NOW</button>
+                </div>
+
+                <p class="mt-8 text-xs text-slate-500 font-bold uppercase tracking-widest">No hidden charges • 24/7 support • secure payments</p>
+            </div>
+        </div>
+
+        <!-- Footer Section (Final UI/UX Match) -->
+        <div class="bg-[#172337] text-white -mx-4 px-4 py-12 mt-32 rounded-t-[40px] border-t border-[#282f39]">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-6 gap-8 pb-12">
+                    <!-- About Section -->
+                    <div class="space-y-4">
+                        <h4 class="text-[#878787] text-[10px] font-bold uppercase tracking-widest">About</h4>
+                        <div class="flex flex-col gap-2 text-[11px] font-medium text-white/90">
+                            <a href="#" class="hover:underline">Contact Us</a>
+                            <a href="#" class="hover:underline">About Us</a>
+                            <a href="#" class="hover:underline">Careers</a>
+                            <a href="#" class="hover:underline">Ecom Stories</a>
+                            <a href="#" class="hover:underline">Press</a>
+                            <a href="#" class="hover:underline">Corporate Information</a>
+                        </div>
+                    </div>
+
+                    <!-- Group Companies -->
+                    <div class="space-y-4">
+                        <h4 class="text-[#878787] text-[10px] font-bold uppercase tracking-widest">Group Companies</h4>
+                        <div class="flex flex-col gap-2 text-[11px] font-medium text-white/90">
+                            <a href="#" class="hover:underline">Myntra</a>
+                            <a href="#" class="hover:underline">Cleartrip</a>
+                            <a href="#" class="hover:underline">Shopsy</a>
+                        </div>
+                    </div>
+
+                    <!-- Help -->
+                    <div class="space-y-4">
+                        <h4 class="text-[#878787] text-[10px] font-bold uppercase tracking-widest">Help</h4>
+                        <div class="flex flex-col gap-2 text-[11px] font-medium text-white/90">
+                            <a href="#" class="hover:underline">Payments</a>
+                            <a href="#" class="hover:underline">Shipping</a>
+                            <a href="#" class="hover:underline">Cancellation & Returns</a>
+                            <a href="#" class="hover:underline">FAQ</a>
+                            <a href="#" class="hover:underline">Report Infringement</a>
+                        </div>
+                    </div>
+
+                    <!-- Consumer Policy -->
+                    <div class="space-y-4">
+                        <h4 class="text-[#878787] text-[10px] font-bold uppercase tracking-widest">Consumer Policy</h4>
+                        <div class="flex flex-col gap-2 text-[11px] font-medium text-white/90">
+                            <a href="#" class="hover:underline">Cancellation & Returns</a>
+                            <a href="#" class="hover:underline">Terms of Use</a>
+                            <a href="#" class="hover:underline">Security</a>
+                            <a href="#" class="hover:underline">Privacy</a>
+                            <a href="#" class="hover:underline">Sitemap</a>
+                            <a href="#" class="hover:underline">Grievance Redressal</a>
+                            <a href="#" class="hover:underline">EPR Compliance</a>
+                        </div>
+                    </div>
+
+                    <!-- Mail Us -->
+                    <div class="space-y-4 border-l border-[#282f39] pl-6 md:col-span-1">
+                        <h4 class="text-[#878787] text-[10px] font-bold uppercase tracking-widest">Mail Us:</h4>
+                        <p class="text-[11px] text-white/90 leading-5">
+                            Ecom Internet Private Limited,<br>
+                            Buildings Alyssa, Begonia &<br>
+                            Clove Embassy Tech Village,<br>
+                            Outer Ring Road,<br>
+                            Devarabeesanahalli Village,<br>
+                            Bengaluru, 560103,<br>
+                            Karnataka, India
+                        </p>
+                        <div class="flex items-center gap-4 text-white/70 pt-4">
+                            <a href="#" class="hover:text-white"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="#" class="hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="#" class="hover:text-white"><i class="fa-brands fa-youtube"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Registered Office -->
+                    <div class="space-y-4 md:col-span-1">
+                        <h4 class="text-[#878787] text-[10px] font-bold uppercase tracking-widest">Registered Office:</h4>
+                        <p class="text-[11px] text-white/90 leading-5">
+                            Ecom Internet Private Limited,<br>
+                            Buildings Alyssa, Begonia &<br>
+                            Clove Embassy Tech Village,<br>
+                            Outer Ring Road,<br>
+                            Devarabeesanahalli Village,<br>
+                            Bengaluru, 560103,<br>
+                            Karnataka, India<br>
+                            CIN : U51109KA2012PTC066107<br>
+                            Telephone: <span class="text-[#2874f0] font-bold">044-45614700</span>
                         </p>
                     </div>
-
-                    <!-- Feature Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-                        <!-- Card 1 -->
-                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
-                            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl mb-6">
-                                <i class="fa-solid fa-binoculars"></i>
-                            </div>
-                            <h3 class="text-lg font-black text-slate-800 mb-3">Opportunity</h3>
-                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">45 crore+ of customers across 19000+ pincodes, and access to shopping festivals like The Big Billion Days, and more.</p>
-                        </div>
-                        
-                        <!-- Card 2 -->
-                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
-                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl mb-6">
-                                <i class="fa-solid fa-handshake-simple"></i>
-                            </div>
-                            <h3 class="text-lg font-black text-slate-800 mb-3">Ease of Doing Business</h3>
-                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">Create your Ecom seller account in under 10 minutes with just 1 product and a valid GSTIN number.</p>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
-                            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center text-xl mb-6">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </div>
-                            <h3 class="text-lg font-black text-slate-800 mb-3">Growth</h3>
-                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">Sellers see an average 2.8X spike in growth, 2.3X more visibility, and up to 5X growth in Sale events.</p>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-50 hover:-translate-y-1 transition duration-300">
-                            <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl mb-6">
-                                <i class="fa-solid fa-headset"></i>
-                            </div>
-                            <h3 class="text-lg font-black text-slate-800 mb-3">Additional Support</h3>
-                            <p class="text-[13px] font-medium text-slate-500 leading-relaxed">Account management services, exclusive training programs, business insights, catalogue support, and more.</p>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Right Image -->
-                <div class="w-full lg:w-2/5 flex justify-center lg:justify-end relative">
-                    <!-- Decor -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-100/40 rounded-full blur-3xl -z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=800" alt="Successful Seller" class="max-w-md w-full h-auto object-cover rounded-3xl shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform duration-500">
+                <!-- Bottom Bar -->
+                <div class="pt-8 border-t border-[#282f39] flex flex-col md:flex-row items-center justify-between gap-6 pb-6">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-8 text-[11px] font-bold text-white uppercase tracking-tighter">
+                        <a href="/register" class="flex items-center gap-2 hover:text-[#2874f0]"><i class="fa-solid fa-briefcase text-orange-500"></i> Become a Seller</a>
+                        <a href="#" class="flex items-center gap-2 hover:text-[#2874f0]"><i class="fa-solid fa-star text-orange-500"></i> Advertise</a>
+                        <a href="#" class="flex items-center gap-2 hover:text-[#2874f0]"><i class="fa-solid fa-gift text-orange-500"></i> Gift Cards</a>
+                        <a href="#" class="flex items-center gap-2 hover:text-[#2874f0]"><i class="fa-solid fa-circle-question text-orange-500"></i> Help Center</a>
+                    </div>
+                    
+                    <div class="text-[#cfcfcf] text-[11px]">
+                        © 2007-2024 Ecom.com. All rights reserved.
+                    </div>
+
+                    <div class="flex items-center gap-4 grayscale opacity-40 hover:opacity-100 transition duration-300 brightness-200">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-3" alt="Visa">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-5" alt="Mastercard">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="h-3" alt="Paypal">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Apple_Pay_logo.svg" class="h-4" alt="Apple Pay">
+                    </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Journey Section -->
-        <section class="py-24 px-6 bg-white border-t border-slate-100">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-left mb-16">
-                    <h2 class="text-4xl font-heading font-black text-slate-800 mb-4"><span class="text-brand">Your Journey</span> on Ecom Store</h2>
-                    <p class="text-slate-500 font-medium">Starting your online business with Ecom Store is easy. 14 lakh+ sellers trust us with their business.</p>
-                </div>
-
-                <!-- Steps Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                    <!-- Step 1 -->
-                    <div class="flex flex-col group">
-                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
-                            <i class="fa-solid fa-id-card text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
-                        </div>
-                        <h4 class="text-xl font-black text-slate-800 mb-3">Create</h4>
-                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Register in just 10 mins with valid GST, address, & bank details.</p>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="flex flex-col group">
-                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
-                            <i class="fa-solid fa-rectangle-list text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
-                        </div>
-                        <h4 class="text-xl font-black text-slate-800 mb-3">List</h4>
-                        <p class="text-xs font-medium text-slate-500 leading-relaxed">List your products (min 1 no.) that you want to sell on Ecom Store.</p>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="flex flex-col group">
-                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
-                            <i class="fa-solid fa-box-open text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
-                        </div>
-                        <h4 class="text-xl font-black text-slate-800 mb-3">Orders</h4>
-                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Receive orders from over 45 crore+ Ecom Store customers.</p>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="flex flex-col group">
-                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
-                            <i class="fa-solid fa-truck-fast text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
-                        </div>
-                        <h4 class="text-xl font-black text-slate-800 mb-3">Shipment</h4>
-                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Ecom ensures stress-free delivery of your products.</p>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="flex flex-col group">
-                        <div class="w-full aspect-[4/5] bg-slate-50 rounded-2xl mb-6 flex flex-col justify-end items-center p-6 relative overflow-hidden border border-slate-100 transition-colors group-hover:bg-blue-50/50">
-                            <i class="fa-solid fa-building-columns text-5xl text-brand mb-8 relative z-10 group-hover:scale-110 transition-transform"></i>
-                        </div>
-                        <h4 class="text-xl font-black text-slate-800 mb-3">Payment</h4>
-                        <p class="text-xs font-medium text-slate-500 leading-relaxed">Receive payment 7 days* from the date of dispatch of your order.</p>
-                    </div>
-                </div>
-
-                <div class="mt-16 flex justify-center">
-                    <a href="#" class="px-8 py-3 border-2 border-brand text-brand font-bold rounded-lg hover:bg-brand hover:text-white transition-colors">Download Launch Kit</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sneak Peek Section -->
-        <section class="py-24 px-6 bg-slate-50 border-t border-slate-100 relative overflow-hidden">
-            <div class="absolute right-0 top-0 w-1/3 h-full bg-blue-50/50 rounded-l-[100px] -z-10"></div>
             
-            <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
-                <h2 class="text-4xl font-heading font-black text-slate-800 mb-16">
-                    Take a sneak peek into <span class="text-brand">our platform</span>
-                </h2>
+            <!-- Go to Top Button -->
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 bg-[#2874f0] text-white px-6 py-3 rounded-full font-black text-sm shadow-2xl hover:-translate-y-2 transition duration-300 z-50 flex items-center gap-2 group">
+               <i class="fa-solid fa-arrow-up group-hover:-translate-y-1 transition-transform"></i> <span>Go to Top</span>
+            </button>
+        </div>
+        
+        <!-- Login Modal (Final UI/UX Match) -->
+        <div id="loginModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeLoginModal()"></div>
+            
+            <!-- Modal Content -->
+            <div class="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] animate-in fade-in zoom-in duration-300">
+                <!-- Close Button -->
+                <button onclick="closeLoginModal()" class="absolute top-6 right-6 z-10 text-slate-400 hover:text-slate-600 transition bg-slate-50 w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
 
-                <div class="w-full bg-white rounded-[40px] shadow-2xl shadow-blue-900/5 p-8 md:p-12 border border-blue-50 relative group">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                        <!-- Text Area -->
-                        <div class="lg:col-span-4 text-left space-y-6">
-                            <h3 class="text-2xl font-black text-brand leading-tight">Easy listing with Ecom Store</h3>
-                            <p class="text-slate-500 font-medium text-sm leading-relaxed">
-                                Our listing feature makes it effortless for sellers, whether they have a single product or multiple products. Manage your inventory seamlessly.
-                            </p>
-                            <a href="#" class="inline-block mt-4 px-6 py-2.5 border-2 border-brand text-brand font-bold rounded-lg hover:bg-brand hover:text-white transition-colors text-[13px]">Explore All Features</a>
+                <!-- Modal Header -->
+                <div class="p-8 border-b border-slate-100">
+                    <h3 class="text-2xl font-bold text-slate-800">Login</h3>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-8 pb-12 space-y-8">
+                    <div class="space-y-2">
+                        <input type="text" placeholder="Username or phone number or email" 
+                               class="w-full px-5 py-5 bg-white border border-slate-300 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition text-base font-medium text-slate-800">
+                    </div>
+                    
+                    <button class="w-full bg-[#B0D1F3] text-white py-5 rounded-xl font-bold text-lg cursor-not-allowed transition hover:bg-[#8ebce9] shadow-sm">
+                        Next
+                    </button>
+                    
+                    <div class="text-center pt-4 space-y-4">
+                        <p class="text-sm font-bold text-slate-500">Don't have an account?</p>
+                        <button onclick="closeLoginModal(); openRegisterModal();" class="inline-block w-full border-2 border-blue-100 text-blue-600 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition">
+                            Register for new account
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="px-12 pb-10 text-[11px] text-slate-400 text-center leading-relaxed font-medium">
+                    By continuing, you agree to Ecom's <a href="#" class="text-blue-500 hover:underline">Terms of Use</a> & <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>.<br>
+                    Site protected by reCAPTCHA & Google <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>, <a href="#" class="text-blue-500 hover:underline">Terms</a> apply.
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Modal (Multi-Step Form) -->
+        <div id="registerModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeRegisterModal()"></div>
+            
+            <!-- Modal Content -->
+            <div class="relative bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] animate-in fade-in zoom-in duration-300">
+                <!-- Close Button -->
+                <button onclick="closeRegisterModal()" class="absolute top-8 right-8 z-10 text-slate-400 hover:text-slate-600 transition bg-slate-50 w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+
+                <!-- Modal Header -->
+                <div class="p-8 border-b border-slate-100">
+                    <h3 class="text-2xl font-bold text-slate-800">Become a Seller</h3>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-8 md:p-12 space-y-12">
+                    <!-- Steps Indicator -->
+                    <div class="flex items-center justify-center gap-12 text-[11px] font-black uppercase tracking-widest">
+                        <div class="flex items-center gap-3 text-nav">
+                            <span class="w-6 h-6 rounded-full border-2 border-nav flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+                            <span class="border-b-2 border-orange-400 pb-1">Email & Password</span>
                         </div>
-                        
-                        <!-- Image Area -->
-                        <div class="lg:col-span-8 relative flex justify-center lg:justify-end items-center">
-                            <!-- Laptop Frame Mockup -->
-                            <div class="relative w-full max-w-3xl translate-x-4">
-                                <div class="bg-slate-800 p-2 sm:p-3 rounded-t-xl rounded-b-md sm:rounded-t-2xl sm:rounded-b-lg shadow-2xl">
-                                    <div class="aspect-video bg-white rounded sm:rounded-md overflow-hidden relative">
-                                        <!-- Dashboard screenshot replacement -->
-                                        <div class="absolute inset-0 bg-slate-50 flex flex-col">
-                                            <div class="h-8 bg-blue-600 w-full flex items-center px-4 gap-4">
-                                                <div class="w-6 h-6 bg-white/20 rounded"></div>
-                                                <div class="h-2 w-24 bg-white/40 rounded"></div>
-                                            </div>
-                                            <div class="flex-1 p-6 grid grid-cols-4 gap-6">
-                                                <div class="col-span-1 border-r border-slate-200 pr-4 space-y-4">
-                                                    <div class="h-8 w-full bg-slate-200 rounded"></div>
-                                                    <div class="h-8 w-full bg-slate-200 rounded"></div>
-                                                    <div class="h-8 w-full bg-slate-200 rounded"></div>
-                                                </div>
-                                                <div class="col-span-3 space-y-4">
-                                                    <div class="h-32 w-full bg-blue-50/50 border border-blue-100 rounded-xl"></div>
-                                                    <div class="h-48 w-full bg-slate-100 rounded-xl"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="h-3 sm:h-4 w-full bg-slate-400 rounded-b-xl sm:rounded-b-3xl mt-0 shadow-lg relative flex items-center justify-center">
-                                    <div class="w-16 h-1 bg-slate-300 rounded-full"></div>
-                                </div>
+                        <div class="w-12 h-px bg-slate-200"></div>
+                        <div class="flex items-center gap-3 text-slate-300">
+                            <span class="w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-check opacity-0"></i>
+                            </span>
+                            <span>Business Details</span>
+                        </div>
+                    </div>
+
+                    <!-- Form Fields -->
+                    <div class="space-y-6">
+                        <!-- Mobile Number Section -->
+                        <div id="mobileSection">
+                            <div class="relative group">
+                                <input type="text" id="sellerMobile" placeholder="Enter Mobile Number *" 
+                                       class="w-full px-5 py-5 border border-slate-200 rounded-xl focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                                <button onclick="triggerOTP()" id="sendOtpBtn" class="absolute right-5 top-1/2 -translate-y-1/2 text-blue-500 font-bold text-xs hover:underline">Send OTP</button>
                             </div>
                             
-                            <!-- Mobile Frame Overlay Mockup -->
-                            <div class="absolute -right-4 -bottom-8 w-32 sm:w-48 bg-slate-800 p-1.5 sm:p-2.5 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border-2 sm:border-4 border-slate-700">
-                                <div class="aspect-[9/19] bg-white rounded-[1rem] sm:rounded-[1.5rem] overflow-hidden relative flex flex-col">
-                                    <div class="h-6 w-full bg-blue-600 flex justify-center items-center">
-                                        <div class="w-12 h-1 bg-black/20 rounded-b-lg absolute top-0"></div>
-                                    </div>
-                                    <div class="flex-1 p-3 space-y-3">
-                                        <div class="w-full h-16 bg-slate-100 rounded-lg"></div>
-                                        <div class="w-full h-16 bg-slate-100 rounded-lg"></div>
-                                        <div class="w-full h-10 bg-slate-100 rounded-lg"></div>
-                                    </div>
+                            <!-- Dynamic OTP Section (Hidden by default) -->
+                            <div id="otpSection" class="hidden mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                                <p class="text-[13px] font-bold text-slate-700 mb-6">* Enter OTP sent to your mobile number</p>
+                                
+                                <div class="flex gap-3 mb-6">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'otp2')" id="otp1" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'otp3')" id="otp2" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'otp4')" id="otp3" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'otp5')" id="otp4" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'otp6')" id="otp5" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
+                                    <input type="text" maxlength="1" id="otp6" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
                                 </div>
+                                
+                                <p id="otpError" class="text-xs text-red-500 font-bold hidden mb-4">Please enter OTP</p>
+                                <p class="text-xs text-slate-500 font-bold">Resend OTP in <span id="otpTimer">30</span> seconds.</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Slider Navigation (Visual only) -->
-                    <div class="absolute top-1/2 -left-6 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-400 cursor-pointer hover:text-brand hover:scale-105 transition">
-                        <i class="fa-solid fa-chevron-left text-sm"></i>
-                    </div>
-                    <div class="absolute top-1/2 -right-6 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-400 cursor-pointer hover:text-brand hover:scale-105 transition">
-                        <i class="fa-solid fa-chevron-right text-sm"></i>
-                    </div>
-                    
-                    <!-- Slider Dots -->
-                    <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-slate-300"></div>
-                        <div class="w-6 h-2 rounded-full bg-brand"></div>
-                        <div class="w-2 h-2 rounded-full bg-slate-300"></div>
-                        <div class="w-2 h-2 rounded-full bg-slate-300"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Help Section -->
-        <section class="py-24 px-6 bg-white">
-            <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-                
-                <!-- Left Form -->
-                <div class="w-full lg:w-1/2">
-                    <h2 class="text-4xl font-heading font-black text-slate-800 mb-4">
-                        We are happy to <span class="text-brand">help you</span>
-                    </h2>
-                    <p class="text-slate-500 font-medium mb-10 text-sm leading-relaxed max-w-lg">
-                        Still have questions or queries that are left unanswered? Share your thoughts below which will help us improve your website experience.
-                    </p>
+                        <!-- Email Section -->
+                        <div id="emailSection">
+                            <div class="relative group">
+                                <input type="email" id="sellerEmail" placeholder="Email ID *" 
+                                       class="w-full px-5 py-5 border border-slate-200 rounded-xl focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                                <button onclick="triggerEmailOTP()" id="sendEmailOtpBtn" class="absolute right-5 top-1/2 -translate-y-1/2 text-blue-500 font-bold text-xs hover:underline">Send OTP</button>
+                            </div>
 
-                    <form action="#" method="get" class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Enter Full Name <span class="text-red-500">*</span></label>
-                            <input type="text" placeholder="John Doe" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all">
+                            <!-- Dynamic Email OTP Section -->
+                            <div id="emailOtpSection" class="hidden mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                                <p class="text-[13px] font-bold text-slate-700 mb-6">* Enter OTP sent to your email ID</p>
+                                
+                                <div class="flex gap-3 mb-6">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'e-otp2')" id="e-otp1" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'e-otp3')" id="e-otp2" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'e-otp4')" id="e-otp3" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'e-otp5')" id="e-otp4" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
+                                    <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'e-otp6')" id="e-otp5" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
+                                    <input type="text" maxlength="1" id="e-otp6" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
+                                </div>
+                                
+                                <p id="emailOtpError" class="text-xs text-red-500 font-bold hidden mb-4">Please enter OTP</p>
+                                <p class="text-xs text-slate-500 font-bold">Resend OTP in <span id="emailOtpTimer">30</span> seconds.</p>
+                            </div>
                         </div>
+                        <div class="group">
+                            <input type="password" id="sellerPass" placeholder="Create Password *" 
+                                   class="w-full px-5 py-5 border border-slate-200 rounded-xl focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                        </div>
+                        <div class="group">
+                            <input type="password" id="sellerConfirmPass" placeholder="Confirm Password *" 
+                                   class="w-full px-5 py-5 border border-slate-200 rounded-xl focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <p class="text-xs text-slate-500 font-medium">
+                            By continuing, I agree to Ecom's <a href="#" class="text-blue-600 font-bold hover:underline">Terms of Use</a> & <a href="#" class="text-blue-600 font-bold hover:underline">Privacy Policy</a>
+                        </p>
                         
-                        <div class="space-y-2">
-                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Enter Mobile Number / Email ID <span class="text-red-500">*</span></label>
-                            <input type="text" placeholder="name@company.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all">
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Select A Topic</label>
-                            <div class="relative">
-                                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all appearance-none cursor-pointer">
-                                    <option>Registration Query</option>
-                                    <option>Fee Structure</option>
-                                    <option>Listing Issue</option>
-                                    <option>Other</option>
-                                </select>
-                                <i class="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="text-[11px] font-bold text-slate-400 tracking-wider">Type Your Message <span class="text-red-500">*</span></label>
-                            <textarea rows="4" placeholder="How can we help you today?" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all resize-none"></textarea>
-                        </div>
-
-                        <button type="button" class="bg-brand text-white px-8 py-3.5 rounded-xl font-bold text-[13px] hover:bg-blue-600 transition shadow-lg shadow-brand/30 active:scale-95">Send Query</button>
-                    </form>
-                </div>
-
-                <!-- Right Illustration Area -->
-                <div class="w-full lg:w-1/2 relative flex justify-center items-center">
-                    <div class="absolute inset-0 bg-blue-50/60 blur-3xl rounded-[100px] -z-10 scale-90"></div>
-                     <div class="relative w-full max-w-lg aspect-square">
-                        <!-- We construct a clean CSS illustration abstracting the agent from the screenshot -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-64 h-64 bg-slate-100 rounded-full relative shadow-xl overflow-hidden flex items-end justify-center">
-                                <!-- Person Silhouette -->
-                                <div class="w-32 h-32 bg-slate-800 rounded-full absolute top-8 mr-4 z-10">
-                                    <!-- Headset -->
-                                    <div class="absolute top-1/2 right-0 w-4 h-4 rounded-full bg-slate-400 -translate-y-1/2 translate-x-2"></div>
-                                    <div class="absolute top-1/2 right-2 w-8 h-12 border-r-2 border-b-2 border-slate-400 rounded-br-2xl -translate-y-1/2 translate-y-6"></div>
-                                </div>
-                                <div class="w-56 h-36 bg-brand rounded-t-[50px] relative z-20"></div>
-                                <!-- Monitor -->
-                                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-48 h-32 bg-white rounded-lg shadow-2xl z-30 border border-slate-100 flex flex-col overflow-hidden">
-                                     <div class="flex-1 bg-slate-50 flex items-center justify-center px-4">
-                                        <div class="w-full h-1/2 border-2 border-slate-200 rounded-lg"></div>
-                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Floating Elements -->
-                            <div class="absolute top-4 right-10 w-16 h-16 bg-white rounded-full shadow-lg border border-slate-50 flex items-center justify-center text-slate-400 text-xl animate-bounce" style="animation-duration: 3s;"><i class="fa-regular fa-envelope"></i></div>
-                            <div class="absolute top-16 left-12 w-14 h-14 bg-white rounded-full shadow-lg border border-slate-50 flex items-center justify-center text-slate-400 text-lg animate-bounce" style="animation-duration: 4s;"><i class="fa-solid fa-phone"></i></div>
-                            <div class="absolute top-32 right-0 w-12 h-12 bg-white rounded-full shadow-lg border border-slate-50 flex items-center justify-center text-slate-600 font-bold text-xs">24/7</div>
-                        </div>
+                        <button onclick="verifyAndContinue()" class="bg-[#2874f0] text-white px-10 py-5 rounded-xl font-black text-lg flex items-center gap-4 hover:shadow-xl hover:bg-blue-600 transition group">
+                            Register & Continue <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </button>
                     </div>
                 </div>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-nav text-slate-300 py-12 px-6 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-brandYellow rounded border border-yellow-500/20 flex items-center justify-center text-slate-900 shadow">
-                    <i class="fa-solid fa-shop text-sm"></i>
-                </div>
-                <div class="flex flex-col leading-none">
-                    <span class="text-[9px] font-black text-brandYellow tracking-wider">ECOM</span>
-                    <span class="text-sm font-heading font-black text-white tracking-tight">Seller Hub</span>
-                </div>
-            </div>
-            
-            <p class="text-[11px] font-medium opacity-60">© 2026 Ecom Store. All rights reserved.</p>
-            
-            <div class="flex gap-4">
-                <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:text-white transition"><i class="fa-brands fa-twitter text-xs"></i></a>
-                <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:text-white transition"><i class="fa-brands fa-facebook text-xs"></i></a>
-                <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:text-white transition"><i class="fa-brands fa-linkedin text-xs"></i></a>
             </div>
         </div>
-    </footer>
 
-    <!-- Fixed 'Go to Top' Button -->
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed right-8 bottom-24 bg-white border border-slate-200 text-brand px-4 py-2 rounded-full font-bold text-[11px] shadow-xl hover:-translate-y-1 transition active:translate-y-0 hidden sm:flex items-center gap-2 group">
-        <i class="fa-solid fa-arrow-up group-hover:-translate-y-1 transition"></i> Go to Top
-    </button>
+        <!-- Onboarding Dashboard (Step 2: Business Details) -->
+        <div id="onboardingDashboard" class="fixed inset-0 z-[110] bg-slate-50 hidden flex-col animate-in fade-in duration-500 overflow-y-auto">
+            <!-- Dashboard Header -->
+            <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-20">
+                <div class="flex items-center gap-4">
+                    <img src="https://static-assets-web.flixcart.com/fk-sp-static/images/fk-logo-1.svg" class="h-8" alt="Logo">
+                    <div class="w-px h-6 bg-slate-200"></div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Seller Hub Onboarding</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">S</div>
+                        <span id="displayUserEmail" class="text-xs font-bold text-slate-700">email@example.com</span>
+                    </div>
+                    <button onclick="location.reload()" class="text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+            </header>
 
-    <!-- AI Chat Assistant -->
-    <div class="fixed right-8 bottom-8 z-[100] group flex flex-col items-end gap-3 translate-y-2 opacity-0 animate-[fade-up_0.5s_ease-out_forwards]">
-        <!-- Welcome Tooltip -->
-        <div class="bg-white border border-slate-100 shadow-2xl rounded-2xl px-5 py-3 text-[13px] font-bold text-slate-700 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all -translate-x-2 pointer-events-none relative shadow-brand/10">
-            Hey! How can I help you grow today?
-            <div class="absolute right-6 -bottom-1 w-2 h-2 bg-white border-r border-b border-slate-100 rotate-45"></div>
+            <div class="flex-1 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 p-8">
+                <!-- Sidebar -->
+                <aside class="md:col-span-3 space-y-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Onboarding Status</p>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="relative w-16 h-16">
+                                <svg class="w-full h-full transform -rotate-90">
+                                    <circle cx="32" cy="32" r="28" fill="transparent" stroke="#f1f5f9" stroke-width="6"></circle>
+                                    <circle cx="32" cy="32" r="28" fill="transparent" stroke="#f59e0b" stroke-width="6" stroke-dasharray="176" stroke-dashoffset="132"></circle>
+                                </svg>
+                                <span class="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-700">25%</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-orange-400 h-full w-1/4"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checklist -->
+                        <div class="space-y-4 pt-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-5 h-5 rounded-full bg-green-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700">Mobile & Email Verification</p>
+                                    <p class="text-[10px] text-green-500 font-bold">100% Completed</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 opacity-100">
+                                <div class="w-5 h-5 rounded-full border-2 border-orange-400 text-orange-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5"><i class="fa-regular fa-circle"></i></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700">ID & Signature Verification</p>
+                                    <p class="text-[10px] text-slate-400 font-bold">In Progress</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 opacity-50">
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-200 text-slate-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5"><i class="fa-regular fa-circle"></i></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700">Store & Pickup Details</p>
+                                    <p class="text-[10px] text-slate-400 font-bold">Pending</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 opacity-50">
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-200 text-slate-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5"><i class="fa-regular fa-circle"></i></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700">Listing & Stock Availability</p>
+                                    <p class="text-[10px] text-slate-400 font-bold">Pending</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Dashboard Content -->
+                <main class="md:col-span-9 space-y-8 pb-32">
+                    <div class="space-y-2">
+                        <h1 class="text-3xl font-black text-slate-800">Hello, <span class="text-blue-600">Future Seller!</span></h1>
+                        <p class="text-slate-500 font-medium">Let's finish setting up your account to start selling products.</p>
+                    </div>
+
+                    <!-- Verification Summary -->
+                    <section class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 space-y-6">
+                        <h4 class="text-sm font-bold text-slate-800 border-b border-slate-50 pb-4">Mobile & Email Verification</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-xl">
+                                <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-400 text-xl"><i class="fa-solid fa-mobile-screen"></i></div>
+                                <div class="flex-1">
+                                    <p id="verifiedMobile" class="font-bold text-slate-700 text-sm">+91 7858024086</p>
+                                    <span class="text-[10px] font-black text-green-500 uppercase tracking-widest">Verified</span>
+                                </div>
+                                <i class="fa-solid fa-circle-check text-green-500"></i>
+                            </div>
+                            <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-xl">
+                                <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-400 text-xl"><i class="fa-solid fa-envelope"></i></div>
+                                <div class="flex-1">
+                                    <p id="verifiedEmail" class="font-bold text-slate-700 text-sm">shubhampathak566@gmail.com</p>
+                                    <span class="text-[10px] font-black text-green-500 uppercase tracking-widest">Verified</span>
+                                </div>
+                                <i class="fa-solid fa-circle-check text-green-500"></i>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ID & Signature Verification -->
+                    <section class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 space-y-8">
+                        <h4 class="text-sm font-bold text-slate-800 border-b border-slate-50 pb-4">ID & Signature Verification</h4>
+                        
+                        <div class="space-y-4">
+                            <p class="text-xs font-bold text-slate-500">What are you looking to sell on Ecom?</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <button class="flex items-center gap-4 p-4 border-2 border-blue-500 bg-blue-50 rounded-xl text-left transition group">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-500 text-white flex items-center justify-center text-lg"><i class="fa-solid fa-cubes"></i></div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-slate-800 text-sm">All Categories</p>
+                                        <p class="text-[10px] text-slate-500">Clothing, Electronics, Home, etc.</p>
+                                    </div>
+                                    <div class="w-5 h-5 rounded-full border-2 border-blue-500 flex items-center justify-center"><div class="w-2.5 h-2.5 bg-blue-500 rounded-full"></div></div>
+                                </button>
+                                <button class="flex items-center gap-4 p-4 border border-slate-200 hover:border-blue-200 rounded-xl text-left transition group">
+                                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center text-lg"><i class="fa-solid fa-book"></i></div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-slate-800 text-sm">Only Books</p>
+                                        <p class="text-[10px] text-slate-500">(PAN is mandatory)</p>
+                                    </div>
+                                    <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-slate-50">
+                            <div class="relative">
+                                <input type="text" placeholder="Enter GSTIN *" class="w-full px-5 py-5 border border-slate-200 rounded-xl focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                                <button class="absolute right-5 top-1/2 -translate-y-1/2 text-blue-500 font-bold text-xs hover:underline">Verify GSTIN</button>
+                            </div>
+                            <p class="text-[11px] text-slate-400 font-medium">GSTIN is required to sell products on Ecom. If you don't have one, <a href="#" class="text-blue-500 underline">Apply now</a>.</p>
+                        </div>
+
+                        <div class="space-y-4 pt-6 border-t border-slate-50">
+                            <p class="text-xs font-bold text-slate-500">Add Your e-Signature</p>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="px-8 py-4 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:border-blue-400 transition flex items-center gap-3">
+                                    <i class="fa-solid fa-signature text-blue-500"></i> Draw your signature
+                                </button>
+                                <span class="self-center text-[10px] font-black text-slate-300 uppercase">OR</span>
+                                <button class="px-8 py-4 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:border-blue-400 transition flex items-center gap-3">
+                                    <i class="fa-solid fa-upload text-blue-500"></i> Choose your signature
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Store & Pickup Details -->
+                    <section class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 space-y-8">
+                        <h4 class="text-sm font-bold text-slate-800 border-b border-slate-50 pb-4">Store & Pickup Details</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Full Name *</label>
+                                <input type="text" placeholder="Enter Your Full Name" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:bg-white focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Display Name *</label>
+                                <input type="text" id="sellerStoreName" placeholder="Enter Display Name" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:bg-white focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                            </div>
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Store Description</label>
+                                <textarea id="sellerStoreDesc" placeholder="Bio of your store..." class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:bg-white focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700 h-32 resize-none"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-slate-50 rounded-2xl space-y-4">
+                            <p class="text-xs font-bold text-slate-700">Add Pickup Address <span class="text-[10px] font-medium text-slate-400 ml-2">(Flipkart executive will pickup your orders from this location)</span></p>
+                            <div class="flex gap-4">
+                                <div class="relative flex-1">
+                                    <input type="text" placeholder="Search your Pickup Area or Local" class="w-full px-10 py-4 bg-white border border-slate-200 rounded-xl focus:border-blue-400 outline-none transition text-sm font-bold text-slate-700">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                                </div>
+                                <button class="px-6 py-4 bg-white border border-blue-500 text-blue-500 rounded-xl text-xs font-bold hover:bg-blue-50 transition">Use Current Location</button>
+                            </div>
+                        </div>
+
+                        <button id="saveStoreDetailsBtn" onclick="saveStoreDetails()" class="bg-[#2874f0] text-white px-12 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-blue-600 transition shadow-lg active:scale-95">Save Details</button>
+                    </section>
+
+                    <!-- Global Fixed Footer -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-6 flex justify-center gap-4 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+                        <button class="px-12 py-4 border-2 border-slate-200 text-slate-400 rounded-xl font-black text-sm uppercase tracking-widest opacity-50">Go Live Now</button>
+                        <button class="px-12 py-4 border-2 border-slate-200 text-slate-400 rounded-xl font-black text-sm uppercase tracking-widest opacity-50 flex items-center gap-2">Go to Listing <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </main>
+            </div>
         </div>
-        <!-- Bubble Button -->
-        <button class="w-14 h-14 bg-brand rounded-full shadow-2xl shadow-brand/40 flex items-center justify-center text-white text-xl hover:scale-110 active:scale-95 transition-all relative overflow-hidden group/btn">
-            <div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent"></div>
-            <i class="fa-solid fa-wand-magic-sparkles group-hover/btn:rotate-12 transition-transform"></i>
-            <!-- Pulse Effect -->
-            <div class="absolute inset-0 border-4 border-white/30 rounded-full animate-ping opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        </button>
-        <!-- Notification Badge -->
-        <div class="absolute top-10 right-0 w-4 h-4 bg-red-500 border-2 border-white rounded-full"></div>
-    </div>
+            #loginModal.flex, #registerModal.flex {
+                display: flex !important;
+            }
 
-    <style>
-        @keyframes fade-up {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-    </style>
+            /* Force hide all site-wide navigation except our seller hub toolbar */
+            nav:not(.seller-hub-toolbar), 
+            header, 
+            footer,
+            .mobile-nav-bottom {
+                display: none !important;
+            }
+
+            .seller-hub-toolbar {
+                display: flex !important;
+            }
+
+            .active-tab {
+                background-color: white;
+                color: #1F223D !important;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+
+            .active-tab i {
+                color: #3b82f6;
+            }
+
+            .seller-tab-btn:hover:not(.active-tab) {
+                color: #1F223D;
+                background-color: white;
+            }
+        </style>
+
+        <script>
+            function switchTab(targetId) {
+                // Update buttons
+                const buttons = document.querySelectorAll('.seller-tab-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active-tab', 'bg-white', 'shadow-sm');
+                    btn.classList.add('text-slate-500');
+                });
+
+                const activeBtn = document.querySelector(`[data-target="${targetId}"]`);
+                activeBtn.classList.add('active-tab');
+                activeBtn.classList.remove('text-slate-500');
+
+                // Update content
+                const contents = document.querySelectorAll('.seller-tab-content');
+                contents.forEach(content => {
+                    content.classList.add('hidden');
+                    content.classList.remove('block');
+                });
+
+                const activeContent = document.getElementById(`${targetId}-content`);
+                activeContent.classList.remove('hidden');
+                activeContent.classList.add('block');
+            }
+            
+            // Modal Controls
+            function openLoginModal() {
+                const modal = document.getElementById('loginModal');
+                modal.classList.add('flex');
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Stop scrolling
+            }
+
+            function closeLoginModal() {
+                const modal = document.getElementById('loginModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (!document.getElementById('registerModal').classList.contains('flex')) {
+                    document.body.style.overflow = 'auto'; // Resume scrolling only if other modal is not open
+                }
+            }
+
+            // Register Modal Controls
+            function openRegisterModal() {
+                const modal = document.getElementById('registerModal');
+                modal.classList.add('flex');
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeRegisterModal() {
+                const modal = document.getElementById('registerModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (!document.getElementById('loginModal').classList.contains('flex')) {
+                    document.body.style.overflow = 'auto';
+                }
+                
+                // Reset OTP state when modal closes
+                document.getElementById('otpSection').classList.add('hidden');
+                document.getElementById('sendOtpBtn').classList.remove('hidden');
+            }
+
+            // OTP Functionality
+            let lastGeneratedOTP = null;
+
+            function triggerOTP() {
+                const mobileInput = document.getElementById('sellerMobile');
+                if (!mobileInput.value || mobileInput.value.length < 10) {
+                    alert('Please enter a valid 10-digit mobile number');
+                    return;
+                }
+                
+                // Generate simulated OTP
+                lastGeneratedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                
+                // Simulate sending OTP (Alert for demo)
+                alert(`OTP Sent to ${mobileInput.value}\n\n[DEMO MODE] Your OTP is: ${lastGeneratedOTP}`);
+                
+                document.getElementById('otpSection').classList.remove('hidden');
+                document.getElementById('sendOtpBtn').classList.add('hidden');
+                
+                // Reset inputs
+                for(let i=1; i<=6; i++) document.getElementById(`otp${i}`).value = '';
+                document.getElementById('otp1').focus();
+
+                // Mock Timer
+                let count = 30;
+                const timerElem = document.getElementById('otpTimer');
+                const interval = setInterval(() => {
+                    count--;
+                    timerElem.innerText = count;
+                    if (count <= 0) {
+                        clearInterval(interval);
+                        document.getElementById('sendOtpBtn').classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+
+            function moveOTPFocus(current, nextFieldId) {
+                if (current.value.length >= 1) {
+                    const nextField = document.getElementById(nextFieldId);
+                    if (nextField) nextField.focus();
+                }
+            }
+
+            // Email OTP Functionality
+            let lastGeneratedEmailOTP = null;
+
+            function triggerEmailOTP() {
+                const emailInput = document.getElementById('sellerEmail');
+                if (!emailInput.value || !emailInput.value.includes('@')) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                // Generate simulated OTP
+                lastGeneratedEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                
+                // Simulate sending OTP (Alert for demo)
+                alert(`OTP Sent to ${emailInput.value}\n\n[DEMO MODE] Your Email OTP is: ${lastGeneratedEmailOTP}`);
+                
+                document.getElementById('emailOtpSection').classList.remove('hidden');
+                document.getElementById('sendEmailOtpBtn').classList.add('hidden');
+                
+                // Reset inputs
+                for(let i=1; i<=6; i++) document.getElementById(`e-otp${i}`).value = '';
+                document.getElementById('e-otp1').focus();
+
+                // Mock Timer
+                let count = 30;
+                const timerElem = document.getElementById('emailOtpTimer');
+                const interval = setInterval(() => {
+                    count--;
+                    timerElem.innerText = count;
+                    if (count <= 0) {
+                        clearInterval(interval);
+                        document.getElementById('sendEmailOtpBtn').classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+
+            async function verifyAndContinue() {
+                // Collect Mobile OTP
+                let enteredMobileOTP = '';
+                for(let i=1; i<=6; i++) enteredMobileOTP += document.getElementById(`otp${i}`).value;
+
+                // Collect Email OTP
+                let enteredEmailOTP = '';
+                for(let i=1; i<=6; i++) enteredEmailOTP += document.getElementById(`e-otp${i}`).value;
+
+                // Validation Logic
+                if (document.getElementById('otpSection').classList.contains('hidden')) {
+                    alert('Please verify your mobile number first');
+                    return;
+                }
+                if (document.getElementById('emailOtpSection').classList.contains('hidden')) {
+                    alert('Please verify your email ID first');
+                    return;
+                }
+                if (enteredMobileOTP !== lastGeneratedOTP) {
+                    alert('Invalid Mobile OTP');
+                    return;
+                }
+                if (enteredEmailOTP !== lastGeneratedEmailOTP) {
+                    alert('Invalid Email OTP');
+                    return;
+                }
+
+                // Collect Registration Data
+                const mobile = document.getElementById('sellerMobile').value;
+                const email = document.getElementById('sellerEmail').value;
+                const password = document.getElementById('sellerPass').value;
+                const confirmPassword = document.getElementById('sellerConfirmPass').value;
+
+                if (!password || password !== confirmPassword) {
+                    alert('Passwords do not match or are empty');
+                    return;
+                }
+
+                // Show Loading
+                const regBtn = document.querySelector('button[onclick="verifyAndContinue()"]');
+                const originalHtml = regBtn.innerHTML;
+                regBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> CREATING ACCOUNT...';
+                regBtn.disabled = true;
+
+                // Prepare FormData
+                const formData = new FormData();
+                formData.append('mobileNumber', mobile);
+                formData.append('name', email.split('@')[0]); // Default name from email
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('role', 'ROLE_SELLER');
+
+                try {
+                    const response = await fetch('/api/auth/signup', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // Smooth Transition to Onboarding Dashboard
+                        const regModal = document.getElementById('registerModal');
+                        const dashboard = document.getElementById('onboardingDashboard');
+                        const verifiedMobile = document.getElementById('verifiedMobile');
+                        const verifiedEmail = document.getElementById('verifiedEmail');
+                        const userEmailDisplay = document.getElementById('displayUserEmail');
+
+                        // Update UI with verified data
+                        verifiedMobile.innerText = mobile;
+                        verifiedEmail.innerText = email;
+                        userEmailDisplay.innerText = email;
+
+                        regModal.classList.add('hidden');
+                        regModal.classList.remove('flex');
+                        
+                        dashboard.classList.remove('hidden');
+                        dashboard.classList.add('flex');
+                        
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        alert(data.message || 'Registration failed');
+                        regBtn.innerHTML = originalHtml;
+                        regBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred during registration');
+                    regBtn.innerHTML = originalHtml;
+                    regBtn.disabled = false;
+                }
+            }
+            
+            async function saveStoreDetails() {
+                const storeName = document.getElementById('sellerStoreName').value;
+                const storeDesc = document.getElementById('sellerStoreDesc').value;
+
+                if (!storeName) {
+                    alert('Please enter a Display Name for your store');
+                    return;
+                }
+
+                const saveBtn = document.getElementById('saveStoreDetailsBtn');
+                const originalHtml = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> SAVING...';
+                saveBtn.disabled = true;
+
+                const formData = new FormData();
+                formData.append('storeName', storeName);
+                formData.append('storeDescription', storeDesc);
+
+                try {
+                    const response = await fetch('/api/user/profile', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert('Store details saved successfully!');
+                        // Update progress UI
+                        const progressCircle = document.querySelector('circle[stroke="#f59e0b"]');
+                        if (progressCircle) progressCircle.style.strokeDashoffset = "88"; // 50%
+                        const progressText = document.querySelector('.absolute.inset-0.text-xs.font-black');
+                        if (progressText) progressText.innerText = "50%";
+                        
+                        saveBtn.innerHTML = 'DETAILS SAVED';
+                        saveBtn.classList.replace('bg-[#2874f0]', 'bg-green-500');
+                    } else {
+                        alert(data.message || 'Failed to save store details. Make sure you are registered.');
+                        saveBtn.innerHTML = originalHtml;
+                        saveBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while saving store details.');
+                    saveBtn.innerHTML = originalHtml;
+                    saveBtn.disabled = false;
+                }
+            }
+            
+            // Script to ensure site-wide nav is hidden via JS as a fallback
+            document.addEventListener("DOMContentLoaded", function() {
+                const navs = document.querySelectorAll('nav');
+                navs.forEach(nav => {
+                    if (!nav.classList.contains('seller-hub-toolbar')) {
+                        nav.style.setProperty('display', 'none', 'important');
+                    }
+                });
+            });
+        </script>
+    </section>
 </body>
+
 </html>

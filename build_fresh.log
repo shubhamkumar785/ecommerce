@@ -1,0 +1,95 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.ecom:Shopping_Cart >-----------------------
+[INFO] Building Shopping_Cart 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Shopping_Cart ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 57 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ Shopping_Cart ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 75 source files with javac [debug release 17] to target\classes
+[INFO] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/HomeController.java: C:\Users\Shubham Pathak\OneDrive\Documents\Project\Shopping_Cart\src\main\java\com\ecommerce\controller\HomeController.java uses or overrides a deprecated API.
+[INFO] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/HomeController.java: Recompile with -Xlint:deprecation for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[94,52] cannot find symbol
+  symbol:   method getTotalOrders()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[95,53] cannot find symbol
+  symbol:   method getTotalRevenue()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[96,52] cannot find symbol
+  symbol:   method getTotalProfit()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[97,58] cannot find symbol
+  symbol:   method getTotalQuantitySold()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/service/impl/DashboardServiceImpl.java:[18,30] cannot find symbol
+  symbol:   method builder()
+  location: class com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/service/impl/DashboardServiceImpl.java:[28,30] cannot find symbol
+  symbol:   method builder()
+  location: class com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[99,56] cannot find symbol
+  symbol:   method getTotalOrders()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[100,57] cannot find symbol
+  symbol:   method getTotalRevenue()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[101,56] cannot find symbol
+  symbol:   method getTotalProfit()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[102,62] cannot find symbol
+  symbol:   method getTotalQuantitySold()
+  location: variable stats of type com.ecommerce.dto.DashboardStats
+[INFO] 10 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.509 s
+[INFO] Finished at: 2026-03-31T11:32:39+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project Shopping_Cart: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[94,52] cannot find symbol
+[ERROR]   symbol:   method getTotalOrders()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[95,53] cannot find symbol
+[ERROR]   symbol:   method getTotalRevenue()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[96,52] cannot find symbol
+[ERROR]   symbol:   method getTotalProfit()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/SellerController.java:[97,58] cannot find symbol
+[ERROR]   symbol:   method getTotalQuantitySold()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/service/impl/DashboardServiceImpl.java:[18,30] cannot find symbol
+[ERROR]   symbol:   method builder()
+[ERROR]   location: class com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/service/impl/DashboardServiceImpl.java:[28,30] cannot find symbol
+[ERROR]   symbol:   method builder()
+[ERROR]   location: class com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[99,56] cannot find symbol
+[ERROR]   symbol:   method getTotalOrders()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[100,57] cannot find symbol
+[ERROR]   symbol:   method getTotalRevenue()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[101,56] cannot find symbol
+[ERROR]   symbol:   method getTotalProfit()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] /C:/Users/Shubham Pathak/OneDrive/Documents/Project/Shopping_Cart/src/main/java/com/ecommerce/controller/AdminController.java:[102,62] cannot find symbol
+[ERROR]   symbol:   method getTotalQuantitySold()
+[ERROR]   location: variable stats of type com.ecommerce.dto.DashboardStats
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.config.CustomUser;
 import com.ecommerce.config.JwtUtil;
-import com.ecommerce.dto.admin.AuthLoginRequest;
-import com.ecommerce.dto.admin.AuthLoginResponse;
+import com.ecommerce.dto.AuthLoginRequest;
+import com.ecommerce.dto.AuthLoginResponse;
 import com.ecommerce.model.UserDtls;
 import com.ecommerce.service.UserService;
 
@@ -73,15 +73,12 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/signup")
-    public ResponseEntity<?> signup(@ModelAttribute UserDtls user, @RequestParam(value = "img", required = false) MultipartFile file, HttpServletRequest request) {
+    public ResponseEntity<?> signup(@ModelAttribute UserDtls user, @RequestParam(value = "img", required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
         if (userService.existsEmail(user.getEmail())) {
             return ResponseEntity.badRequest().body(Map.of("message", "Email already exists"));
         }
 
-        // Prevent setting Admin role from frontend
-        if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole())) {
-            user.setRole("ROLE_USER");
-        }
+        // Default role is ROLE_USER if none provided
         if (ObjectUtils.isEmpty(user.getRole())) {
             user.setRole("ROLE_USER");
         }
@@ -91,33 +88,62 @@ public class AuthController {
 
         UserDtls savedUser = userService.saveUser(user);
 
-        if (!ObjectUtils.isEmpty(savedUser) && file != null && !file.isEmpty()) {
-            try {
-                File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator + file.getOriginalFilename());
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (!ObjectUtils.isEmpty(savedUser)) {
+            // Save image if present
+            if (file != null && !file.isEmpty()) {
+                try {
+                    File saveFile = new ClassPathResource("static/img").getFile();
+                    Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator + file.getOriginalFilename());
+                    if (!Files.exists(path.getParent())) Files.createDirectories(path.getParent());
+                    Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
+            // Generate Token and Login Automatically
+            String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole());
+            response.addHeader(HttpHeaders.SET_COOKIE, buildCookie(token, request.isSecure()).toString());
+
+            return ResponseEntity.ok(Map.of(
+                "message", "Registered successfully", 
+                "success", true,
+                "token", token,
+                "role", savedUser.getRole(),
+                "name", savedUser.getName()
+            ));
         }
 
-        return ResponseEntity.ok(Map.of("message", "Registered successfully", "success", true));
+        return ResponseEntity.status(500).body(Map.of("message", "Something went wrong during registration"));
     }
 
-    @GetMapping("/api/user/profile")
-    public ResponseEntity<?> getProfile() {
+    @PostMapping("/api/user/profile")
+    public ResponseEntity<?> updateProfile(@ModelAttribute UserDtls user, @RequestParam(value = "img", required = false) MultipartFile file) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             return ResponseEntity.status(401).body(Map.of("message", "Not authenticated"));
         }
+        
         String email = auth.getName();
-        UserDtls user = userService.getUserByEmail(email);
-        if (user == null) {
+        UserDtls dbUser = userService.getUserByEmail(email);
+        if (dbUser == null) {
             return ResponseEntity.status(404).body(Map.of("message", "User not found"));
         }
-        // Scrub password before returning
-        user.setPassword(null);
-        return ResponseEntity.ok(user);
+
+        // Update only provided fields
+        if (StringUtils.hasText(user.getName())) dbUser.setName(user.getName());
+        if (StringUtils.hasText(user.getMobileNumber())) dbUser.setMobileNumber(user.getMobileNumber());
+        if (StringUtils.hasText(user.getAddress())) dbUser.setAddress(user.getAddress());
+        if (StringUtils.hasText(user.getCity())) dbUser.setCity(user.getCity());
+        if (StringUtils.hasText(user.getState())) dbUser.setState(user.getState());
+        if (StringUtils.hasText(user.getPincode())) dbUser.setPincode(user.getPincode());
+        if (StringUtils.hasText(user.getStoreName())) dbUser.setStoreName(user.getStoreName());
+        if (StringUtils.hasText(user.getStoreDescription())) dbUser.setStoreDescription(user.getStoreDescription());
+
+        UserDtls updated = userService.updateUserProfile(dbUser, file);
+        updated.setPassword(null); // Safety
+
+        return ResponseEntity.ok(Map.of("message", "Profile updated successfully", "user", updated));
     }
 
     @PostMapping("/auth/google")
@@ -165,12 +191,6 @@ public class AuthController {
     }
 
     private String redirectFor(UserDtls user) {
-        if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole())) {
-            return "/admin/dashboard";
-        }
-        if ("ROLE_SELLER".equalsIgnoreCase(user.getRole())) {
-            return "/seller/dashboard";
-        }
-        return "/user/dashboard";
+        return "/";
     }
 }

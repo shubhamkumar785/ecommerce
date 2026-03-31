@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -45,16 +44,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.addHeader(HttpHeaders.SET_COOKIE, authCookie.toString());
         }
 
-        for (GrantedAuthority auth : authentication.getAuthorities()) {
-            String role = auth.getAuthority();
-            if ("ROLE_ADMIN".equals(role)) {
-                response.sendRedirect("/admin/dashboard");
-                return;
-            } else if ("ROLE_SELLER".equals(role)) {
-                response.sendRedirect("/seller/dashboard");
-                return;
-            }
-        }
         // Default: customer
         response.sendRedirect("/");
     }

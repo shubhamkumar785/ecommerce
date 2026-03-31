@@ -5,119 +5,178 @@
 <title>Shopping Cart | Ecom Store</title>
 </head>
 <body>
-    <section class="min-h-screen bg-pastel-bg py-12 px-4 md:px-8">
-        <div class="max-w-6xl mx-auto">
+    <section class="min-h-screen bg-[#f1f3f6] py-8 px-4 md:px-0">
+        <div class="max-w-[1400px] mx-auto">
             
-            <!-- Header -->
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">Your Cart 🛒</h2>
-                    <p class="text-slate-500 font-medium">Review your items and proceed to checkout.</p>
-                </div>
-                <!-- Breadcrumbs -->
-                <div class="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">
-                    <a href="/" class="hover:text-orange-500 transition">Home</a>
-                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span class="text-nav">Cart</span>
-                </div>
-            </div>
-
-            <!-- Toast Alerts -->
+            <!-- Context Alerts -->
             <th:block th:if="${session.succMsg}">
-                <div class="mb-8 p-4 bg-green-50 border border-green-100 rounded-2xl flex items-center gap-3 text-green-600 font-bold text-sm animate-[slideDown_0.3s_ease-out]">
+                <div class="max-w-4xl mx-auto mb-6 p-4 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3 text-green-600 font-bold text-sm shadow-sm animate-bounce">
                     <i class="fa-solid fa-circle-check text-lg"></i> [[${session.succMsg}]]
                 </div>
                 <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
             </th:block>
 
             <th:block th:if="${session.errorMsg}">
-                <div class="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 font-bold text-sm animate-[slideDown_0.3s_ease-out]">
+                <div class="max-w-4xl mx-auto mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-600 font-bold text-sm shadow-sm">
                     <i class="fa-solid fa-circle-exclamation text-lg"></i> [[${session.errorMsg}]]
                 </div>
                 <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
             </th:block>
 
-            <div class="flex flex-col lg:flex-row gap-8">
+            <div class="flex flex-col lg:flex-row gap-4 items-start">
                 
-                <!-- Main Cart Items List -->
-                <div class="lg:w-2/3 space-y-6">
-                    <!-- Empty State -->
-                    <div th:if="${#lists.isEmpty(carts)}" class="bg-white rounded-[40px] p-20 text-center shadow-xl shadow-slate-200/50 border border-slate-50">
-                        <div class="w-24 h-24 bg-orange-50 text-orange-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
-                            <i class="fa-solid fa-cart-arrow-down"></i>
+                <!-- Left: Product List & Delivery -->
+                <div class="lg:w-[70%] space-y-4">
+                    
+                    <!-- Tabs Header (Modern Style) -->
+                    <div class="bg-white rounded-t-lg shadow-sm border-b border-gray-100 flex overflow-x-auto no-scrollbar">
+                        <button class="px-10 py-4 border-b-4 border-blue-600 text-blue-600 font-bold text-sm whitespace-nowrap">
+                            Ecom ([[${itemsCount ?: 0}]])
+                        </button>
+                    </div>
+
+                    <!-- Delivery Information -->
+                    <div class="bg-white p-4 md:px-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 border-b border-gray-50">
+                        <div class="flex items-start gap-3 w-full">
+                            <span class="text-sm font-medium text-gray-800">Deliver to: <span class="font-bold">[[${user.name}]]</span>, <span th:text="${user.pincode}">201301</span></span>
+                            <span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] font-black text-gray-500 uppercase">Home</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Your cart is empty</h3>
-                        <p class="text-slate-500 font-medium max-w-sm mx-auto mb-8">Looks like you haven't added anything to your cart yet.</p>
-                        <a href="/products" class="inline-flex items-center gap-2 px-8 py-3 bg-nav text-white rounded-full font-bold shadow-lg hover:bg-slate-800 transition">
-                            START SHOPPING <i class="fa-solid fa-arrow-right-long opacity-50 text-xs"></i>
+                        <button class="px-4 py-2 border border-gray-200 text-blue-600 font-bold text-xs rounded hover:bg-blue-50 transition w-full md:w-auto uppercase tracking-wider">
+                            Change
+                        </button>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div th:if="${#lists.isEmpty(carts)}" class="bg-white p-16 text-center shadow-sm">
+                        <img src="https://rukminim2.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90" class="w-64 mx-auto mb-6 opacity-80" alt="Empty Cart">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Missing Cart items?</h3>
+                        <p class="text-gray-500 text-sm mb-6">Login to see the items you added previously</p>
+                        <a href="/products" class="inline-block px-12 py-3 bg-nav text-white font-bold rounded shadow-lg hover:bg-slate-800 transition uppercase tracking-widest text-xs">
+                            Shop Now
                         </a>
                     </div>
 
-                    <div th:each="cart,c:${carts}" class="bg-white rounded-[32px] p-6 shadow-xl shadow-slate-200/50 border border-slate-50 relative group transition-all duration-300 hover:shadow-2xl flex flex-col sm:flex-row items-center gap-6">
-                        
-                        <!-- Product Image -->
-                        <div class="w-full sm:w-32 h-32 bg-slate-50 rounded-[24px] p-3 flex items-center justify-center overflow-hidden border border-slate-100 shrink-0">
-                            <img th:src="@{'/img/product_img/'+${cart.product.image}}" class="w-full h-full object-contain mix-blend-multiply drop-shadow-md">
-                        </div>
+                    <!-- Cart Item List -->
+                    <div th:unless="${#lists.isEmpty(carts)}" class="bg-white overflow-hidden shadow-sm">
+                        <div th:each="cart,c:${carts}" class="p-6 border-b border-gray-100 last:border-b-0 group">
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <!-- Product Image & Controls -->
+                                <div class="w-full md:w-32 flex flex-col items-center gap-4">
+                                    <div class="w-32 h-32 flex items-center justify-center p-2 border border-gray-50 rounded">
+                                        <img th:src="@{'/img/product_img/'+${cart.product.image}}" class="max-w-full max-h-full object-contain mix-blend-multiply" th:alt="${cart.product.title}">
+                                    </div>
+                                    <!-- Qty Control -->
+                                    <div class="flex items-center gap-3">
+                                        <a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}" class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 transition active:scale-90">-</a>
+                                        <span class="w-10 text-center font-bold text-sm bg-white border border-gray-200 py-0.5 rounded shadow-inner">[[${cart.quantity}]]</span>
+                                        <a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}" class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 transition active:scale-90">+</a>
+                                    </div>
+                                </div>
 
-                        <!-- Details -->
-                        <div class="flex-1 w-full text-center sm:text-left space-y-2">
-                            <h4 class="text-lg font-bold text-slate-900 text-balance leading-tight">[[${cart.product.title}]]</h4>
-                            <p class="text-[13px] font-bold text-[#2d3a98]">Price: ₹[[${cart.product.discountPrice}]]</p>
-                        </div>
+                                <!-- Product Details -->
+                                <div class="flex-1 space-y-2">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="text-lg font-medium text-gray-900 hover:text-blue-600 transition cursor-pointer leading-tight max-w-lg">[[${cart.product.title}]]</h4>
+                                        <div class="text-right flex flex-col">
+                                            <span class="text-xs text-gray-400 line-through">₹[[${cart.product.price}]]</span>
+                                            <span class="text-xl font-black text-gray-900">₹[[${cart.product.discountPrice}]]</span>
+                                            <span class="text-[10px] font-bold text-green-600 uppercase tracking-tighter">[[${cart.product.discount}]]% Off applied</span>
+                                        </div>
+                                    </div>
 
-                        <!-- Controls -->
-                        <div class="flex sm:flex-col items-center gap-4 sm:gap-6 w-full sm:w-auto shrink-0 justify-between sm:justify-center">
-                            
-                            <!-- Qty Selector -->
-                            <div class="flex items-center bg-slate-50 rounded-full p-1 border border-slate-200">
-                                <a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}" class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-500 hover:text-red-500 transition shadow-sm border border-slate-100 active:scale-95"><i class="fa-solid fa-minus text-[10px]"></i></a>
-                                <span class="w-8 text-center font-bold text-slate-800 text-[13px]">[[${cart.quantity}]]</span>
-                                <a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}" class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-500 hover:text-green-500 transition shadow-sm border border-slate-100 active:scale-95"><i class="fa-solid fa-plus text-[10px]"></i></a>
+                                    <!-- Tags & Rating -->
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <div class="flex items-center gap-1 bg-green-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded">
+                                            [[${cart.product.rating ?: 4.2}]] <i class="fa-solid fa-star text-[7px]"></i>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-400">(43,350 ratings)</span>
+                                        <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-4" alt="Assured">
+                                    </div>
+
+                                    <!-- Additional Info -->
+                                    <div class="pt-2">
+                                        <p th:if="${cart.product.stock <= 0}" class="text-xs font-bold text-red-500 uppercase tracking-wide">
+                                            <i class="fa-solid fa-circle-exclamation"></i> Out Of Stock
+                                        </p>
+                                        <p th:unless="${cart.product.stock <= 0}" class="text-xs font-bold text-gray-500">
+                                            Seller: [[${cart.product.seller?.name ?: 'Ecom Retail'}]]
+                                        </p>
+                                    </div>
+
+                                    <!-- Actions -->
+                                    <div class="pt-6 flex gap-8">
+                                        <button class="text-sm font-black text-gray-800 uppercase tracking-wider hover:text-blue-600 transition flex items-center gap-2">
+                                            Save for later
+                                        </button>
+                                        <a href="#" class="text-sm font-black text-gray-800 uppercase tracking-wider hover:text-red-600 transition flex items-center gap-2">
+                                            Remove
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-
-                            <!-- Total Price -->
-                            <div class="text-right flex flex-col items-end">
-                                <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-0.5">Subtotal</span>
-                                <span class="text-lg font-black text-slate-800">₹[[${cart.totalPrice}]]</span>
-                            </div>
                         </div>
+                    </div>
+
+                    <!-- Bottom Bar (Mobile/Sticky Desktop) -->
+                    <div th:unless="${#lists.isEmpty(carts)}" class="bg-white p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] sticky bottom-0 z-10 lg:hidden flex justify-between items-center px-6">
+                        <div class="flex flex-col">
+                            <span class="text-base font-black text-gray-900">₹[[${totalOrderPrice}]]</span>
+                            <span class="text-[10px] font-bold text-blue-600 uppercase">View price breakdown</span>
+                        </div>
+                        <a href="/user/orders" class="px-10 py-3 bg-[#fb641b] text-white font-black text-sm uppercase tracking-widest rounded shadow-lg">
+                            Place Order
+                        </a>
                     </div>
                 </div>
 
-                <!-- Order Summary Sidebar -->
-                <div th:unless="${#lists.isEmpty(carts)}" class="lg:w-1/3">
-                    <div class="bg-white rounded-[40px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 sticky top-28">
-                        <h3 class="text-xl font-heading font-extrabold text-slate-900 mb-6 tracking-tight">Order Summary</h3>
+                <!-- Right: Price Breakdown -->
+                <div th:unless="${#lists.isEmpty(carts)}" class="lg:w-[30%] space-y-4">
+                    <div class="bg-white rounded shadow-sm overflow-hidden sticky top-24">
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h3 class="text-base font-black text-gray-500 uppercase tracking-widest">Price Details</h3>
+                        </div>
                         
-                        <div class="space-y-4 text-sm font-medium mb-8">
-                            <div class="flex items-center justify-between text-slate-500">
-                                <span>Subtotal</span>
-                                <span class="text-slate-800 font-bold">₹[[${totalOrderPrice}]]</span>
+                        <div class="p-6 space-y-5">
+                            <div class="flex justify-between text-base">
+                                <span class="text-gray-800">Price ([[${itemsCount}]] item)</span>
+                                <span>₹[[${totalMrp}]]</span>
                             </div>
-                            <div class="flex items-center justify-between text-slate-500">
-                                <span>Shipping estimate</span>
-                                <span class="text-green-500 font-bold">Free</span>
+                            
+                            <div class="flex justify-between text-base">
+                                <span class="text-gray-800">Discount</span>
+                                <span class="text-green-600 font-medium">- ₹[[${totalDiscount}]]</span>
                             </div>
-                            <div class="flex items-center justify-between text-slate-500">
-                                <span>Tax</span>
-                                <span class="text-slate-800 font-bold">₹0</span>
+
+                            <div class="flex justify-between text-base">
+                                <span class="text-gray-800">Delivery Charges</span>
+                                <span class="text-green-600 line-through">₹120</span>
+                                <span class="text-green-600 font-medium italic ml-[-40px]">Free</span>
+                            </div>
+
+                            <div class="pt-5 border-t border-dashed border-gray-200">
+                                <div class="flex justify-between">
+                                    <span class="text-lg font-black text-gray-900">Total Amount</span>
+                                    <span class="text-lg font-black text-gray-900">₹[[${totalOrderPrice}]]</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-2 text-center rounded">
+                                <p class="text-sm font-bold text-green-600">You will save ₹[[${totalDiscount}]] on this order</p>
+                            </div>
+
+                            <div class="lg:block hidden pt-4">
+                                <a href="/user/orders" class="w-full inline-block text-center py-4 bg-[#fb641b] text-white font-black text-sm uppercase tracking-widest rounded shadow-xl hover:shadow-[#fb641b]/20 hover:-translate-y-0.5 transition">
+                                    Place Order
+                                </a>
                             </div>
                         </div>
 
-                        <div class="pt-6 border-t border-slate-100 mb-8">
-                            <div class="flex items-end justify-between">
-                                <span class="text-[15px] font-bold text-slate-900">Order Total</span>
-                                <span class="text-3xl font-black text-[#2d3a98]">₹[[${totalOrderPrice}]]</span>
+                        <!-- Safety Badges -->
+                        <div class="bg-gray-50 p-6 flex flex-col gap-4 border-t border-gray-100">
+                            <div class="flex items-center gap-3 text-gray-500">
+                                <i class="fa-solid fa-shield-halved text-xl opacity-60"></i>
+                                <span class="text-xs font-bold leading-tight">Safe and secure payments. Easy returns. 100% Authentic products.</span>
                             </div>
-                        </div>
-
-                        <a href="/user/orders" class="w-full py-4.5 bg-nav text-white rounded-[24px] font-bold shadow-xl shadow-slate-200 hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3 tracking-widest uppercase text-xs">
-                            PROCEED TO CHECKOUT <i class="fa-solid fa-arrow-right-long opacity-50 text-[10px]"></i>
-                        </a>
-
-                        <div class="mt-6 flex items-center justify-center gap-2 text-slate-400 font-medium text-xs">
-                            <i class="fa-solid fa-lock text-[10px]"></i> Secure Checkout Guaranteed
                         </div>
                     </div>
                 </div>
@@ -126,10 +185,8 @@
         </div>
 
         <style>
-            @keyframes slideDown {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         </style>
     </section>
 </body>

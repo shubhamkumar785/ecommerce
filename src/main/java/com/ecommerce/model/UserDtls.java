@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "user_dtls")
 public class UserDtls {
 
 	@Id
@@ -46,11 +48,14 @@ public class UserDtls {
 
 	private String role;
 
-	private Boolean isEnable;
+	@Column(name = "is_enable")
+	private Boolean isEnable = true;
 
-	private Boolean accountNonLocked;
+	@Column(name = "account_non_locked")
+	private Boolean accountNonLocked = true;
 
-	private Integer failedAttempt;
+	@Column(name = "failed_attempt")
+	private Integer failedAttempt = 0;
 
 	private Date lockTime;
 	

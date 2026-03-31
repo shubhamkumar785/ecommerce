@@ -1,4 +1,4 @@
-package com.ecommerce.dto.admin;
+package com.ecommerce.dto;
 
 public record AuthLoginRequest(String email, String password) {
 }

@@ -274,4 +274,9 @@ public class HomeController {
 		return "seller_landing";
 	}
 
+	@GetMapping("/become-seller")
+	public String becomeSeller() {
+		return "seller_landing";
+	}
+
 }

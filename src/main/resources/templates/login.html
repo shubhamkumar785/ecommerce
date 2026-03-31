@@ -52,7 +52,7 @@
                 <div class="absolute bottom-10 left-0 w-64 h-64 bg-orange-400/10 rounded-full blur-[80px] -translate-x-1/4"></div>
                 
                 <div class="relative z-10 w-full lg:w-[90%]">
-                    <span id="roleLabel" class="inline-block bg-[#1F223D] text-white text-[10px] font-bold px-3 py-1 rounded-full mb-6 tracking-widest uppercase">Customer</span>
+                    <span id="roleLabel" class="inline-block bg-[#1F223D] text-white text-[10px] font-bold px-3 py-1 rounded-full mb-6 tracking-widest uppercase">Customer Account</span>
                     <h2 id="bannerTitle" class="text-3xl md:text-5xl font-heading font-extrabold text-[#1F223D] leading-[1.1] mb-5 tracking-tight transition-all duration-500">Welcome <br/> Back!</h2>
                     <p id="bannerDesc" class="text-slate-600 font-medium text-sm md:text-base opacity-80 leading-relaxed transition-all duration-500">Discover new trends, track your orders, and enjoy faster checkout.</p>
                 </div>
@@ -66,15 +66,8 @@
             <!-- Right Side: Login Form -->
             <div class="w-full md:w-1/2 p-8 md:p-14 lg:p-16 flex flex-col justify-center bg-white relative z-20">
                 
-                <!-- Role Switcher -->
+                <!-- Role Switcher Removed -->
                 <div class="mb-10">
-                    <div class="flex items-center justify-center p-1 bg-slate-100 rounded-[20px] w-full max-w-[360px] mx-auto mb-8 overflow-hidden relative">
-                        <div id="roleSlider" class="absolute left-1 top-1 w-1/3 h-[calc(100%-8px)] bg-white rounded-[16px] shadow-md transition-all duration-500 ease-out"></div>
-                        <button type="button" onclick="selectRole('ROLE_USER', 0)" class="flex-1 py-2.5 text-xs font-black text-slate-400 relative z-10 transition-colors duration-300 active:scale-95">Customer</button>
-                        <button type="button" onclick="selectRole('ROLE_SELLER', 1)" class="flex-1 py-2.5 text-xs font-black text-slate-400 relative z-10 transition-colors duration-300 active:scale-95">Seller</button>
-                        <button type="button" onclick="selectRole('ROLE_ADMIN', 2)" class="flex-1 py-2.5 text-xs font-black text-slate-400 relative z-10 transition-colors duration-300 active:scale-95">Admin</button>
-                    </div>
-
                     <div class="text-center">
                         <h3 class="text-2xl md:text-3xl font-heading font-bold text-[#1F223D] mb-2">Sign in to Account</h3>
                         <p class="text-sm text-slate-500 font-medium">Please enter your details to proceed.</p>
@@ -128,9 +121,21 @@
                 </div>
 
                 <!-- Signup Link -->
-                <p class="text-center text-sm font-medium text-slate-400 mt-10">
-                    New to platform? <a href="/register" class="font-bold text-orange-600 hover:text-orange-700 transition">Get started</a>
-                </p>
+                <div class="flex flex-col gap-4 mt-8">
+                    <p class="text-center text-sm font-medium text-slate-400">
+                        New to platform? <a href="/register" class="font-bold text-orange-600 hover:text-orange-700 transition underline underline-offset-4 decoration-orange-200">Get started</a>
+                    </p>
+                    
+                    <div class="relative flex items-center justify-center my-2">
+                        <div class="absolute w-20 h-[1px] bg-slate-100"></div>
+                        <span class="bg-white px-3 text-[9px] font-black text-slate-300 relative z-10 uppercase tracking-widest">or</span>
+                    </div>
+
+                    <a href="/become-seller" class="w-fit mx-auto flex items-center gap-2.5 px-6 py-2.5 rounded-full border border-slate-200 text-[#1F223D] font-bold text-xs hover:bg-slate-50 hover:border-orange-200 hover:text-orange-600 transition-all duration-300 group shadow-sm active:scale-95">
+                        <i class="fa-solid fa-shop text-orange-400 group-hover:scale-110 transition-transform"></i>
+                        <span>WANT TO SELL? BECOME A SELLER</span>
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -139,42 +144,8 @@
         <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
 
         <script th:inline="javascript">
-            function selectRole(role, index) {
-                const slider = document.getElementById('roleSlider');
-                const bannerTitle = document.getElementById('bannerTitle');
-                const bannerDesc = document.getElementById('bannerDesc');
-                const bannerImg = document.getElementById('bannerImg');
-                const roleLabel = document.getElementById('roleLabel');
-                const sideBanner = document.getElementById('sideBanner');
-                
-                document.getElementById('roleInput').value = role;
-                
-                slider.style.left = (index * 33.33) + 1 + '%';
-
-                if (role === 'ROLE_SELLER') {
-                    roleLabel.innerText = "Seller";
-                    bannerTitle.innerHTML = "Store <br/> Management";
-                    bannerDesc.innerText = "Access your shop dashboard, manage inventory and track your growth.";
-                    bannerImg.src = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=500&fit=crop";
-                    sideBanner.style.backgroundColor = "#D5E6FF"; // Blue
-                } else if (role === 'ROLE_ADMIN') {
-                    roleLabel.innerText = "Administrator";
-                    bannerTitle.innerHTML = "System <br/> Console";
-                    bannerDesc.innerText = "Full control over the marketplace, users, and platform settings.";
-                    bannerImg.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&fit=crop";
-                    sideBanner.style.backgroundColor = "#E2E8F0"; // Slate
-                } else {
-                    roleLabel.innerText = "Customer";
-                    bannerTitle.innerHTML = "Welcome <br/> Back!";
-                    bannerDesc.innerText = "Discover new trends, track your orders, and enjoy faster checkout.";
-                    bannerImg.src = "/img/category_img/laptop.jpg";
-                    sideBanner.style.backgroundColor = "#FFF5AB"; // Yellow
-                }
-                
-                // Active Button styling
-                const buttons = slider.parentElement.querySelectorAll('button');
-                buttons.forEach((btn, i) => i === index ? btn.classList.add('text-nav') : btn.classList.remove('text-nav'));
-            }
+            // Simplified role selection logic (always USER for this page)
+            const currentRole = 'ROLE_USER';
 
             function togglePass(fid, bid) {
                 const f = document.getElementById(fid);
@@ -215,9 +186,7 @@
 
             // Initial
             window.onload = () => {
-                const currentRole = document.getElementById('roleInput').value || 'ROLE_USER';
-                const index = currentRole === 'ROLE_ADMIN' ? 2 : currentRole === 'ROLE_SELLER' ? 1 : 0;
-                selectRole(currentRole, index);
+                document.getElementById('roleInput').value = 'ROLE_USER';
             };
 
             document.getElementById('loginForm').addEventListener('submit', async function(e) {

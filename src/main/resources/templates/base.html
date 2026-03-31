@@ -67,6 +67,12 @@
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 					<th:block th:if="${user==null}">
 						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="/become-seller"><i
+								class="fa-solid fa-store"></i> BECOME SELLER</a></li>
+					</th:block>
+
+					<th:block th:if="${user==null}">
+						<li class="nav-item"><a class="nav-link active"
 													aria-current="page" href="/signin"><i
 														class="fa-solid fa-right-to-bracket"></i> LOGIN</a></li>
 						<!-- Only show REGISTER if not admin tab/page -->

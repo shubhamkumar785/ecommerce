@@ -19,11 +19,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.core.annotation.Order;
 
 @Configuration
+@EnableWebSecurity
+@Order(1)
 public class SecurityConfig {
 
 	private static final String AUTH_COOKIE = "SHOPPING_CART_TOKEN";
@@ -67,7 +70,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		AuthenticationEntryPoint forbiddenEntryPoint = new HttpStatusEntryPoint(HttpStatus.FORBIDDEN);
+		System.out.println("DEBUG: SecurityConfig filterChain loaded");
 		AccessDeniedHandler accessDeniedHandler = (request, response, accessDeniedException) -> response
 				.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized");
 
@@ -75,21 +78,13 @@ public class SecurityConfig {
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(req -> req
-						.requestMatchers("/", "/signin", "/login", "/register", "/saveUser", "/products",
-								"/product/**", "/search", "/forgot-password", "/reset-password", "/auth/google",
-								"/api/auth/login", "/api/auth/signup", "/css/**", "/js/**", "/img/**", "/static/**", "/error")
+						.requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/signin"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/register"), new AntPathRequestMatcher("/saveUser"), new AntPathRequestMatcher("/products"),
+								new AntPathRequestMatcher("/product/**"), new AntPathRequestMatcher("/search"), new AntPathRequestMatcher("/forgot-password"), new AntPathRequestMatcher("/reset-password"), new AntPathRequestMatcher("/auth/google"),
+								new AntPathRequestMatcher("/api/auth/login"), new AntPathRequestMatcher("/api/auth/signup"), new AntPathRequestMatcher("/api/products"), new AntPathRequestMatcher("/become-seller"), new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/js/**"), new AntPathRequestMatcher("/img/**"), new AntPathRequestMatcher("/static/**"), new AntPathRequestMatcher("/error"))
 						.permitAll()
-						.requestMatchers("/api/admin/**").hasRole("ADMIN")
 						.requestMatchers("/user/**").hasRole("USER")
-						.requestMatchers("/admin/**").hasRole("ADMIN")
-						.requestMatchers("/seller/**").hasRole("SELLER")
 						.anyRequest().authenticated())
-				.exceptionHandling(ex -> ex
-						.defaultAuthenticationEntryPointFor(forbiddenEntryPoint,
-								new AntPathRequestMatcher("/admin/**"))
-						.defaultAuthenticationEntryPointFor(forbiddenEntryPoint,
-								new AntPathRequestMatcher("/api/admin/**"))
-						.accessDeniedHandler(accessDeniedHandler))
+				.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler))
 				.formLogin(form -> form.loginPage("/signin")
 						.loginProcessingUrl("/login")
 						.authenticationDetailsSource(customWebAuthenticationDetailsSource)
