@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.title} + ' | Complete Payment'">Complete Payment</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg py-6 px-4 md:px-0">
+        <div class="max-w-[1040px] mx-auto">
+
+            <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="text-[10px] font-black uppercase tracking-[0.32em] text-orange-400 mb-2">Secure Checkout</p>
+                    <h1 class="text-[1.85rem] md:text-[2.15rem] font-heading font-extrabold text-slate-900 tracking-tight leading-none">
+                        Complete your <span class="text-orange-500">payment</span>
+                    </h1>
+                    <p class="text-slate-500 font-medium mt-2 text-[13px] md:text-[14px]">Choose a payment method and review your order details in the same secure checkout flow.</p>
+                </div>
+                <a th:href="@{/user/buy-now(pid=${product.id},quantity=${quantity})}"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 font-bold hover:border-orange-200 hover:text-orange-500 transition shadow-sm">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back to Summary
+                </a>
+            </div>
+
+            <div class="mb-5 bg-white rounded-[22px] p-3.5 shadow-xl shadow-slate-200/50 border border-slate-50">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-2xl bg-green-50 text-green-500 flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.28em] text-slate-400">Step 1</p>
+                            <p class="text-base font-bold text-slate-900">Address confirmed</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-2xl bg-blue-500 text-white flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-bag-shopping text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.28em] text-slate-400">Step 2</p>
+                            <p class="text-base font-bold text-slate-900">Order reviewed</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-sm">
+                            <span class="text-base font-black">3</span>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.28em] text-slate-400">Step 3</p>
+                            <p class="text-base font-bold text-slate-900">Payment & place order</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/user/buy-now/place-order" method="post" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px]">
+                <input type="hidden" name="pid" th:value="${product.id}">
+                <input type="hidden" name="quantity" th:value="${quantity}">
+                <input type="hidden" name="firstName" th:value="${orderRequest.firstName}">
+                <input type="hidden" name="lastName" th:value="${orderRequest.lastName}">
+                <input type="hidden" name="email" th:value="${orderRequest.email}">
+                <input type="hidden" name="mobileNo" th:value="${orderRequest.mobileNo}">
+                <input type="hidden" name="address" th:value="${orderRequest.address}">
+                <input type="hidden" name="city" th:value="${orderRequest.city}">
+                <input type="hidden" name="state" th:value="${orderRequest.state}">
+                <input type="hidden" name="pincode" th:value="${orderRequest.pincode}">
+                <input type="hidden" id="paymentTypeInput" name="paymentType" th:value="${orderRequest.paymentType}">
+
+                <div class="bg-white rounded-[22px] p-2.5 shadow-xl shadow-slate-200/50 border border-slate-50">
+                    <div class="grid gap-2.5 lg:grid-cols-[175px_minmax(0,1fr)]">
+
+                        <aside class="rounded-[18px] border border-slate-100 overflow-hidden bg-white">
+                            <button type="button" data-method="CARD"
+                                class="payment-option w-full border-b border-slate-100 px-3 py-3 text-left transition">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="flex w-8 h-8 rounded-xl bg-pastel-lightBlue/40 text-blue-600 items-center justify-center shrink-0 text-sm">
+                                        <i class="fa-regular fa-credit-card"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-[14px] font-bold text-slate-900 leading-tight">Credit / Debit / ATM Card</p>
+                                        <p class="mt-1 text-[12px] text-slate-500 font-medium leading-5">Add and secure cards as per RBI guidelines</p>
+                                        <p class="mt-1 text-[12px] text-green-600 font-bold">Get up to 5% cashback</p>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <button type="button" data-method="COD"
+                                class="payment-option w-full border-b border-slate-100 px-3 py-3 text-left transition">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="flex w-8 h-8 rounded-xl bg-orange-50 text-orange-500 items-center justify-center shrink-0 text-sm">
+                                        <i class="fa-solid fa-money-bill-wave"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-[14px] font-bold text-slate-900 leading-tight">Cash on Delivery</p>
+                                        <p class="mt-1 text-[12px] text-slate-500 font-medium leading-5">Pay when the order reaches your doorstep</p>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <button type="button" data-method="GIFT"
+                                class="payment-option w-full border-b border-slate-100 px-3 py-3 text-left transition">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="flex w-8 h-8 rounded-xl bg-pastel-purple/30 text-violet-600 items-center justify-center shrink-0 text-sm">
+                                        <i class="fa-solid fa-gift"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-[14px] font-bold text-slate-900 leading-tight">Have an Ecom Gift Card?</p>
+                                        <p class="mt-1 text-[12px] text-slate-500 font-medium leading-5">Apply store credits before placing the order</p>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <div class="flex items-center justify-between border-b border-slate-100 px-3 py-3 opacity-60">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="flex w-8 h-8 rounded-xl bg-slate-100 text-slate-400 items-center justify-center shrink-0">
+                                        <span class="text-xs font-black">UPI</span>
+                                    </div>
+                                    <p class="text-[14px] font-bold text-slate-500">UPI</p>
+                                </div>
+                                <span class="text-[12px] font-bold text-slate-400">Unavailable</span>
+                            </div>
+
+                            <div class="flex items-center justify-between px-3 py-3 opacity-60">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="flex w-8 h-8 rounded-xl bg-slate-100 text-slate-400 items-center justify-center shrink-0">
+                                        <i class="fa-solid fa-percent"></i>
+                                    </div>
+                                    <p class="text-[14px] font-bold text-slate-500">EMI</p>
+                                </div>
+                                <span class="text-[12px] font-bold text-slate-400">Unavailable</span>
+                            </div>
+                        </aside>
+
+                        <div class="rounded-[18px] bg-slate-50 border border-slate-100 p-2.5">
+                            <div id="panel-CARD" class="payment-panel bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
+                                <p class="text-slate-500 font-medium leading-6 text-[14px] md:text-[15px]">
+                                    Please ensure your card is enabled for online transactions before you continue.
+                                    <span class="text-blue-600 font-bold">Your order will be placed right after this step.</span>
+                                </p>
+                                <div class="mt-4 space-y-3.5">
+                                    <div>
+                                        <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">Card Number</label>
+                                        <div class="relative">
+                                            <input type="text" placeholder="XXXX XXXX XXXX XXXX"
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-[15px] md:text-base tracking-[0.14em] text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                            <i class="fa-regular fa-credit-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 text-base"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid gap-4 md:grid-cols-2">
+                                        <div>
+                                            <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">Valid Thru</label>
+                                            <input type="text" placeholder="MM / YY"
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] md:text-base text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">CVV</label>
+                                            <input type="password" placeholder="CVV"
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] md:text-base text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">Name on Card</label>
+                                        <input type="text" th:value="${deliveryFullName}" placeholder="Cardholder name"
+                                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[14px] md:text-[15px] text-slate-700 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                    </div>
+
+                                    <button type="submit"
+                                        class="w-full py-3 px-8 rounded-[16px] bg-[#ffca28] text-slate-900 font-black text-base shadow-lg hover:bg-[#ffc107] transition active:scale-95">
+                                        Pay &#8377;<span th:text="${sellingPrice}">0</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="panel-COD" class="payment-panel hidden bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex w-10 h-10 rounded-2xl bg-orange-50 text-orange-500 items-center justify-center shrink-0">
+                                        <i class="fa-solid fa-money-bill-wave text-base"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-bold text-slate-900">Cash on Delivery</h2>
+                                        <p class="mt-1.5 text-[14px] text-slate-500 font-medium leading-6">Pay at your doorstep after the package reaches you.</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 rounded-[16px] bg-pastel-yellow/40 border border-amber-100 p-3.5">
+                                    <p class="text-slate-700 text-[14px] font-medium leading-6">
+                                        Keep the exact amount ready. Our delivery partner will contact you before arrival and you can inspect visible package damage before acceptance.
+                                    </p>
+                                </div>
+
+                                <button type="submit"
+                                    class="mt-5 w-full py-3 px-8 rounded-[16px] bg-nav text-white font-black text-[15px] shadow-xl hover:bg-slate-800 transition active:scale-95">
+                                    PLACE ORDER WITH CASH ON DELIVERY
+                                </button>
+                            </div>
+
+                            <div id="panel-GIFT" class="payment-panel hidden bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
+                                <h2 class="text-xl font-bold text-slate-900">Apply Gift Card</h2>
+                                <p class="mt-2 text-[14px] text-slate-500 font-medium leading-6">
+                                    Use your Ecom gift card or store credit here before you place the order.
+                                </p>
+
+                                <div class="mt-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_120px]">
+                                    <input type="text" placeholder="Enter gift card or promo code"
+                                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[14px] text-slate-700 outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400 transition">
+                                    <button type="button"
+                                        class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-[11px] font-black tracking-wide text-violet-600 hover:bg-violet-100 transition">
+                                        APPLY
+                                    </button>
+                                </div>
+
+                                <button type="submit"
+                                    class="mt-5 w-full py-3 px-8 rounded-[16px] bg-nav text-white font-black text-[15px] shadow-xl hover:bg-slate-800 transition active:scale-95">
+                                    CONTINUE TO PLACE ORDER
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="space-y-4">
+                    <div class="bg-white rounded-[20px] p-3.5 shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-[14px] bg-slate-50 border border-slate-100 flex items-center justify-center p-2 shadow-inner overflow-hidden">
+                                <img th:src="@{'/img/product_img/'+${product.image}}" th:alt="${product.title}"
+                                    class="max-w-full max-h-full object-contain mix-blend-multiply">
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] font-black uppercase tracking-[0.28em] text-slate-400 mb-2">Selected Product</p>
+                                <h3 class="text-[1rem] font-bold text-slate-900 leading-tight" th:text="${product.title}">Product title</h3>
+                                <p class="mt-1 text-[13px] font-bold text-slate-400">
+                                    Qty: <span class="text-slate-700" th:text="${quantity}">1</span>
+                                    <span class="mx-2 text-slate-300">|</span>
+                                    <span th:text="${product.category}">Laptop</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[20px] p-3.5 shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <h3 class="text-base font-bold text-slate-900 mb-3">Delivery Details</h3>
+                        <div class="space-y-3 text-slate-600">
+                            <p class="text-base font-bold text-slate-900" th:text="${deliveryFullName}">Delivery contact</p>
+                            <p class="text-[14px] font-medium leading-6">
+                                <span th:text="${orderRequest.address}">Address line</span>,
+                                <span th:text="${orderRequest.city}">City</span>,
+                                <span th:text="${orderRequest.state}">State</span> -
+                                <span th:text="${orderRequest.pincode}">000000</span>
+                            </p>
+                            <p class="text-[14px] font-medium">Phone: <span class="font-bold text-slate-900" th:text="${orderRequest.mobileNo}">9999999999</span></p>
+                            <p class="text-[14px] font-medium break-all">Email: <span class="font-bold text-slate-900" th:text="${orderRequest.email}">mail@example.com</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[20px] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="px-4 py-3.5 border-b border-slate-100">
+                            <h3 class="text-[13px] font-black text-slate-500 uppercase tracking-widest">Price Details</h3>
+                        </div>
+                        <div class="p-4 space-y-3.5">
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">MRP</span>
+                                <span class="text-slate-900 font-semibold">&#8377;[[${mrp}]]</span>
+                            </div>
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">Discount</span>
+                                <span class="text-green-600 font-semibold">- &#8377;[[${discountAmount}]]</span>
+                            </div>
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">Delivery Charges</span>
+                                <span class="text-green-600 font-semibold">Free</span>
+                            </div>
+                            <div class="pt-3.5 border-t border-dashed border-slate-200">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[15px] font-black text-slate-900">Total Amount</span>
+                                    <span class="text-xl font-black text-slate-900">&#8377;[[${sellingPrice}]]</span>
+                                </div>
+                            </div>
+                            <div class="rounded-[16px] bg-green-50 px-3.5 py-3 text-center border border-green-100">
+                                <p class="text-[13px] font-bold text-green-600">You will save &#8377;[[${discountAmount}]] on this order</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </form>
+        </div>
+
+        <script th:inline="javascript">
+            const paymentButtons = document.querySelectorAll('.payment-option');
+            const paymentPanels = document.querySelectorAll('.payment-panel');
+            const paymentTypeInput = document.getElementById('paymentTypeInput');
+            const initialMethod = paymentTypeInput.value || 'CARD';
+
+            function activatePayment(method) {
+                paymentTypeInput.value = method;
+
+                paymentButtons.forEach((button) => {
+                    const isActive = button.dataset.method === method;
+                    button.classList.toggle('bg-blue-50', isActive && method === 'CARD');
+                    button.classList.toggle('border-blue-500', isActive && method === 'CARD');
+                    button.classList.toggle('shadow-sm', isActive);
+                    button.classList.toggle('bg-orange-50', isActive && method === 'COD');
+                    button.classList.toggle('border-orange-300', isActive && method === 'COD');
+                    button.classList.toggle('bg-violet-50', isActive && method === 'GIFT');
+                    button.classList.toggle('border-violet-300', isActive && method === 'GIFT');
+                });
+
+                paymentPanels.forEach((panel) => {
+                    panel.classList.toggle('hidden', panel.id !== `panel-${method}`);
+                });
+            }
+
+            paymentButtons.forEach((button) => {
+                button.addEventListener('click', () => activatePayment(button.dataset.method));
+            });
+
+            activatePayment(initialMethod);
+        </script>
+    </section>
+</body>
+</html>

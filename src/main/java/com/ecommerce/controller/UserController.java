@@ -2,9 +2,12 @@ package com.ecommerce.controller;
 
 import java.security.Principal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +40,15 @@ import com.ecommerce.model.Address;
 import com.ecommerce.model.Cart;
 import com.ecommerce.model.Category;
 import com.ecommerce.model.OrderRequest;
+import com.ecommerce.model.Product;
 import com.ecommerce.model.ProductOrder;
 import com.ecommerce.model.UserDtls;
 import com.ecommerce.model.Wishlist;
-import com.ecommerce.repository.UserRepository;
 import com.ecommerce.service.AddressService;
 import com.ecommerce.service.CartService;
 import com.ecommerce.service.CategoryService;
 import com.ecommerce.service.OrderService;
+import com.ecommerce.service.ProductService;
 import com.ecommerce.service.ReviewService;
 import com.ecommerce.service.UserService;
 import com.ecommerce.service.WishlistService;
@@ -60,12 +64,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import org.springframework.core.io.ClassPathResource;
 
-import jakarta.servlet.http.HttpSession;
-
 @Controller
 @RequestMapping("/user")
 public class UserController {
 	private static final String AUTH_COOKIE = "SHOPPING_CART_TOKEN";
+	private static final String LAST_CONFIRMED_ORDER_ID = "lastConfirmedOrderId";
 	private static final String EMAIL_OTP_CODE = "profile.email.otp.code";
 	private static final String EMAIL_OTP_VALUE = "profile.email.otp.value";
 	private static final String EMAIL_OTP_EXPIRY = "profile.email.otp.expiry";
@@ -84,6 +87,9 @@ public class UserController {
 
 	@Autowired
 	private OrderService orderService;
+
+	@Autowired
+	private ProductService productService;
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -217,6 +223,84 @@ public class UserController {
 		return "/user/order";
 	}
 
+	@GetMapping("/buy-now")
+	public String buyNowPage(@RequestParam Integer pid, @RequestParam(defaultValue = "1") Integer quantity, Principal p,
+			Model m, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		Product product = validateBuyNowProduct(pid, session);
+		if (product == null) {
+			return "redirect:/products";
+		}
+
+		int orderQuantity = sanitizeQuantity(quantity);
+		Address selectedAddress = resolveSelectedAddress(user.getId());
+		if (selectedAddress == null) {
+			session.setAttribute("errorMsg", "Please add a delivery address before placing your order");
+			return "redirect:/user/address";
+		}
+
+		String[] nameParts = splitName(selectedAddress.getFullName());
+
+		populateBuyNowSummary(m, product, orderQuantity);
+		m.addAttribute("firstName", nameParts[0]);
+		m.addAttribute("lastName", nameParts[1]);
+		m.addAttribute("selectedAddress", selectedAddress);
+		m.addAttribute("hideCartButton", true);
+		return "/user/buy_now";
+	}
+
+	@PostMapping("/buy-now")
+	public String loadBuyNowPaymentPage(@RequestParam Integer pid, @RequestParam(defaultValue = "1") Integer quantity,
+			@ModelAttribute OrderRequest request, Principal p, Model m, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		Product product = validateBuyNowProduct(pid, session);
+		if (product == null) {
+			return "redirect:/products";
+		}
+
+		Address selectedAddress = resolveSelectedAddress(user.getId());
+		if (selectedAddress == null) {
+			session.setAttribute("errorMsg", "Please add a delivery address before placing your order");
+			return "redirect:/user/address";
+		}
+
+		applyOrderRequestDefaults(request, user, selectedAddress);
+		if (!StringUtils.hasText(request.getPaymentType())) {
+			request.setPaymentType("CARD");
+		}
+
+		int orderQuantity = sanitizeQuantity(quantity);
+		populateBuyNowSummary(m, product, orderQuantity);
+		m.addAttribute("orderRequest", request);
+		m.addAttribute("deliveryFullName", buildFullName(request.getFirstName(), request.getLastName()));
+		m.addAttribute("hideCartButton", true);
+		return "/user/buy_now_payment";
+	}
+
+	@PostMapping("/buy-now/place-order")
+	public String placeBuyNowOrder(@RequestParam Integer pid, @RequestParam(defaultValue = "1") Integer quantity,
+			@ModelAttribute OrderRequest request, Principal p, HttpSession session) throws Exception {
+		UserDtls user = getLoggedInUserDetails(p);
+		Product product = validateBuyNowProduct(pid, session);
+		if (product == null) {
+			return "redirect:/products";
+		}
+
+		if (!StringUtils.hasText(request.getPaymentType())) {
+			request.setPaymentType("CARD");
+		}
+
+		Address selectedAddress = resolveSelectedAddress(user.getId());
+		if (selectedAddress != null) {
+			applyOrderRequestDefaults(request, user, selectedAddress);
+		}
+
+		ProductOrder placedOrder = orderService.saveSingleProductOrder(user.getId(), product, sanitizeQuantity(quantity), request);
+		session.setAttribute("succMsg", "Order placed successfully");
+		session.setAttribute(LAST_CONFIRMED_ORDER_ID, placedOrder.getOrderId());
+		return "redirect:/user/order-confirmation?orderId=" + placedOrder.getOrderId();
+	}
+
 	@PostMapping("/save-order")
 	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
 		// System.out.println(request);
@@ -242,6 +326,27 @@ public class UserController {
 	@GetMapping("/success")
 	public String loadSuccess() {
 		return "/user/success";
+	}
+
+	@GetMapping("/order-confirmation")
+	public String loadOrderConfirmation(@RequestParam(required = false) String orderId, Principal p, Model m, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		String resolvedOrderId = StringUtils.hasText(orderId) ? orderId
+				: (String) session.getAttribute(LAST_CONFIRMED_ORDER_ID);
+		if (!StringUtils.hasText(resolvedOrderId)) {
+			session.setAttribute("errorMsg", "We couldn't find that order confirmation");
+			return "redirect:/user/user-orders";
+		}
+
+		ProductOrder order = orderService.getOrdersByOrderId(resolvedOrderId);
+		if (order == null || order.getUser() == null || !order.getUser().getId().equals(user.getId())) {
+			session.setAttribute("errorMsg", "We couldn't find that order confirmation");
+			return "redirect:/user/user-orders";
+		}
+
+		session.setAttribute(LAST_CONFIRMED_ORDER_ID, order.getOrderId());
+		populateOrderConfirmationModel(m, order);
+		return "/user/order_confirmation";
 	}
 
 	@GetMapping("/user-orders")
@@ -593,6 +698,113 @@ public class UserController {
 		stats.put("delivered", delivered);
 		stats.put("responseTime", "Within minutes");
 		return stats;
+	}
+
+	private String[] splitName(String fullName) {
+		if (!StringUtils.hasText(fullName)) {
+			return new String[] { "", "" };
+		}
+
+		String[] parts = fullName.trim().split("\\s+", 2);
+		if (parts.length == 1) {
+			return new String[] { parts[0], "" };
+		}
+		return parts;
+	}
+
+	private double safeAmount(Double value) {
+		return value == null ? 0.0 : value;
+	}
+
+	private Product validateBuyNowProduct(Integer pid, HttpSession session) {
+		Product product = productService.getLiveProductById(pid);
+		if (product == null || product.getStock() <= 0) {
+			session.setAttribute("errorMsg", "This product is currently unavailable");
+			return null;
+		}
+		return product;
+	}
+
+	private int sanitizeQuantity(Integer quantity) {
+		return quantity == null || quantity < 1 ? 1 : quantity;
+	}
+
+	private void populateBuyNowSummary(Model m, Product product, int orderQuantity) {
+		double mrp = safeAmount(product.getPrice()) * orderQuantity;
+		double sellingPrice = safeAmount(product.getDiscountPrice()) * orderQuantity;
+		double discountAmount = Math.max(0.0, mrp - sellingPrice);
+
+		m.addAttribute("product", product);
+		m.addAttribute("quantity", orderQuantity);
+		m.addAttribute("mrp", mrp);
+		m.addAttribute("sellingPrice", sellingPrice);
+		m.addAttribute("discountAmount", discountAmount);
+		m.addAttribute("estimatedDelivery", "Delivery by 8 Apr, Wednesday");
+	}
+
+	private Address resolveSelectedAddress(Integer userId) {
+		List<Address> addresses = addressService.getAddressByUser(userId);
+		if (addresses == null || addresses.isEmpty()) {
+			return null;
+		}
+
+		return addresses.stream()
+				.filter(address -> Boolean.TRUE.equals(address.getIsDefault()))
+				.findFirst()
+				.orElse(addresses.get(0));
+	}
+
+	private void applyOrderRequestDefaults(OrderRequest request, UserDtls user, Address selectedAddress) {
+		String[] nameParts = splitName(selectedAddress.getFullName());
+		if (!StringUtils.hasText(request.getFirstName())) {
+			request.setFirstName(nameParts[0]);
+		}
+		if (!StringUtils.hasText(request.getLastName())) {
+			request.setLastName(nameParts[1]);
+		}
+		if (!StringUtils.hasText(request.getEmail())) {
+			request.setEmail(user.getEmail());
+		}
+		if (!StringUtils.hasText(request.getMobileNo())) {
+			request.setMobileNo(selectedAddress.getMobileNumber());
+		}
+		if (!StringUtils.hasText(request.getAddress())) {
+			request.setAddress(selectedAddress.getAddressLine1());
+		}
+		if (!StringUtils.hasText(request.getCity())) {
+			request.setCity(selectedAddress.getCity());
+		}
+		if (!StringUtils.hasText(request.getState())) {
+			request.setState(selectedAddress.getState());
+		}
+		if (!StringUtils.hasText(request.getPincode())) {
+			request.setPincode(selectedAddress.getPincode());
+		}
+	}
+
+	private String buildFullName(String firstName, String lastName) {
+		String first = StringUtils.hasText(firstName) ? firstName.trim() : "";
+		String last = StringUtils.hasText(lastName) ? lastName.trim() : "";
+		String fullName = (first + " " + last).trim();
+		return StringUtils.hasText(fullName) ? fullName : "Delivery contact";
+	}
+
+	private void populateOrderConfirmationModel(Model m, ProductOrder order) {
+		LocalDate orderDate = order.getOrderDate() != null ? order.getOrderDate() : LocalDate.now();
+		LocalDate estimatedDeliveryDate = orderDate.plusDays(5);
+		double totalAmount = safeAmount(order.getPrice()) * (order.getQuantity() == null ? 1 : order.getQuantity());
+		String deliveryFullName = order.getOrderAddress() == null ? "Delivery contact"
+				: buildFullName(order.getOrderAddress().getFirstName(), order.getOrderAddress().getLastName());
+
+		DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("EEE, MMM d", Locale.ENGLISH);
+		DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH);
+
+		m.addAttribute("order", order);
+		m.addAttribute("deliveryFullName", deliveryFullName);
+		m.addAttribute("estimatedDeliveryShort", estimatedDeliveryDate.format(dayFormatter));
+		m.addAttribute("estimatedDeliveryLong", estimatedDeliveryDate.format(fullFormatter));
+		m.addAttribute("totalAmount", totalAmount);
+		m.addAttribute("isCashOnDelivery", "COD".equalsIgnoreCase(order.getPaymentType()));
 	}
 
 	private void refreshLoggedInUser(UserDtls user, HttpServletRequest request, HttpServletResponse response) {

@@ -5,11 +5,15 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.ecommerce.model.OrderRequest;
+import com.ecommerce.model.Product;
 import com.ecommerce.model.ProductOrder;
 
 public interface OrderService {
 
 	public void saveOrder(Integer userid, OrderRequest orderRequest) throws Exception;
+
+	public ProductOrder saveSingleProductOrder(Integer userId, Product product, Integer quantity, OrderRequest orderRequest)
+			throws Exception;
 
 	public List<ProductOrder> getOrdersByUser(Integer userId);
 

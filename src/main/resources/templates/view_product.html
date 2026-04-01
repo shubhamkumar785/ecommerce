@@ -69,7 +69,11 @@
                                 class="flex-1 py-4 bg-[#ff9f00] text-white font-black uppercase text-sm rounded shadow-md hover:shadow-lg transition text-center flex items-center justify-center gap-2 active:scale-95">
                                 <i class="fa-solid fa-cart-shopping"></i> Add to Cart
                             </button>
-                            <a th:href="@{${user == null} ? '/signin' : ('/user/save-order?pid='+product.id+'&uid='+user.id)}"
+                            <a th:if="${user == null}" href="/signin"
+                                class="flex-1 py-4 bg-[#fb641b] text-white font-black uppercase text-sm rounded shadow-md hover:shadow-lg transition text-center flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-bolt"></i> Buy Now
+                            </a>
+                            <a th:if="${user != null}" th:href="@{/user/buy-now(pid=${product.id})}"
                                 class="flex-1 py-4 bg-[#fb641b] text-white font-black uppercase text-sm rounded shadow-md hover:shadow-lg transition text-center flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-bolt"></i> Buy Now
                             </a>
@@ -86,7 +90,7 @@
                     <div>
                         <h1 class="text-xl md:text-2xl text-gray-900 font-medium mb-2" th:text="${product.title}"></h1>
 
-                        <!-- Rating & Assured -->
+                        <!-- Rating -->
                         <div class="flex items-center gap-3 mt-1">
                             <div
                                 class="flex items-center bg-green-700 text-white text-[12px] font-bold px-1.5 py-0.5 rounded gap-1 shadow-sm">
@@ -95,8 +99,6 @@
                             </div>
                             <a href="#reviews" class="text-gray-500 text-sm font-bold hover:underline cursor-pointer"
                                 th:text="${reviewCountText}"></a>
-                            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
-                                class="h-4.5 ml-1" alt="Assured">
                         </div>
                     </div>
 
@@ -304,7 +306,11 @@
                     class="flex-1 py-3 text-gray-900 font-bold uppercase text-xs rounded border border-gray-200 flex items-center justify-center gap-2 shadow-sm active:scale-95">
                     Add to Cart
                 </button>
-                <a th:href="@{${user == null} ? '/signin' : ('/user/save-order?pid='+product.id+'&uid='+user.id)}"
+                <a th:if="${user == null}" href="/signin"
+                    class="flex-1 py-3 bg-[#fb641b] text-white font-bold uppercase text-xs rounded shadow-md flex items-center justify-center gap-2">
+                    Buy Now
+                </a>
+                <a th:if="${user != null}" th:href="@{/user/buy-now(pid=${product.id})}"
                     class="flex-1 py-3 bg-[#fb641b] text-white font-bold uppercase text-xs rounded shadow-md flex items-center justify-center gap-2">
                     Buy Now
                 </a>

@@ -13,10 +13,10 @@ import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.ReviewRepository;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.service.ReviewService;
-import com.ecommerce.util.OrderStatus;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
+    private static final String DELIVERED_STATUS = "Delivered";
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -98,7 +98,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public boolean canUserReviewProduct(Integer userId, Integer productId) {
         return productOrderRepository.existsByUserIdAndProductIdAndStatus(userId, productId,
-                OrderStatus.DELIVERED.getName());
+                DELIVERED_STATUS);
     }
 
     @Override
