@@ -185,13 +185,25 @@ public class ProductRestController {
 
         String email = p.getName();
         UserDtls user = userService.getUserByEmail(email);
+        Product product = productRepository.findById(pid).orElse(null);
+
+        if (product == null || !Boolean.TRUE.equals(product.getIsActive())) {
+            response.put("status", "error");
+            response.put("message", "This product is currently unavailable");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (product.getStock() <= 0) {
+            response.put("status", "error");
+            response.put("message", "Out of stock, we will notify you when available");
+            return ResponseEntity.badRequest().body(response);
+        }
         
         Cart saveCart = cartService.saveCart(pid, user.getId());
 
         if (ObjectUtils.isEmpty(saveCart)) {
             response.put("status", "error");
-            response.put("message", "Failed to add product to cart");
-            return ResponseEntity.status(500).body(response);
+            response.put("message", "Only available stock can be added to your cart");
+            return ResponseEntity.badRequest().body(response);
         } else {
             response.put("status", "success");
             response.put("message", "Product added to cart successfully");

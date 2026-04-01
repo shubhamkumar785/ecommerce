@@ -83,6 +83,9 @@
                             Out of Stock
                         </button>
                     </div>
+                    <div th:if="${product.stock <= 0}" class="hidden lg:flex mt-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-600">
+                        Out of stock, we will notify you when available.
+                    </div>
                 </div>
 
                 <!-- Right: Product Details -->
@@ -319,6 +322,9 @@
                 class="w-full py-3 bg-gray-200 text-gray-500 font-bold uppercase rounded cursor-not-allowed">
                 Out of Stock
             </button>
+        </div>
+        <div th:if="${product.stock <= 0}" class="lg:hidden fixed bottom-[72px] left-3 right-3 bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-xl px-4 py-3 z-40 shadow-sm">
+            Out of stock, we will notify you when available.
         </div>
 
         <style>

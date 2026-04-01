@@ -28,4 +28,6 @@ public interface OrderService {
 	public Page<ProductOrder> getAllOrdersPagination(Integer pageNo,Integer pageSize);
 
 	public Page<ProductOrder> getOrdersBySeller(Integer sellerId, Integer pageNo, Integer pageSize);
+
+	public List<ProductOrder> getOrdersBySeller(Integer sellerId);
 }

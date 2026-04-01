@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <form action="/user/buy-now/place-order" method="post" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px]">
+            <form id="buyNowPaymentForm" action="/user/buy-now/place-order" method="post" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px]">
                 <input type="hidden" name="pid" th:value="${product.id}">
                 <input type="hidden" name="quantity" th:value="${quantity}">
                 <input type="hidden" name="firstName" th:value="${orderRequest.firstName}">
@@ -222,10 +222,15 @@
                                     <div>
                                         <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">UPI ID</label>
                                         <div class="relative">
-                                            <input type="text" placeholder="yourname@upi"
+                                            <input id="buyNowUpiId" name="upiId" type="text" placeholder="yourname@upi"
                                                 class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-[15px] md:text-base text-slate-700 outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition">
                                             <i class="fa-solid fa-mobile-screen-button absolute right-4 top-1/2 -translate-y-1/2 text-emerald-300 text-base"></i>
                                         </div>
+                                        <p id="buyNowUpiValidation" class="mt-2 hidden text-[12px] font-bold"></p>
+                                    </div>
+
+                                    <div id="buyNowUpiStatus" class="hidden rounded-[16px] border px-4 py-3">
+                                        <p id="buyNowUpiStatusText" class="text-[13px] font-bold leading-6"></p>
                                     </div>
 
                                     <div class="rounded-[16px] border border-dashed border-slate-200 bg-slate-50 px-4 py-3">
@@ -234,7 +239,7 @@
                                         </p>
                                     </div>
 
-                                    <button type="submit"
+                                    <button id="buyNowUpiPayButton" type="button"
                                         class="w-full py-3 px-8 rounded-[16px] bg-emerald-500 text-white font-black text-base shadow-lg hover:bg-emerald-600 transition active:scale-95">
                                         PAY WITH UPI
                                     </button>
@@ -331,14 +336,23 @@
             </form>
         </div>
 
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script th:inline="javascript">
             const paymentButtons = document.querySelectorAll('.payment-option');
             const paymentPanels = document.querySelectorAll('.payment-panel');
             const paymentTypeInput = document.getElementById('paymentTypeInput');
+            const buyNowPaymentForm = document.getElementById('buyNowPaymentForm');
             const availableMethods = Array.from(paymentButtons).map((button) => button.dataset.method);
             const initialMethod = availableMethods.includes(paymentTypeInput.value)
                 ? paymentTypeInput.value
                 : (availableMethods.includes('CARD') ? 'CARD' : availableMethods[0]);
+            const buyNowUpiInput = document.getElementById('buyNowUpiId');
+            const buyNowUpiValidation = document.getElementById('buyNowUpiValidation');
+            const buyNowUpiStatus = document.getElementById('buyNowUpiStatus');
+            const buyNowUpiStatusText = document.getElementById('buyNowUpiStatusText');
+            const buyNowUpiPayButton = document.getElementById('buyNowUpiPayButton');
+            const razorpayConfigured = /*[[${razorpayConfigured}]]*/ false;
+            const upiPattern = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$/;
 
             function activatePayment(method) {
                 paymentTypeInput.value = method;
@@ -359,10 +373,211 @@
                 paymentPanels.forEach((panel) => {
                     panel.classList.toggle('hidden', panel.id !== `panel-${method}`);
                 });
+
+                if (method !== 'UPI') {
+                    clearBuyNowUpiStatus();
+                }
+            }
+
+            function clearBuyNowUpiStatus() {
+                buyNowUpiStatus.classList.add('hidden');
+                buyNowUpiValidation.classList.add('hidden');
+                buyNowUpiValidation.textContent = '';
+                buyNowUpiInput.classList.remove('border-red-400', 'focus:ring-red-200', 'focus:border-red-400');
+            }
+
+            function showBuyNowUpiValidation(message, type = 'error') {
+                buyNowUpiValidation.textContent = message;
+                buyNowUpiValidation.className = `mt-2 text-[12px] font-bold ${type === 'success' ? 'text-emerald-600' : 'text-red-500'}`;
+                buyNowUpiInput.classList.toggle('border-red-400', type === 'error');
+                buyNowUpiInput.classList.toggle('focus:ring-red-200', type === 'error');
+                buyNowUpiInput.classList.toggle('focus:border-red-400', type === 'error');
+            }
+
+            function setBuyNowUpiStatus(type, message) {
+                const typeClasses = {
+                    processing: 'rounded-[16px] border border-blue-100 bg-blue-50 px-4 py-3',
+                    success: 'rounded-[16px] border border-emerald-100 bg-emerald-50 px-4 py-3',
+                    error: 'rounded-[16px] border border-red-100 bg-red-50 px-4 py-3'
+                };
+                const textClasses = {
+                    processing: 'text-[13px] font-bold leading-6 text-blue-700',
+                    success: 'text-[13px] font-bold leading-6 text-emerald-700',
+                    error: 'text-[13px] font-bold leading-6 text-red-600'
+                };
+
+                buyNowUpiStatus.className = typeClasses[type] || typeClasses.processing;
+                buyNowUpiStatusText.className = textClasses[type] || textClasses.processing;
+                buyNowUpiStatusText.textContent = message;
+                buyNowUpiStatus.classList.remove('hidden');
+            }
+
+            function validateBuyNowUpi(showMessage = true) {
+                const upiId = buyNowUpiInput.value.trim().toLowerCase();
+                if (!upiId) {
+                    if (showMessage) {
+                        showBuyNowUpiValidation('Please enter your UPI ID to continue.');
+                    }
+                    return false;
+                }
+                if (!upiPattern.test(upiId)) {
+                    if (showMessage) {
+                        showBuyNowUpiValidation('Enter a valid UPI ID like name@bank.');
+                    }
+                    return false;
+                }
+                showBuyNowUpiValidation('UPI ID looks valid. You can continue.', 'success');
+                return true;
+            }
+
+            function setBuyNowUpiButtonLoading(loading, label = 'PAY WITH UPI') {
+                buyNowUpiPayButton.disabled = loading;
+                buyNowUpiPayButton.textContent = loading ? label : 'PAY WITH UPI';
+                buyNowUpiPayButton.classList.toggle('opacity-70', loading);
+                buyNowUpiPayButton.classList.toggle('cursor-not-allowed', loading);
+            }
+
+            async function verifyBuyNowUpiPayment(checkoutReference, response) {
+                setBuyNowUpiStatus('processing', 'Waiting for payment confirmation. Verifying your payment securely...');
+
+                const verificationResponse = await fetch('/user/payments/upi/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        checkoutReference,
+                        razorpayOrderId: response.razorpay_order_id,
+                        razorpayPaymentId: response.razorpay_payment_id,
+                        razorpaySignature: response.razorpay_signature
+                    })
+                });
+                const payload = await verificationResponse.json();
+
+                if (!verificationResponse.ok || !payload.success) {
+                    throw new Error(payload.message || 'Payment verification failed. No order was placed.');
+                }
+
+                setBuyNowUpiStatus('success', 'Payment Successful. Confirming your order now...');
+                if (typeof showToast === 'function') {
+                    showToast('Payment successful', 'success');
+                }
+                setTimeout(() => {
+                    window.location.href = payload.redirectUrl;
+                }, 900);
+            }
+
+            async function initiateBuyNowUpiPayment() {
+                if (!razorpayConfigured) {
+                    setBuyNowUpiStatus('error', 'UPI payments are not configured yet. Add Razorpay test credentials and try again.');
+                    return;
+                }
+
+                if (!validateBuyNowUpi(true)) {
+                    buyNowUpiInput.focus();
+                    return;
+                }
+
+                if (typeof Razorpay === 'undefined') {
+                    setBuyNowUpiStatus('error', 'Unable to load Razorpay checkout right now. Please refresh and try again.');
+                    return;
+                }
+
+                setBuyNowUpiButtonLoading(true, 'PROCESSING PAYMENT...');
+                setBuyNowUpiStatus('processing', 'Processing payment. Waiting for Razorpay checkout to open...');
+
+                try {
+                    const payload = Object.fromEntries(new FormData(buyNowPaymentForm).entries());
+                    payload.upiId = buyNowUpiInput.value.trim().toLowerCase();
+                    payload.paymentType = 'UPI';
+                    payload.checkoutType = 'BUY_NOW';
+
+                    const initiationResponse = await fetch('/user/payments/upi/initiate-buy-now', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    const initiationPayload = await initiationResponse.json();
+
+                    if (!initiationResponse.ok || !initiationPayload.success) {
+                        throw new Error(initiationPayload.message || 'Unable to start the UPI payment.');
+                    }
+
+                    setBuyNowUpiStatus('processing', 'Waiting for payment confirmation in Razorpay. Approve the payment in your UPI app.');
+
+                    const razorpayCheckout = new Razorpay({
+                        key: initiationPayload.razorpayKeyId,
+                        amount: initiationPayload.amount,
+                        currency: initiationPayload.currency,
+                        name: 'Ecom Store',
+                        description: 'UPI payment for your order',
+                        order_id: initiationPayload.razorpayOrderId,
+                        method: 'upi',
+                        prefill: {
+                            name: initiationPayload.customerName,
+                            email: initiationPayload.customerEmail,
+                            contact: initiationPayload.customerContact
+                        },
+                        notes: {
+                            preferred_upi_id: payload.upiId
+                        },
+                        theme: {
+                            color: '#10b981'
+                        },
+                        modal: {
+                            confirm_close: true,
+                            ondismiss: function () {
+                                setBuyNowUpiButtonLoading(false);
+                                setBuyNowUpiStatus('error', 'Payment was not completed. No order was placed.');
+                            }
+                        },
+                        handler: function (response) {
+                            verifyBuyNowUpiPayment(initiationPayload.checkoutReference, response)
+                                .catch((error) => {
+                                    setBuyNowUpiButtonLoading(false);
+                                    setBuyNowUpiStatus('error', error.message || 'Payment verification failed. No order was placed.');
+                                });
+                        }
+                    });
+
+                    razorpayCheckout.on('payment.failed', function (response) {
+                        setBuyNowUpiButtonLoading(false);
+                        const reason = response.error && response.error.description
+                            ? response.error.description
+                            : 'Payment Failed. No order was placed.';
+                        setBuyNowUpiStatus('error', reason);
+                    });
+
+                    razorpayCheckout.open();
+                } catch (error) {
+                    setBuyNowUpiButtonLoading(false);
+                    setBuyNowUpiStatus('error', error.message || 'Unable to start the UPI payment.');
+                }
             }
 
             paymentButtons.forEach((button) => {
                 button.addEventListener('click', () => activatePayment(button.dataset.method));
+            });
+
+            buyNowUpiInput?.addEventListener('input', () => {
+                if (!buyNowUpiInput.value.trim()) {
+                    clearBuyNowUpiStatus();
+                    return;
+                }
+                validateBuyNowUpi(false);
+            });
+
+            buyNowUpiPayButton?.addEventListener('click', initiateBuyNowUpiPayment);
+
+            buyNowPaymentForm?.addEventListener('submit', (event) => {
+                if (paymentTypeInput.value === 'UPI') {
+                    event.preventDefault();
+                    initiateBuyNowUpiPayment();
+                }
             });
 
             activatePayment(initialMethod);

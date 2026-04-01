@@ -77,13 +77,13 @@
 										<tr>
 											<td>Delivery Fee</td>
 											<td>:</td>
-											<td>&#8377; 250</td>
+											<td class="text-success fw-bold">Free</td>
 										</tr>
 
 										<tr>
 											<td>Tax</td>
 											<td>:</td>
-											<td>&#8377; 100</td>
+											<td>Included</td>
 										</tr>
 
 										<tr class="border-top">
@@ -102,7 +102,7 @@
 								<!-- <form action="/login" method="post"> -->
 								<div class="mb-3">
 									<label class="form-label">Select Payment Type</label> <select required
-										name="paymentType" class="form-control">
+										name="paymentType" class="form-control" id="cartPaymentType">
 										<option value="">--select--</option>
 										<option th:if="${cashOnDeliveryAvailable}" value="COD">Cash On Delivery</option>
 										<option value="UPI">UPI</option>
@@ -111,7 +111,16 @@
 
 								</div>
 
-								<button class="btn bg-primary text-white col-md-12">Place
+								<div id="cartUpiGroup" class="mb-3 d-none">
+									<label class="form-label fw-bold">UPI ID</label>
+									<input type="text" class="form-control" id="cartUpiId" name="upiId" placeholder="name@bank">
+									<div id="cartUpiValidation" class="form-text d-none"></div>
+									<div class="form-text mt-2">We will first start the payment, then verify it before placing your order.</div>
+								</div>
+
+								<div id="cartUpiStatus" class="alert d-none mb-3" role="status"></div>
+
+								<button id="cartPlaceOrderButton" class="btn bg-primary text-white col-md-12">Place
 									Order</button>
 
 							</div>
@@ -121,6 +130,208 @@
 				</div>
 			</form>
 		</div>
+
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<script th:inline="javascript">
+			const cartOrderForm = document.getElementById('orders');
+			const cartPaymentType = document.getElementById('cartPaymentType');
+			const cartUpiGroup = document.getElementById('cartUpiGroup');
+			const cartUpiId = document.getElementById('cartUpiId');
+			const cartUpiValidation = document.getElementById('cartUpiValidation');
+			const cartUpiStatus = document.getElementById('cartUpiStatus');
+			const cartPlaceOrderButton = document.getElementById('cartPlaceOrderButton');
+			const cartRazorpayConfigured = /*[[${razorpayConfigured}]]*/ false;
+			const cartUpiPattern = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$/;
+
+			function toggleCartUpiGroup() {
+				const showUpi = cartPaymentType.value === 'UPI';
+				cartUpiGroup.classList.toggle('d-none', !showUpi);
+				if (!showUpi) {
+					clearCartUpiFeedback();
+				}
+			}
+
+			function clearCartUpiFeedback() {
+				cartUpiStatus.className = 'alert d-none mb-3';
+				cartUpiStatus.textContent = '';
+				cartUpiValidation.className = 'form-text d-none';
+				cartUpiValidation.textContent = '';
+				cartUpiId.classList.remove('is-invalid', 'is-valid');
+			}
+
+			function setCartUpiStatus(type, message) {
+				const alertClass = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-danger' : 'alert-info';
+				cartUpiStatus.className = `alert ${alertClass} mb-3`;
+				cartUpiStatus.textContent = message;
+			}
+
+			function validateCartUpi(showMessage = true) {
+				const value = cartUpiId.value.trim().toLowerCase();
+				if (!value) {
+					if (showMessage) {
+						cartUpiValidation.className = 'form-text text-danger';
+						cartUpiValidation.textContent = 'Please enter your UPI ID.';
+						cartUpiId.classList.add('is-invalid');
+						cartUpiId.classList.remove('is-valid');
+					}
+					return false;
+				}
+				if (!cartUpiPattern.test(value)) {
+					if (showMessage) {
+						cartUpiValidation.className = 'form-text text-danger';
+						cartUpiValidation.textContent = 'Enter a valid UPI ID like name@bank.';
+						cartUpiId.classList.add('is-invalid');
+						cartUpiId.classList.remove('is-valid');
+					}
+					return false;
+				}
+				cartUpiValidation.className = 'form-text text-success';
+				cartUpiValidation.textContent = 'UPI ID looks valid.';
+				cartUpiId.classList.remove('is-invalid');
+				cartUpiId.classList.add('is-valid');
+				return true;
+			}
+
+			function setCartPlaceOrderLoading(loading, label = 'Place Order') {
+				cartPlaceOrderButton.disabled = loading;
+				cartPlaceOrderButton.textContent = loading ? label : 'Place Order';
+			}
+
+			async function verifyCartUpiPayment(checkoutReference, response) {
+				setCartUpiStatus('processing', 'Waiting for payment confirmation. Verifying your payment securely...');
+				const verificationResponse = await fetch('/user/payments/upi/verify', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-Requested-With': 'XMLHttpRequest'
+					},
+					body: JSON.stringify({
+						checkoutReference,
+						razorpayOrderId: response.razorpay_order_id,
+						razorpayPaymentId: response.razorpay_payment_id,
+						razorpaySignature: response.razorpay_signature
+					})
+				});
+				const payload = await verificationResponse.json();
+
+				if (!verificationResponse.ok || !payload.success) {
+					throw new Error(payload.message || 'Payment verification failed. No order was placed.');
+				}
+
+				setCartUpiStatus('success', 'Payment Successful. Confirming your order now...');
+				setTimeout(() => {
+					window.location.href = payload.redirectUrl;
+				}, 900);
+			}
+
+			async function initiateCartUpiPayment() {
+				if (!cartOrderForm.reportValidity()) {
+					return;
+				}
+				if (!cartRazorpayConfigured) {
+					setCartUpiStatus('error', 'UPI payments are not configured yet. Add Razorpay test credentials and try again.');
+					return;
+				}
+				if (!validateCartUpi(true)) {
+					cartUpiId.focus();
+					return;
+				}
+				if (typeof Razorpay === 'undefined') {
+					setCartUpiStatus('error', 'Unable to load Razorpay checkout right now. Please refresh and try again.');
+					return;
+				}
+
+				setCartPlaceOrderLoading(true, 'Processing Payment...');
+				setCartUpiStatus('processing', 'Processing payment. Waiting for Razorpay checkout to open...');
+
+				try {
+					const payload = Object.fromEntries(new FormData(cartOrderForm).entries());
+					payload.upiId = cartUpiId.value.trim().toLowerCase();
+					payload.paymentType = 'UPI';
+					payload.checkoutType = 'CART';
+
+					const initiationResponse = await fetch('/user/payments/upi/initiate-cart', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						},
+						body: JSON.stringify(payload)
+					});
+					const initiationPayload = await initiationResponse.json();
+
+					if (!initiationResponse.ok || !initiationPayload.success) {
+						throw new Error(initiationPayload.message || 'Unable to start the UPI payment.');
+					}
+
+					setCartUpiStatus('processing', 'Waiting for payment confirmation in Razorpay. Approve the payment in your UPI app.');
+
+					const razorpayCheckout = new Razorpay({
+						key: initiationPayload.razorpayKeyId,
+						amount: initiationPayload.amount,
+						currency: initiationPayload.currency,
+						name: 'Ecom Store',
+						description: 'UPI payment for your cart order',
+						order_id: initiationPayload.razorpayOrderId,
+						method: 'upi',
+						prefill: {
+							name: initiationPayload.customerName,
+							email: initiationPayload.customerEmail,
+							contact: initiationPayload.customerContact
+						},
+						notes: {
+							preferred_upi_id: payload.upiId
+						},
+						theme: {
+							color: '#0d6efd'
+						},
+						modal: {
+							confirm_close: true,
+							ondismiss: function () {
+								setCartPlaceOrderLoading(false);
+								setCartUpiStatus('error', 'Payment was not completed. No order was placed.');
+							}
+						},
+						handler: function (response) {
+							verifyCartUpiPayment(initiationPayload.checkoutReference, response)
+								.catch((error) => {
+									setCartPlaceOrderLoading(false);
+									setCartUpiStatus('error', error.message || 'Payment verification failed. No order was placed.');
+								});
+						}
+					});
+
+					razorpayCheckout.on('payment.failed', function (response) {
+						setCartPlaceOrderLoading(false);
+						const reason = response.error && response.error.description
+							? response.error.description
+							: 'Payment Failed. No order was placed.';
+						setCartUpiStatus('error', reason);
+					});
+
+					razorpayCheckout.open();
+				} catch (error) {
+					setCartPlaceOrderLoading(false);
+					setCartUpiStatus('error', error.message || 'Unable to start the UPI payment.');
+				}
+			}
+
+			cartPaymentType?.addEventListener('change', toggleCartUpiGroup);
+			cartUpiId?.addEventListener('input', () => {
+				if (!cartUpiId.value.trim()) {
+					clearCartUpiFeedback();
+					return;
+				}
+				validateCartUpi(false);
+			});
+			cartOrderForm?.addEventListener('submit', (event) => {
+				if (cartPaymentType.value === 'UPI') {
+					event.preventDefault();
+					initiateCartUpiPayment();
+				}
+			});
+			toggleCartUpiGroup();
+		</script>
 
 	</section>
 </body>

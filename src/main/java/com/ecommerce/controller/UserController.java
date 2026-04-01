@@ -5,12 +5,15 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,14 +46,18 @@ import com.ecommerce.model.Address;
 import com.ecommerce.model.Cart;
 import com.ecommerce.model.Category;
 import com.ecommerce.model.OrderRequest;
+import com.ecommerce.model.PendingUpiCheckout;
 import com.ecommerce.model.Product;
 import com.ecommerce.model.ProductOrder;
+import com.ecommerce.model.UpiCheckoutInitiationRequest;
+import com.ecommerce.model.UpiPaymentVerificationRequest;
 import com.ecommerce.model.UserDtls;
 import com.ecommerce.model.Wishlist;
 import com.ecommerce.service.AddressService;
 import com.ecommerce.service.CartService;
 import com.ecommerce.service.CategoryService;
 import com.ecommerce.service.OrderService;
+import com.ecommerce.service.PaymentGatewayService;
 import com.ecommerce.service.ProductService;
 import com.ecommerce.service.ReviewService;
 import com.ecommerce.service.UserService;
@@ -78,7 +86,9 @@ public class UserController {
 	private static final String MOBILE_OTP_CODE = "profile.mobile.otp.code";
 	private static final String MOBILE_OTP_VALUE = "profile.mobile.otp.value";
 	private static final String MOBILE_OTP_EXPIRY = "profile.mobile.otp.expiry";
+	private static final String PENDING_UPI_CHECKOUTS = "pendingUpiCheckouts";
 	private static final long OTP_VALIDITY_MS = 10 * 60 * 1000L;
+	private static final Pattern UPI_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$");
 
 	@Autowired
 	private UserService userService;
@@ -114,6 +124,9 @@ public class UserController {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+
+	@Autowired
+	private PaymentGatewayService paymentGatewayService;
 
 	@GetMapping("/")
 	public String home() {
@@ -219,11 +232,12 @@ public class UserController {
 		m.addAttribute("carts", carts);
 		if (carts.size() > 0) {
 			Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
-			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice() + 250 + 100;
 			m.addAttribute("orderPrice", orderPrice);
-			m.addAttribute("totalOrderPrice", totalOrderPrice);
+			m.addAttribute("totalOrderPrice", orderPrice);
 		}
 		m.addAttribute("cashOnDeliveryAvailable", isCashOnDeliveryEligible(carts));
+		m.addAttribute("razorpayConfigured", paymentGatewayService.isConfigured());
+		m.addAttribute("razorpayKeyId", paymentGatewayService.getPublicKey());
 		return "/user/order";
 	}
 
@@ -234,6 +248,10 @@ public class UserController {
 		Product product = validateBuyNowProduct(pid, session);
 		if (product == null) {
 			return "redirect:/products";
+		}
+		if (sanitizeQuantity(quantity) > product.getStock()) {
+			session.setAttribute("errorMsg", "Only " + product.getStock() + " item(s) are available right now.");
+			return "redirect:/product/" + pid;
 		}
 
 		int orderQuantity = sanitizeQuantity(quantity);
@@ -261,6 +279,10 @@ public class UserController {
 		if (product == null) {
 			return "redirect:/products";
 		}
+		if (sanitizeQuantity(quantity) > product.getStock()) {
+			session.setAttribute("errorMsg", "Only " + product.getStock() + " item(s) are available right now.");
+			return "redirect:/product/" + pid;
+		}
 
 		Address selectedAddress = resolveSelectedAddress(user.getId());
 		if (selectedAddress == null) {
@@ -281,6 +303,8 @@ public class UserController {
 		m.addAttribute("orderRequest", request);
 		m.addAttribute("deliveryFullName", buildFullName(request.getFirstName(), request.getLastName()));
 		m.addAttribute("cashOnDeliveryAvailable", cashOnDeliveryAvailable);
+		m.addAttribute("razorpayConfigured", paymentGatewayService.isConfigured());
+		m.addAttribute("razorpayKeyId", paymentGatewayService.getPublicKey());
 		m.addAttribute("hideCartButton", true);
 		return "/user/buy_now_payment";
 	}
@@ -295,6 +319,10 @@ public class UserController {
 		}
 
 		request.setPaymentType(normalizePaymentType(request.getPaymentType()));
+		if ("UPI".equalsIgnoreCase(request.getPaymentType())) {
+			session.setAttribute("errorMsg", "Please complete the verified UPI payment flow before placing your order");
+			return "redirect:/user/buy-now?pid=" + pid + "&quantity=" + sanitizeQuantity(quantity);
+		}
 		if ("COD".equalsIgnoreCase(request.getPaymentType()) && !isCashOnDeliveryEligible(product)) {
 			session.setAttribute("errorMsg", "Cash on Delivery is only available for products priced below ₹1000");
 			return "redirect:/user/buy-now?pid=" + pid + "&quantity=" + sanitizeQuantity(quantity);
@@ -305,7 +333,13 @@ public class UserController {
 			applyOrderRequestDefaults(request, user, selectedAddress);
 		}
 
-		ProductOrder placedOrder = orderService.saveSingleProductOrder(user.getId(), product, sanitizeQuantity(quantity), request);
+		ProductOrder placedOrder;
+		try {
+			placedOrder = orderService.saveSingleProductOrder(user.getId(), product, sanitizeQuantity(quantity), request);
+		} catch (IllegalStateException ex) {
+			session.setAttribute("errorMsg", ex.getMessage());
+			return "redirect:/product/" + pid;
+		}
 		session.setAttribute("succMsg", "Order placed successfully");
 		session.setAttribute(LAST_CONFIRMED_ORDER_ID, placedOrder.getOrderId());
 		return "redirect:/user/order-confirmation?orderId=" + placedOrder.getOrderId();
@@ -317,13 +351,187 @@ public class UserController {
 		UserDtls user = getLoggedInUserDetails(p);
 		List<Cart> carts = cartService.getCartsByUser(user.getId());
 		request.setPaymentType(normalizePaymentType(request.getPaymentType()));
+		if ("UPI".equalsIgnoreCase(request.getPaymentType())) {
+			session.setAttribute("errorMsg", "Please complete the verified UPI payment flow before placing your order");
+			return "redirect:/user/orders";
+		}
 		if ("COD".equalsIgnoreCase(request.getPaymentType()) && !isCashOnDeliveryEligible(carts)) {
 			session.setAttribute("errorMsg", "Cash on Delivery is only available when every product is priced below ₹1000");
 			return "redirect:/user/orders";
 		}
-		orderService.saveOrder(user.getId(), request);
+		try {
+			orderService.saveOrder(user.getId(), request);
+		} catch (IllegalStateException ex) {
+			session.setAttribute("errorMsg", ex.getMessage());
+			return "redirect:/user/cart";
+		}
 
 		return "redirect:/user/success";
+	}
+
+	@PostMapping("/payments/upi/initiate-buy-now")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> initiateBuyNowUpiPayment(@RequestBody UpiCheckoutInitiationRequest request,
+			Principal p, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		Product product = validateBuyNowProduct(request.getPid(), session);
+		if (product == null) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Selected product is unavailable"));
+		}
+		if (!paymentGatewayService.isConfigured()) {
+			return ResponseEntity.badRequest().body(
+					Map.of("success", false, "message", "Razorpay test credentials are not configured yet"));
+		}
+
+		String upiId = normalizeUpiId(request.getUpiId());
+		if (!isValidUpiId(upiId)) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Enter a valid UPI ID like name@bank"));
+		}
+
+		Address selectedAddress = resolveSelectedAddress(user.getId());
+		if (selectedAddress == null) {
+			return ResponseEntity.badRequest().body(
+					Map.of("success", false, "message", "Please add a delivery address before placing your order"));
+		}
+
+		int orderQuantity = sanitizeQuantity(request.getQuantity());
+		applyOrderRequestDefaults(request, user, selectedAddress);
+		request.setPaymentType("UPI");
+		request.setUpiId(upiId);
+
+		try {
+			int amountInPaise = toPaise(resolveEffectiveProductPrice(product) * orderQuantity);
+			return ResponseEntity.ok(buildUpiInitiationPayload(createPendingUpiCheckout(session, request, user.getId(),
+					"BUY_NOW", product.getId(), orderQuantity, amountInPaise, product.getTitle())));
+		} catch (IllegalStateException ex) {
+			return ResponseEntity.internalServerError().body(Map.of("success", false, "message",
+					StringUtils.hasText(ex.getMessage()) ? ex.getMessage() : "Unable to start the Razorpay payment"));
+		}
+	}
+
+	@PostMapping("/payments/upi/initiate-cart")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> initiateCartUpiPayment(@RequestBody UpiCheckoutInitiationRequest request,
+			Principal p, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		List<Cart> carts = cartService.getCartsByUser(user.getId());
+		if (carts == null || carts.isEmpty()) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Your cart is empty"));
+		}
+		if (!paymentGatewayService.isConfigured()) {
+			return ResponseEntity.badRequest().body(
+					Map.of("success", false, "message", "Razorpay test credentials are not configured yet"));
+		}
+
+		String upiId = normalizeUpiId(request.getUpiId());
+		if (!isValidUpiId(upiId)) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Enter a valid UPI ID like name@bank"));
+		}
+
+		request.setPaymentType("UPI");
+		request.setUpiId(upiId);
+		try {
+			int amountInPaise = toPaise(resolveCartSubtotal(carts));
+			return ResponseEntity.ok(buildUpiInitiationPayload(createPendingUpiCheckout(session, request, user.getId(),
+					"CART", null, null, amountInPaise, "Cart Checkout")));
+		} catch (IllegalStateException ex) {
+			return ResponseEntity.internalServerError().body(Map.of("success", false, "message",
+					StringUtils.hasText(ex.getMessage()) ? ex.getMessage() : "Unable to start the Razorpay payment"));
+		}
+	}
+
+	@PostMapping("/payments/upi/verify")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> verifyUpiPayment(@RequestBody UpiPaymentVerificationRequest request,
+			Principal p, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		PendingUpiCheckout pendingCheckout = getPendingUpiCheckouts(session).get(request.getCheckoutReference());
+		if (pendingCheckout == null || pendingCheckout.getUserId() == null
+				|| !pendingCheckout.getUserId().equals(user.getId())) {
+			return ResponseEntity.badRequest()
+					.body(Map.of("success", false, "message", "Your payment session expired. Please try again."));
+		}
+
+		if (!StringUtils.hasText(request.getRazorpayOrderId())
+				|| !request.getRazorpayOrderId().equals(pendingCheckout.getGatewayOrderId())) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message",
+					"Payment verification failed because the payment order did not match the initiated session."));
+		}
+
+		try {
+			PaymentGatewayService.PaymentVerificationResult verificationResult = paymentGatewayService.verifyPayment(
+					request.getRazorpayOrderId(), request.getRazorpayPaymentId(), request.getRazorpaySignature());
+			if (!verificationResult.success()) {
+				return ResponseEntity.badRequest().body(Map.of(
+						"success", false,
+						"message", StringUtils.hasText(verificationResult.failureReason())
+								? verificationResult.failureReason()
+								: "Payment failed. No order was placed.",
+						"paymentStatus", verificationResult.paymentStatus()));
+			}
+
+			OrderRequest orderRequest = enrichVerifiedOrderRequest(pendingCheckout, verificationResult);
+			Map<String, PendingUpiCheckout> pendingCheckouts = getPendingUpiCheckouts(session);
+
+			if ("BUY_NOW".equalsIgnoreCase(pendingCheckout.getCheckoutType())) {
+				Product product = validateBuyNowProduct(pendingCheckout.getProductId(), session);
+				if (product == null) {
+					return ResponseEntity.badRequest()
+							.body(Map.of("success", false, "message", "Selected product is no longer available"));
+				}
+				int currentAmount = toPaise(
+						resolveEffectiveProductPrice(product) * sanitizeQuantity(pendingCheckout.getQuantity()));
+				if (currentAmount != pendingCheckout.getAmountInPaise()) {
+					return ResponseEntity.badRequest().body(
+							Map.of("success", false, "message",
+									"Product price changed during checkout. Please review the order and try again."));
+				}
+
+				ProductOrder placedOrder;
+				try {
+					placedOrder = orderService.saveSingleProductOrder(user.getId(), product,
+							sanitizeQuantity(pendingCheckout.getQuantity()), orderRequest);
+				} catch (IllegalStateException ex) {
+					return ResponseEntity.badRequest().body(Map.of("success", false, "message", ex.getMessage()));
+				}
+				pendingCheckouts.remove(request.getCheckoutReference());
+				session.setAttribute("succMsg", "Payment successful");
+				session.setAttribute(LAST_CONFIRMED_ORDER_ID, placedOrder.getOrderId());
+				return ResponseEntity.ok(Map.of(
+						"success", true,
+						"message", "Payment successful. Your order has been confirmed.",
+						"paymentStatus", "SUCCESS",
+						"redirectUrl", "/user/order-confirmation?orderId=" + placedOrder.getOrderId()));
+			}
+
+			List<Cart> carts = cartService.getCartsByUser(user.getId());
+			if (carts == null || carts.isEmpty()) {
+				return ResponseEntity.badRequest()
+						.body(Map.of("success", false, "message", "Your cart is empty. Please add items again."));
+			}
+			if (toPaise(resolveCartSubtotal(carts)) != pendingCheckout.getAmountInPaise()) {
+				return ResponseEntity.badRequest().body(
+						Map.of("success", false, "message",
+								"Your cart changed during payment. Please review it and try the UPI payment again."));
+			}
+
+			try {
+				orderService.saveOrder(user.getId(), orderRequest);
+			} catch (IllegalStateException ex) {
+				return ResponseEntity.badRequest().body(Map.of("success", false, "message", ex.getMessage()));
+			}
+			pendingCheckouts.remove(request.getCheckoutReference());
+			session.setAttribute("succMsg", "Payment successful");
+			return ResponseEntity.ok(Map.of(
+					"success", true,
+					"message", "Payment successful. Your order has been confirmed.",
+					"paymentStatus", "SUCCESS",
+					"redirectUrl", "/user/success"));
+		} catch (Exception ex) {
+			return ResponseEntity.internalServerError()
+					.body(Map.of("success", false, "message",
+							StringUtils.hasText(ex.getMessage()) ? ex.getMessage() : "Payment verification failed"));
+		}
 	}
 
 	@PostMapping("/submit-review")
@@ -919,7 +1127,7 @@ public class UserController {
 	private Product validateBuyNowProduct(Integer pid, HttpSession session) {
 		Product product = productService.getLiveProductById(pid);
 		if (product == null || product.getStock() <= 0) {
-			session.setAttribute("errorMsg", "This product is currently unavailable");
+			session.setAttribute("errorMsg", "Out of stock. We will notify you when available.");
 			return null;
 		}
 		return product;
@@ -1022,6 +1230,129 @@ public class UserController {
 		case "ONLINE" -> "CARD";
 		default -> "CARD";
 		};
+	}
+
+	private Map<String, Object> buildUpiInitiationPayload(PendingUpiCheckout pendingCheckout) {
+		OrderRequest orderRequest = pendingCheckout.getOrderRequest();
+		return Map.of(
+				"success", true,
+				"message", "Processing payment. Complete the UPI approval in Razorpay to confirm your order.",
+				"checkoutReference", pendingCheckout.getCheckoutReference(),
+				"razorpayOrderId", pendingCheckout.getGatewayOrderId(),
+				"razorpayKeyId", paymentGatewayService.getPublicKey(),
+				"amount", pendingCheckout.getAmountInPaise(),
+				"currency", pendingCheckout.getCurrency(),
+				"customerName", buildFullName(orderRequest.getFirstName(), orderRequest.getLastName()),
+				"customerEmail", orderRequest.getEmail(),
+				"customerContact", normalizeRazorpayContact(orderRequest.getMobileNo()));
+	}
+
+	private PendingUpiCheckout createPendingUpiCheckout(HttpSession session, OrderRequest request, Integer userId,
+			String checkoutType, Integer productId, Integer quantity, int amountInPaise, String description) {
+		try {
+			String checkoutReference = UUID.randomUUID().toString();
+			String receipt = ("BUY_NOW".equalsIgnoreCase(checkoutType) ? "buy_" : "cart_")
+					+ checkoutReference.replace("-", "").substring(0, 20);
+			PaymentGatewayService.PaymentOrder paymentOrder = paymentGatewayService.createOrder(
+					new PaymentGatewayService.PaymentOrderRequest(amountInPaise, "INR", receipt,
+							Map.of("checkout_type", checkoutType, "checkout_reference", checkoutReference,
+									"description", description)));
+
+			PendingUpiCheckout pendingCheckout = new PendingUpiCheckout();
+			pendingCheckout.setCheckoutReference(checkoutReference);
+			pendingCheckout.setCheckoutType(checkoutType);
+			pendingCheckout.setUserId(userId);
+			pendingCheckout.setProductId(productId);
+			pendingCheckout.setQuantity(quantity);
+			pendingCheckout.setAmountInPaise(paymentOrder.amountInPaise());
+			pendingCheckout.setCurrency(paymentOrder.currency());
+			pendingCheckout.setGatewayOrderId(paymentOrder.gatewayOrderId());
+			pendingCheckout.setUpiId(normalizeUpiId(request.getUpiId()));
+			pendingCheckout.setOrderRequest(copyOrderRequest(request));
+			getPendingUpiCheckouts(session).put(checkoutReference, pendingCheckout);
+			return pendingCheckout;
+		} catch (Exception ex) {
+			throw new IllegalStateException(ex.getMessage(), ex);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, PendingUpiCheckout> getPendingUpiCheckouts(HttpSession session) {
+		Object stored = session.getAttribute(PENDING_UPI_CHECKOUTS);
+		if (stored instanceof Map<?, ?> map) {
+			return (Map<String, PendingUpiCheckout>) map;
+		}
+
+		Map<String, PendingUpiCheckout> pending = new HashMap<>();
+		session.setAttribute(PENDING_UPI_CHECKOUTS, pending);
+		return pending;
+	}
+
+	private OrderRequest enrichVerifiedOrderRequest(PendingUpiCheckout pendingCheckout,
+			PaymentGatewayService.PaymentVerificationResult verificationResult) {
+		OrderRequest request = copyOrderRequest(pendingCheckout.getOrderRequest());
+		request.setPaymentType("UPI");
+		request.setUpiId(StringUtils.hasText(verificationResult.payerUpiId()) ? verificationResult.payerUpiId()
+				: pendingCheckout.getUpiId());
+		request.setPaymentStatus("SUCCESS");
+		request.setPaymentGatewayProvider(verificationResult.gatewayProvider());
+		request.setPaymentGatewayOrderId(verificationResult.gatewayOrderId());
+		request.setPaymentGatewayPaymentId(verificationResult.gatewayPaymentId());
+		request.setPaymentFailureCode(verificationResult.failureCode());
+		request.setPaymentFailureReason(verificationResult.failureReason());
+		return request;
+	}
+
+	private OrderRequest copyOrderRequest(OrderRequest source) {
+		OrderRequest target = new OrderRequest();
+		target.setFirstName(source.getFirstName());
+		target.setLastName(source.getLastName());
+		target.setEmail(source.getEmail());
+		target.setMobileNo(source.getMobileNo());
+		target.setAddress(source.getAddress());
+		target.setCity(source.getCity());
+		target.setState(source.getState());
+		target.setPincode(source.getPincode());
+		target.setPaymentType(source.getPaymentType());
+		target.setUpiId(source.getUpiId());
+		target.setPaymentStatus(source.getPaymentStatus());
+		target.setPaymentGatewayProvider(source.getPaymentGatewayProvider());
+		target.setPaymentGatewayOrderId(source.getPaymentGatewayOrderId());
+		target.setPaymentGatewayPaymentId(source.getPaymentGatewayPaymentId());
+		target.setPaymentFailureCode(source.getPaymentFailureCode());
+		target.setPaymentFailureReason(source.getPaymentFailureReason());
+		return target;
+	}
+
+	private double resolveCartSubtotal(List<Cart> carts) {
+		if (carts == null || carts.isEmpty()) {
+			return 0.0;
+		}
+		return safeAmount(carts.get(carts.size() - 1).getTotalOrderPrice());
+	}
+
+	private int toPaise(double amount) {
+		return (int) Math.round(Math.max(0.0, amount) * 100);
+	}
+
+	private String normalizeUpiId(String upiId) {
+		return StringUtils.hasText(upiId) ? upiId.trim().toLowerCase(Locale.ENGLISH) : "";
+	}
+
+	private boolean isValidUpiId(String upiId) {
+		return StringUtils.hasText(upiId) && UPI_ID_PATTERN.matcher(upiId.trim()).matches();
+	}
+
+	private String normalizeRazorpayContact(String mobileNo) {
+		if (!StringUtils.hasText(mobileNo)) {
+			return "";
+		}
+
+		String digits = mobileNo.replaceAll("[^0-9]", "");
+		if (digits.startsWith("91") && digits.length() > 10) {
+			return "+" + digits;
+		}
+		return digits.length() == 10 ? "+91" + digits : "+" + digits;
 	}
 
 	private void populateOrderConfirmationModel(Model m, ProductOrder order) {

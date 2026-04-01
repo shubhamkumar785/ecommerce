@@ -14,10 +14,61 @@
                 <div>
                     <p class="text-[11px] font-black tracking-[0.25em] uppercase text-slate-400">Sales Activity</p>
                     <h1 class="text-3xl md:text-4xl font-heading font-black text-slate-900 mt-2">Seller orders</h1>
-                    <p class="text-slate-500 font-medium mt-2"><span th:text="${orderCount}">0</span> orders placed for your products.</p>
+                    <p class="text-slate-500 font-medium mt-2">
+                        <span id="sellerOrdersHeadlineCount" th:text="${filteredOrderCount}">0</span>
+                        <span id="sellerOrdersHeadlineLabel" th:text="${activeOrderFilterLabel}">Total Orders</span>.
+                    </p>
+                    <p class="text-slate-400 text-sm font-medium mt-1" id="sellerOrdersHeadlineDescription" th:text="${activeOrderFilterDescription}">Showing every order placed for your products.</p>
                 </div>
                 <a href="/seller/products" class="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-orange-500 text-white font-black shadow-lg shadow-orange-200 hover:bg-orange-600 transition">
                     <i class="fa-solid fa-box-open"></i> View Products
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a th:href="@{/seller/orders(filter='all',pageNo=0,pageSize=${pageSize})}"
+                   th:classappend="${activeOrderFilter == 'all'} ? ' ring-2 ring-blue-200 border-blue-100 shadow-md' : ' hover:border-blue-100 hover:shadow-md'"
+                   class="block bg-white rounded-[28px] border border-slate-100 shadow-sm p-5 transition">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.24em] text-slate-400">Total Orders</p>
+                            <p id="sellerSummaryTotalOrders" class="mt-3 text-3xl font-black text-slate-900" th:text="${sellerOrderSummary.totalOrders}">0</p>
+                            <p class="mt-2 text-sm font-medium text-slate-500">All orders placed for your products.</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a th:href="@{/seller/orders(filter='cancelled',pageNo=0,pageSize=${pageSize})}"
+                   th:classappend="${activeOrderFilter == 'cancelled'} ? ' ring-2 ring-red-200 border-red-100 shadow-md' : ' hover:border-red-100 hover:shadow-md'"
+                   class="block bg-white rounded-[28px] border border-slate-100 shadow-sm p-5 transition">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.24em] text-slate-400">Cancelled Orders</p>
+                            <p id="sellerSummaryCancelledOrders" class="mt-3 text-3xl font-black text-red-500" th:text="${sellerOrderSummary.cancelledOrders}">0</p>
+                            <p class="mt-2 text-sm font-medium text-slate-500">Orders cancelled by customers.</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-ban"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a th:href="@{/seller/orders(filter='received',pageNo=0,pageSize=${pageSize})}"
+                   th:classappend="${activeOrderFilter == 'received'} ? ' ring-2 ring-emerald-200 border-emerald-100 shadow-md' : ' hover:border-emerald-100 hover:shadow-md'"
+                   class="block bg-white rounded-[28px] border border-slate-100 shadow-sm p-5 transition">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.24em] text-slate-400">Orders Received / Completed</p>
+                            <p id="sellerSummaryCompletedOrders" class="mt-3 text-3xl font-black text-emerald-600" th:text="${sellerOrderSummary.completedOrders}">0</p>
+                            <p class="mt-2 text-sm font-medium text-slate-500">Successfully delivered or completed orders.</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
                 </a>
             </div>
 
@@ -25,8 +76,8 @@
                 <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-5">
                     <i class="fa-solid fa-receipt text-3xl"></i>
                 </div>
-                <h2 class="text-2xl font-black text-slate-900">No seller orders yet</h2>
-                <p class="text-slate-500 mt-2">Orders for your live products will appear here automatically.</p>
+                <h2 class="text-2xl font-black text-slate-900" th:text="${activeOrderFilter == 'cancelled'} ? 'No cancelled orders found' : (${activeOrderFilter == 'received'} ? 'No completed orders found' : 'No seller orders yet')}">No seller orders yet</h2>
+                <p class="text-slate-500 mt-2" th:text="${activeOrderFilter == 'cancelled'} ? 'Cancelled orders for your products will appear here.' : (${activeOrderFilter == 'received'} ? 'Delivered or completed orders will appear here once they are fulfilled.' : 'Orders for your live products will appear here automatically.')}">Orders for your live products will appear here automatically.</p>
                 <a href="/seller/products" class="inline-flex mt-8 items-center gap-3 px-6 py-3.5 rounded-2xl bg-orange-500 text-white font-black shadow-lg shadow-orange-200 hover:bg-orange-600 transition">
                     Open Catalog
                 </a>
@@ -88,13 +139,13 @@
             </div>
 
             <div th:if="${ordersSize > 0 && totalPages > 1}" class="flex items-center justify-center gap-3 pt-2">
-                <a th:href="@{'/seller/orders?pageNo='+${pageNo-1}+'&pageSize='+${pageSize}}"
+                <a th:href="@{/seller/orders(filter=${activeOrderFilter},pageNo=${pageNo-1},pageSize=${pageSize})}"
                    th:classappend="${isFirst} ? 'pointer-events-none opacity-40' : ''"
                    class="w-11 h-11 rounded-2xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:border-orange-300 hover:text-orange-500 transition">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </a>
                 <span class="text-sm font-bold text-slate-500">Page <span class="text-slate-900" th:text="${pageNo + 1}">1</span> of <span th:text="${totalPages}">1</span></span>
-                <a th:href="@{'/seller/orders?pageNo='+${pageNo+1}+'&pageSize='+${pageSize}}"
+                <a th:href="@{/seller/orders(filter=${activeOrderFilter},pageNo=${pageNo+1},pageSize=${pageSize})}"
                    th:classappend="${isLast} ? 'pointer-events-none opacity-40' : ''"
                    class="w-11 h-11 rounded-2xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:border-orange-300 hover:text-orange-500 transition">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -102,6 +153,64 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const sellerSummaryTotalOrders = document.getElementById('sellerSummaryTotalOrders');
+        const sellerSummaryCancelledOrders = document.getElementById('sellerSummaryCancelledOrders');
+        const sellerSummaryCompletedOrders = document.getElementById('sellerSummaryCompletedOrders');
+        const sellerOrdersHeadlineCount = document.getElementById('sellerOrdersHeadlineCount');
+        const activeSellerOrderFilter = /*[[${activeOrderFilter}]]*/ 'all';
+
+        function updateSellerSummary(summary) {
+            if (!summary) {
+                return;
+            }
+
+            if (sellerSummaryTotalOrders) {
+                sellerSummaryTotalOrders.textContent = summary.totalOrders ?? 0;
+            }
+            if (sellerSummaryCancelledOrders) {
+                sellerSummaryCancelledOrders.textContent = summary.cancelledOrders ?? 0;
+            }
+            if (sellerSummaryCompletedOrders) {
+                sellerSummaryCompletedOrders.textContent = summary.completedOrders ?? 0;
+            }
+            if (sellerOrdersHeadlineCount) {
+                if (activeSellerOrderFilter === 'cancelled') {
+                    sellerOrdersHeadlineCount.textContent = summary.cancelledOrders ?? 0;
+                } else if (activeSellerOrderFilter === 'received') {
+                    sellerOrdersHeadlineCount.textContent = summary.completedOrders ?? 0;
+                } else {
+                    sellerOrdersHeadlineCount.textContent = summary.totalOrders ?? 0;
+                }
+            }
+        }
+
+        async function refreshSellerOrderSummary() {
+            try {
+                const response = await fetch('/seller/orders/summary', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!response.ok) {
+                    return;
+                }
+
+                const summary = await response.json();
+                updateSellerSummary(summary);
+            } catch (error) {
+                // Keep the last rendered values if polling fails.
+            }
+        }
+
+        refreshSellerOrderSummary();
+        setInterval(refreshSellerOrderSummary, 15000);
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                refreshSellerOrderSummary();
+            }
+        });
+    </script>
 </section>
 </body>
 </html>

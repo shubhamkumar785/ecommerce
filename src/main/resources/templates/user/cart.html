@@ -95,7 +95,7 @@
                                     <!-- Additional Info -->
                                     <div class="pt-2">
                                         <p th:if="${cart.product.stock <= 0}" class="text-xs font-bold text-red-500 uppercase tracking-wide">
-                                            <i class="fa-solid fa-circle-exclamation"></i> Out Of Stock
+                                            <i class="fa-solid fa-circle-exclamation"></i> Out of stock, we will notify you when available
                                         </p>
                                         <p th:unless="${cart.product.stock <= 0}" class="text-xs font-bold text-gray-500">
                                             Seller: [[${cart.product.seller?.name ?: 'Ecom Retail'}]]

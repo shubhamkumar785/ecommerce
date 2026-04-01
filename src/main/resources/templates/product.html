@@ -82,8 +82,11 @@
                                 <button th:onclick="'addToWishlistAjax(' + ${p.id} + ')'" class="w-11 h-11 bg-white shadow-md rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all active:scale-90 transform hover:scale-110">
                                     <i class="fa-regular fa-heart text-sm"></i>
                                 </button>
-                                <button th:onclick="'addToCartAjax(' + ${p.id} + ')'" class="w-11 h-11 bg-white shadow-lg rounded-full flex items-center justify-center text-slate-700 hover:text-orange-500 transition active:scale-90 transform hover:scale-110">
+                                <button th:if="${p.stock > 0}" th:onclick="'addToCartAjax(' + ${p.id} + ')'" class="w-11 h-11 bg-white shadow-lg rounded-full flex items-center justify-center text-slate-700 hover:text-orange-500 transition active:scale-90 transform hover:scale-110">
                                     <i class="fa-solid fa-bag-shopping text-sm"></i>
+                                </button>
+                                <button th:unless="${p.stock > 0}" disabled class="w-11 h-11 bg-white/80 shadow-sm rounded-full flex items-center justify-center text-red-400 cursor-not-allowed">
+                                    <i class="fa-solid fa-ban text-sm"></i>
                                 </button>
                             </div>
 
@@ -104,6 +107,8 @@
                                             <span class="text-xs text-nav/40 line-through">&#8377; [[${p.price}]]</span>
                                             <span class="text-[10px] font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded-md">[[${p.discount}]]% OFF</span>
                                         </div>
+                                        <p th:if="${p.stock > 0}" class="text-[10px] font-bold text-slate-500 mt-2">[[${p.stock}]] in stock</p>
+                                        <p th:unless="${p.stock > 0}" class="text-[10px] font-bold text-red-500 mt-2">Out of stock, we will notify you when available</p>
                                     </div>
                                     <a th:href="@{'/product/'+${p.id}}" class="hidden lg:flex w-10 h-10 bg-nav text-white rounded-full items-center justify-center hover:bg-[#FF8833] transition active:scale-90">
                                         <i class="fa-solid fa-chevron-right text-xs"></i>

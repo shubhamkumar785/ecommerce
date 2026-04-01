@@ -1,9 +1,14 @@
 package com.ecommerce.controller;
 
 import java.security.Principal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.dto.DashboardStats;
@@ -112,21 +118,48 @@ public class SellerController {
 
 	@GetMapping("/orders")
 	public String sellerOrders(Principal principal, Model model,
+			@RequestParam(name = "filter", defaultValue = "all") String filter,
 			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		UserDtls seller = getLoggedInSeller(principal);
-		Page<ProductOrder> page = orderService.getOrdersBySeller(seller.getId(), pageNo, pageSize);
+		List<ProductOrder> allSellerOrders = orderService.getOrdersBySeller(seller.getId());
+		String activeOrderFilter = normalizeSellerOrderFilter(filter);
+		List<ProductOrder> filteredOrders = filterSellerOrders(allSellerOrders, activeOrderFilter).stream()
+				.sorted(Comparator.comparing(ProductOrder::getOrderDate,
+						Comparator.nullsLast(Comparator.reverseOrder()))
+						.thenComparing(ProductOrder::getId, Comparator.nullsLast(Comparator.reverseOrder())))
+				.toList();
+		Map<String, Long> orderSummary = buildSellerOrderSummary(allSellerOrders);
+		int safePageSize = pageSize == null || pageSize < 1 ? 10 : pageSize;
+		int filteredOrderCount = filteredOrders.size();
+		int totalPages = filteredOrderCount == 0 ? 0 : (int) Math.ceil((double) filteredOrderCount / safePageSize);
+		int safePageNo = totalPages == 0 ? 0 : Math.min(Math.max(pageNo, 0), totalPages - 1);
+		int fromIndex = Math.min(safePageNo * safePageSize, filteredOrderCount);
+		int toIndex = Math.min(fromIndex + safePageSize, filteredOrderCount);
+		List<ProductOrder> pagedOrders = filteredOrders.subList(fromIndex, toIndex);
 
-		model.addAttribute("orders", page.getContent());
-		model.addAttribute("ordersSize", page.getContent().size());
-		model.addAttribute("orderCount", page.getTotalElements());
-		model.addAttribute("pageNo", page.getNumber());
-		model.addAttribute("pageSize", pageSize);
-		model.addAttribute("totalPages", page.getTotalPages());
-		model.addAttribute("isFirst", page.isFirst());
-		model.addAttribute("isLast", page.isLast());
+		model.addAttribute("orders", pagedOrders);
+		model.addAttribute("ordersSize", pagedOrders.size());
+		model.addAttribute("orderCount", filteredOrderCount);
+		model.addAttribute("filteredOrderCount", filteredOrderCount);
+		model.addAttribute("sellerOrderSummary", orderSummary);
+		model.addAttribute("activeOrderFilter", activeOrderFilter);
+		model.addAttribute("activeOrderFilterLabel", resolveSellerOrderFilterLabel(activeOrderFilter));
+		model.addAttribute("activeOrderFilterDescription", resolveSellerOrderFilterDescription(activeOrderFilter));
+		model.addAttribute("pageNo", safePageNo);
+		model.addAttribute("pageSize", safePageSize);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("isFirst", safePageNo == 0);
+		model.addAttribute("isLast", totalPages == 0 || safePageNo >= totalPages - 1);
 
 		return "seller/orders";
+	}
+
+	@GetMapping("/orders/summary")
+	@ResponseBody
+	public ResponseEntity<Map<String, Long>> sellerOrdersSummary(Principal principal) {
+		UserDtls seller = getLoggedInSeller(principal);
+		return ResponseEntity.ok(buildSellerOrderSummary(orderService.getOrdersBySeller(seller.getId())));
 	}
 
 	@GetMapping("/shop-profile")
@@ -148,5 +181,70 @@ public class SellerController {
 
 	private UserDtls getLoggedInSeller(Principal principal) {
 		return userService.getUserByEmail(principal.getName());
+	}
+
+	private Map<String, Long> buildSellerOrderSummary(List<ProductOrder> orders) {
+		List<ProductOrder> safeOrders = orders == null ? List.of() : orders;
+		long totalOrders = safeOrders.size();
+		long cancelledOrders = safeOrders.stream()
+				.filter(order -> order != null && isCancelledStatus(order.getStatus()))
+				.count();
+		long completedOrders = safeOrders.stream()
+				.filter(order -> order != null && isCompletedStatus(order.getStatus()))
+				.count();
+
+		return Map.of(
+				"totalOrders", totalOrders,
+				"cancelledOrders", cancelledOrders,
+				"completedOrders", completedOrders);
+	}
+
+	private boolean isCancelledStatus(String status) {
+		return "Cancelled".equalsIgnoreCase(status);
+	}
+
+	private boolean isCompletedStatus(String status) {
+		return "Delivered".equalsIgnoreCase(status) || "Completed".equalsIgnoreCase(status);
+	}
+
+	private String normalizeSellerOrderFilter(String filter) {
+		if (filter == null || filter.isBlank()) {
+			return "all";
+		}
+
+		String normalized = filter.trim().toLowerCase(Locale.ENGLISH);
+		return switch (normalized) {
+		case "cancelled", "received", "all" -> normalized;
+		default -> "all";
+		};
+	}
+
+	private List<ProductOrder> filterSellerOrders(List<ProductOrder> orders, String filter) {
+		List<ProductOrder> safeOrders = orders == null ? List.of() : orders;
+		return switch (filter) {
+		case "cancelled" -> safeOrders.stream()
+				.filter(order -> order != null && isCancelledStatus(order.getStatus()))
+				.toList();
+		case "received" -> safeOrders.stream()
+				.filter(order -> order != null && isCompletedStatus(order.getStatus()))
+				.toList();
+		default -> safeOrders;
+		};
+	}
+
+	private String resolveSellerOrderFilterLabel(String filter) {
+		return switch (filter) {
+		case "cancelled" -> "Cancelled Orders";
+		case "received" -> "Orders Received / Completed";
+		default -> "Total Orders";
+		};
+	}
+
+	private String resolveSellerOrderFilterDescription(String filter) {
+		return switch (filter) {
+		case "cancelled" -> "Showing every cancelled order for your products.";
+		case "received" -> "Showing all successfully delivered or completed orders.";
+		default -> "Showing every order placed for your products.";
+		};
 	}
 }

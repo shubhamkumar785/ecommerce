@@ -44,6 +44,20 @@ public class ProductOrder {
 
 	private String paymentType;
 
+	private String paymentStatus;
+
+	private String paymentGatewayProvider;
+
+	private String paymentGatewayOrderId;
+
+	private String paymentGatewayPaymentId;
+
+	private String paymentFailureCode;
+
+	private String paymentFailureReason;
+
+	private String payerUpiId;
+
 	private Double costPrice;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -128,6 +142,62 @@ public class ProductOrder {
 
 	public void setPaymentType(String paymentType) {
 	    this.paymentType = paymentType;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getPaymentGatewayProvider() {
+		return paymentGatewayProvider;
+	}
+
+	public void setPaymentGatewayProvider(String paymentGatewayProvider) {
+		this.paymentGatewayProvider = paymentGatewayProvider;
+	}
+
+	public String getPaymentGatewayOrderId() {
+		return paymentGatewayOrderId;
+	}
+
+	public void setPaymentGatewayOrderId(String paymentGatewayOrderId) {
+		this.paymentGatewayOrderId = paymentGatewayOrderId;
+	}
+
+	public String getPaymentGatewayPaymentId() {
+		return paymentGatewayPaymentId;
+	}
+
+	public void setPaymentGatewayPaymentId(String paymentGatewayPaymentId) {
+		this.paymentGatewayPaymentId = paymentGatewayPaymentId;
+	}
+
+	public String getPaymentFailureCode() {
+		return paymentFailureCode;
+	}
+
+	public void setPaymentFailureCode(String paymentFailureCode) {
+		this.paymentFailureCode = paymentFailureCode;
+	}
+
+	public String getPaymentFailureReason() {
+		return paymentFailureReason;
+	}
+
+	public void setPaymentFailureReason(String paymentFailureReason) {
+		this.paymentFailureReason = paymentFailureReason;
+	}
+
+	public String getPayerUpiId() {
+		return payerUpiId;
+	}
+
+	public void setPayerUpiId(String payerUpiId) {
+		this.payerUpiId = payerUpiId;
 	}
 
 	// Getter and Setter for orderAddress
