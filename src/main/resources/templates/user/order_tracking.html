@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Order | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-pastel-bg py-7 px-4 md:px-0">
+        <div class="max-w-[1180px] mx-auto">
+
+            <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400">
+                        <a href="/" class="hover:text-orange-500 transition">Home</a>
+                        <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                        <a href="/user/user-orders" class="hover:text-orange-500 transition">My Orders</a>
+                        <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                        <span class="text-nav" th:text="${order.orderId}">ORDER-ID</span>
+                    </div>
+                    <p class="mt-3 text-[11px] font-black uppercase tracking-[0.35em] text-orange-400">Track & Manage</p>
+                    <h1 class="mt-2 text-[2rem] md:text-[2.35rem] font-heading font-extrabold text-slate-900 tracking-tight leading-none">
+                        Follow your <span class="text-orange-500">order journey</span>
+                    </h1>
+                    <p class="mt-2 text-[14px] text-slate-500 font-medium max-w-2xl">
+                        Review delivery progress, payment details, and support actions from one place.
+                    </p>
+                </div>
+                <div class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white text-slate-600 font-bold shadow-sm border border-slate-100 text-[14px]">
+                    <i class="fa-solid fa-receipt text-orange-400"></i>
+                    Order ID: <span class="text-slate-900" th:text="${order.orderId}">ORDER-ID</span>
+                </div>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+                <div class="space-y-5">
+                    <article class="bg-white rounded-[28px] p-5 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="flex flex-col gap-5 md:flex-row md:items-center">
+                            <div class="w-full md:w-28 h-28 rounded-[24px] bg-slate-50 border border-slate-100 flex items-center justify-center p-4 overflow-hidden shrink-0">
+                                <img th:src="@{'/img/product_img/'+${order.product.image}}" th:alt="${order.product.title}"
+                                    class="max-w-full max-h-full object-contain mix-blend-multiply">
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-wrap items-center gap-3 mb-3">
+                                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                                        <i class="fa-solid fa-box-open text-orange-400"></i> Selected Product
+                                    </span>
+                                    <span th:if="${isCancelledOrder}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-100 text-[10px] font-black uppercase tracking-widest text-red-500">
+                                        <i class="fa-solid fa-ban"></i> Cancelled
+                                    </span>
+                                    <span th:unless="${isCancelledOrder}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-[10px] font-black uppercase tracking-widest text-green-600">
+                                        <i class="fa-solid fa-location-arrow"></i> <span th:text="${orderStatusLabel}">Order confirmed</span>
+                                    </span>
+                                </div>
+
+                                <h2 class="text-[1.55rem] font-bold text-slate-900 leading-tight" th:text="${order.product.title}">Product title</h2>
+                                <p class="mt-2 text-[14px] font-medium text-slate-500">
+                                    Qty: <span class="font-bold text-slate-900" th:text="${order.quantity}">1</span>
+                                    <span class="mx-2 text-slate-300">|</span>
+                                    <span th:text="${order.product.category}">Category</span>
+                                </p>
+                                <p class="mt-3 text-[15px] text-slate-600 font-medium leading-6" th:text="${statusSummary}">
+                                    Your order is confirmed and preparing for dispatch.
+                                </p>
+                            </div>
+
+                            <div class="md:w-[210px] md:text-right">
+                                <div class="rounded-[22px] bg-slate-50 border border-slate-100 p-4">
+                                    <p class="text-[11px] font-black uppercase tracking-[0.28em] text-slate-400">Payment</p>
+                                    <p class="mt-2 text-[1.05rem] font-bold text-slate-900" th:text="${paymentLabel}">UPI</p>
+                                    <p class="mt-2 text-[13px] font-medium text-slate-500">Expected by <span class="font-bold text-green-600" th:text="${estimatedDeliveryShort}">Mon, Apr 6</span></p>
+                                </div>
+                                <a th:href="@{'/product/' + ${order.product.id}}"
+                                    class="mt-3 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold hover:border-orange-200 hover:text-orange-500 transition shadow-sm">
+                                    <i class="fa-solid fa-eye text-xs"></i> View product
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white rounded-[28px] p-5 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                            <div>
+                                <p class="text-[11px] font-black uppercase tracking-[0.32em] text-slate-400">Order Timeline</p>
+                                <h3 class="mt-2 text-[1.65rem] font-bold text-slate-900">Delivery by <span th:text="${estimatedDeliveryShort}">Mon, Apr 6</span></h3>
+                            </div>
+                            <p class="text-[13px] font-medium text-slate-500 max-w-md" th:text="${statusHint}">
+                                Expected delivery by Monday, 6 Apr 2026
+                            </p>
+                        </div>
+
+                        <div th:if="${isCancelledOrder}" class="mt-5 rounded-[22px] bg-red-50 border border-red-100 px-5 py-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-white text-red-500 flex items-center justify-center shrink-0 shadow-sm">
+                                    <i class="fa-solid fa-ban"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[1rem] font-bold text-slate-900">This order has been cancelled</p>
+                                    <p class="mt-1 text-[14px] text-slate-600 font-medium leading-6">
+                                        If you still need this item, you can return to the product page and place a fresh order.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 relative pl-14">
+                            <div class="absolute left-[17px] top-3 bottom-4 border-l border-dashed border-slate-200"></div>
+
+                            <div th:each="step,iter : ${trackingSteps}" class="relative pb-6 pl-6 md:pl-7 last:pb-0">
+                                <div th:class="'absolute left-0 top-1 w-9 h-9 rounded-full border flex items-center justify-center shadow-sm ' + (${step.current} ? 'bg-green-500 border-green-500 text-white' : (${step.completed} ? 'bg-green-50 border-green-200 text-green-600' : 'bg-white border-slate-200 text-slate-300'))">
+                                    <i th:if="${step.current or step.completed}" class="fa-solid fa-check text-xs"></i>
+                                    <i th:unless="${step.current or step.completed}" class="fa-regular fa-circle text-xs"></i>
+                                </div>
+
+                                <div th:class="'rounded-[22px] border p-4 md:p-5 ' + (${step.current} ? 'bg-green-50/80 border-green-100' : (${step.completed} ? 'bg-white border-slate-100' : 'bg-slate-50/80 border-slate-100'))">
+                                    <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                                        <div>
+                                            <p class="text-[1.02rem] font-bold text-slate-900" th:text="${step.title}">Order confirmed</p>
+                                            <p class="mt-1 text-[14px] text-slate-600 font-medium leading-6" th:text="${step.description}">
+                                                Your order was placed successfully.
+                                            </p>
+                                        </div>
+                                        <span th:if="${step.current}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-green-100 text-[10px] font-black uppercase tracking-widest text-green-600">
+                                            Current step
+                                        </span>
+                                        <span th:if="${step.completed and !step.current}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-[10px] font-black uppercase tracking-widest text-green-600">
+                                            Completed
+                                        </span>
+                                        <span th:if="${!step.completed and !step.current}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                            Upcoming
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white rounded-[28px] p-5 shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="flex flex-col gap-4">
+                            <p class="text-[14px] font-medium text-slate-500">
+                                Delivery executive details will appear here once the order moves to the final delivery stage.
+                            </p>
+                            <div class="grid gap-3 md:grid-cols-2">
+                                <a th:if="${canCancelOrder}" th:href="@{'/user/update-status?id='+${order.id}+'&st=6'}"
+                                    class="inline-flex items-center justify-center gap-2 rounded-[20px] border border-red-100 bg-red-50 px-5 py-3 text-[13px] font-black uppercase tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition">
+                                    <i class="fa-solid fa-xmark"></i> Cancel Order
+                                </a>
+                                <a th:unless="${canCancelOrder}" href="/user/user-orders"
+                                    class="inline-flex items-center justify-center gap-2 rounded-[20px] border border-slate-200 bg-slate-50 px-5 py-3 text-[13px] font-black uppercase tracking-widest text-slate-700 hover:border-orange-200 hover:text-orange-500 transition">
+                                    <i class="fa-solid fa-box-archive"></i> Open My Orders
+                                </a>
+
+                                <a th:href="|/user/customer-care?orderId=${order.orderId}&assistant=true#ai-assistant|"
+                                    class="inline-flex items-center justify-center gap-2 rounded-[20px] border border-blue-100 bg-blue-50 px-5 py-3 text-[13px] font-black uppercase tracking-widest text-blue-600 hover:bg-blue-600 hover:text-white transition">
+                                    <i class="fa-regular fa-comments"></i> Chat With Us
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <aside class="space-y-5">
+                    <div class="bg-white rounded-[28px] p-5 shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="flex items-center justify-between gap-4 mb-4">
+                            <h3 class="text-[1.2rem] font-bold text-slate-900">Delivery details</h3>
+                            <a href="/user/address" class="px-3.5 py-1.5 rounded-xl border border-blue-100 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition">
+                                Change
+                            </a>
+                        </div>
+
+                        <div class="space-y-3 rounded-[22px] bg-slate-50 border border-slate-100 p-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-2xl bg-white text-slate-500 flex items-center justify-center shrink-0 shadow-sm">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-[15px] font-bold text-slate-900" th:text="${deliveryFullName}">Name</p>
+                                    <p class="mt-1 text-[14px] text-slate-600 font-medium leading-6">
+                                        <span th:text="${order.orderAddress.address}">Address</span><br>
+                                        <span th:text="${order.orderAddress.city}">City</span>,
+                                        <span th:text="${order.orderAddress.state}">State</span> -
+                                        <span th:text="${order.orderAddress.pincode}">000000</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-2xl bg-white text-slate-500 flex items-center justify-center shrink-0 shadow-sm">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[12px] font-black uppercase tracking-widest text-slate-400">Phone</p>
+                                    <p class="mt-1 text-[15px] font-bold text-slate-900" th:text="${order.orderAddress.mobileNo}">9999999999</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-2xl bg-white text-slate-500 flex items-center justify-center shrink-0 shadow-sm">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-[12px] font-black uppercase tracking-widest text-slate-400">Email</p>
+                                    <p class="mt-1 text-[15px] font-bold text-slate-900 break-all" th:text="${order.orderAddress.email}">mail@example.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[28px] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50">
+                        <div class="px-5 py-4 border-b border-slate-100">
+                            <h3 class="text-[13px] font-black text-slate-500 uppercase tracking-widest">Price details</h3>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">Listing price</span>
+                                <span class="text-slate-900 font-semibold">&#8377;<span th:text="${listingPrice}">0</span></span>
+                            </div>
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">Selling price</span>
+                                <span class="text-slate-900 font-semibold">&#8377;<span th:text="${sellingPrice}">0</span></span>
+                            </div>
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">Quantity</span>
+                                <span class="text-slate-900 font-semibold" th:text="${order.quantity}">1</span>
+                            </div>
+                            <div class="flex justify-between text-[14px]">
+                                <span class="text-slate-600 font-medium">You saved</span>
+                                <span class="text-green-600 font-semibold">- &#8377;<span th:text="${totalSavings}">0</span></span>
+                            </div>
+                            <div class="pt-4 border-t border-dashed border-slate-200">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[15px] font-black text-slate-900">Total amount</span>
+                                    <span class="text-[1.2rem] font-black text-slate-900">&#8377;<span th:text="${totalAmount}">0</span></span>
+                                </div>
+                            </div>
+
+                            <div class="rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-3.5">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[11px] font-black uppercase tracking-widest text-slate-400">Payment method</p>
+                                        <p class="mt-1 text-[15px] font-bold text-slate-900" th:text="${paymentLabel}">UPI</p>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-2xl bg-white text-slate-500 flex items-center justify-center shadow-sm">
+                                        <i class="fa-solid fa-wallet"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -90,6 +90,104 @@
                 </aside>
 
                 <div class="space-y-6">
+                    <div id="ai-assistant"
+                        th:classappend="${assistantRequested} ? 'ring-2 ring-blue-200 shadow-[0_25px_60px_rgba(47,111,228,0.16)]' : ''"
+                        class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden scroll-mt-28">
+                        <div class="px-6 py-5 border-b border-slate-100 bg-[linear-gradient(135deg,#f4f8ff_0%,#ffffff_68%)]">
+                            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-14 h-14 rounded-[20px] bg-blue-600 text-white flex items-center justify-center text-xl shadow-lg shadow-blue-200">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-black uppercase tracking-[0.22em] text-blue-500">Ecom AI Assistant</p>
+                                        <h3 class="text-2xl font-heading font-black text-slate-900">Ask anything about your order, delivery, payment, or returns</h3>
+                                        <p class="mt-1 text-slate-500 text-sm">A guided shopping assistant that uses your current support context to answer faster.</p>
+                                    </div>
+                                </div>
+
+                                <div th:if="${selectedSupportOrder != null}" class="rounded-[24px] border border-blue-100 bg-white px-4 py-3 min-w-[280px]">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Selected order</p>
+                                    <p class="mt-2 text-sm font-bold text-slate-900" th:text="${selectedSupportOrder.product.title}">Product</p>
+                                    <p class="mt-1 text-[12px] text-slate-500 font-medium">
+                                        Order ID: <span class="font-bold text-slate-700" th:text="${selectedSupportOrder.orderId}">123</span>
+                                        <span class="mx-2 text-slate-300">|</span>
+                                        <span th:text="${assistantContext['status']}">Order confirmed</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
+                            <div class="rounded-[28px] border border-slate-100 bg-slate-50/80 overflow-hidden">
+                                <div id="assistantMessages" class="h-[360px] overflow-y-auto px-4 md:px-5 py-5 space-y-4"></div>
+
+                                <div class="border-t border-slate-100 bg-white px-4 md:px-5 py-4">
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        <button th:each="suggestion : ${assistantSuggestions}" type="button"
+                                            th:attr="data-prompt=${suggestion}"
+                                            class="assistant-prompt inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[12px] font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition">
+                                            <i class="fa-regular fa-comment-dots text-[11px]"></i>
+                                            <span th:text="${suggestion}">Where is my order?</span>
+                                        </button>
+                                    </div>
+
+                                    <form id="assistantForm" class="flex flex-col sm:flex-row gap-3">
+                                        <input id="assistantInput" type="text" autocomplete="off"
+                                            placeholder="Ask the Ecom AI Assistant about your order..."
+                                            class="flex-1 rounded-[20px] border border-slate-200 bg-slate-50 px-5 py-3.5 text-[14px] text-slate-700 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                        <button type="submit"
+                                            class="inline-flex items-center justify-center gap-2 rounded-[20px] bg-nav px-6 py-3.5 text-[13px] font-black uppercase tracking-widest text-white hover:bg-slate-800 transition">
+                                            <i class="fa-solid fa-paper-plane text-[11px]"></i> Ask now
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="rounded-[28px] border border-slate-100 bg-slate-50 px-5 py-5">
+                                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Assistant Scope</p>
+                                    <div class="mt-4 space-y-3">
+                                        <div class="flex items-start gap-3">
+                                            <div class="w-9 h-9 rounded-2xl bg-white text-blue-600 flex items-center justify-center shadow-sm shrink-0">
+                                                <i class="fa-solid fa-truck-fast"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-900">Delivery tracking</p>
+                                                <p class="text-xs text-slate-500 mt-1 leading-5">Get shipment stage, ETA, and delivery guidance.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <div class="w-9 h-9 rounded-2xl bg-white text-emerald-600 flex items-center justify-center shadow-sm shrink-0">
+                                                <i class="fa-solid fa-wallet"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-900">Payment help</p>
+                                                <p class="text-xs text-slate-500 mt-1 leading-5">Understand payment method, confirmations, and eligibility.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <div class="w-9 h-9 rounded-2xl bg-white text-orange-500 flex items-center justify-center shadow-sm shrink-0">
+                                                <i class="fa-solid fa-rotate-left"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-900">Returns and refunds</p>
+                                                <p class="text-xs text-slate-500 mt-1 leading-5">Get guided next steps for delivered or cancelled orders.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rounded-[28px] border border-blue-100 bg-[#edf5ff] px-5 py-5">
+                                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500">Pro tip</p>
+                                    <p class="mt-3 text-sm text-slate-600 leading-6">
+                                        Mention phrases like <span class="font-bold text-slate-900">where is my order</span>, <span class="font-bold text-slate-900">payment method</span>, or <span class="font-bold text-slate-900">change address</span> for faster answers.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
                         <div class="px-6 py-5 border-b border-slate-100">
                             <p class="text-sm font-bold text-slate-500">Help Centre</p>
@@ -151,7 +249,7 @@
                                     <a th:href="@{'/product/'+${o.product.id}}" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition">
                                         View product
                                     </a>
-                                    <a href="#support-article" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition">
+                                    <a th:href="|/user/customer-care?orderId=${o.orderId}&assistant=true#ai-assistant|" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition">
                                         Get help
                                     </a>
                                 </div>
@@ -195,6 +293,126 @@
             .no-scrollbar::-webkit-scrollbar { display: none; }
             .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         </style>
+
+        <script th:inline="javascript">
+            const assistantContext = /*[[${assistantContext}]]*/ {};
+            const assistantRequested = /*[[${assistantRequested}]]*/ false;
+            const assistantMessages = document.getElementById('assistantMessages');
+            const assistantForm = document.getElementById('assistantForm');
+            const assistantInput = document.getElementById('assistantInput');
+            const promptButtons = document.querySelectorAll('.assistant-prompt');
+
+            function renderAssistantMessage(role, text) {
+                const row = document.createElement('div');
+                row.className = role === 'assistant'
+                    ? 'flex items-start gap-3'
+                    : 'flex items-start justify-end';
+
+                const bubble = document.createElement('div');
+                bubble.className = role === 'assistant'
+                    ? 'max-w-[88%] rounded-[22px] rounded-tl-md bg-white border border-slate-100 px-4 py-3 text-[14px] leading-6 text-slate-700 shadow-sm'
+                    : 'max-w-[88%] rounded-[22px] rounded-tr-md bg-blue-600 px-4 py-3 text-[14px] leading-6 text-white shadow-sm';
+                bubble.textContent = text;
+
+                if (role === 'assistant') {
+                    const icon = document.createElement('div');
+                    icon.className = 'w-9 h-9 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-sm shrink-0';
+                    icon.innerHTML = '<i class="fa-solid fa-robot text-sm"></i>';
+                    row.append(icon, bubble);
+                } else {
+                    row.append(bubble);
+                }
+
+                assistantMessages.appendChild(row);
+                assistantMessages.scrollTop = assistantMessages.scrollHeight;
+            }
+
+            function buildDefaultGreeting() {
+                if (assistantContext.orderId) {
+                    return `I'm your Ecom AI Assistant. I can help with order ${assistantContext.orderId} for ${assistantContext.productTitle}. Ask about status, delivery, payment, cancellation, or address changes.`;
+                }
+                return 'I\'m your Ecom AI Assistant. Ask me about order tracking, delivery, payments, returns, or account help and I\'ll guide you quickly.';
+            }
+
+            function buildContextReply(message) {
+                const prompt = message.toLowerCase();
+                const hasOrder = Boolean(assistantContext.orderId);
+                const status = (assistantContext.status || '').toLowerCase();
+
+                if (prompt.includes('where') || prompt.includes('track') || prompt.includes('status')) {
+                    return hasOrder
+                        ? `Order ${assistantContext.orderId} for ${assistantContext.productTitle} is currently ${assistantContext.status}. Estimated delivery is ${assistantContext.estimatedDelivery}.`
+                        : 'You can open any recent order from this page and I can help explain its current status and next delivery step.';
+                }
+
+                if (prompt.includes('deliver')) {
+                    return hasOrder
+                        ? `${assistantContext.productTitle} is expected by ${assistantContext.estimatedDelivery}. If the status changes, the tracking timeline on the order page will update first.`
+                        : 'Delivery estimates usually appear on the order tracking page after purchase. Select an order here and I can help explain the ETA.';
+                }
+
+                if (prompt.includes('payment') || prompt.includes('upi') || prompt.includes('card') || prompt.includes('cod')) {
+                    return hasOrder
+                        ? `The payment method for order ${assistantContext.orderId} is ${assistantContext.paymentLabel}. If you need billing help, keep the order ID ready while contacting support.`
+                        : 'I can explain payment methods, payment failures, refunds, and checkout options. If you choose a specific order, I can be more precise.';
+                }
+
+                if (prompt.includes('cancel')) {
+                    if (!hasOrder) {
+                        return 'Open the order you want help with and I can tell you whether cancellation is still available.';
+                    }
+                    if (status.includes('delivered') || status.includes('cancelled')) {
+                        return `Order ${assistantContext.orderId} is already marked as ${assistantContext.status}, so cancellation is no longer available. If needed, you can ask about returns or support instead.`;
+                    }
+                    return `You can cancel order ${assistantContext.orderId} from the order tracking page while it is still active. Once cancelled, it will be removed from your visible orders list.`;
+                }
+
+                if (prompt.includes('address') || prompt.includes('change address')) {
+                    return 'You can update saved addresses from My Address. If an order is already placed, address changes depend on the current shipment stage, so check the tracking page first.';
+                }
+
+                if (prompt.includes('return') || prompt.includes('refund')) {
+                    return hasOrder && status.includes('delivered')
+                        ? `Because order ${assistantContext.orderId} is delivered, the next step is to open My Orders and use the return or refund action for ${assistantContext.productTitle}.`
+                        : 'Returns and refunds are usually available after delivery. If your order is still active, cancellation is the faster option when available.';
+                }
+
+                return hasOrder
+                    ? `I can help with order ${assistantContext.orderId}. Ask about delivery timing, payment method, cancellation eligibility, returns, or address updates.`
+                    : 'I can help with delivery, payment, returns, account support, and recent orders. Try asking a short question like "Where is my order?" or "How do returns work?"';
+            }
+
+            function submitAssistantPrompt(message) {
+                const trimmed = message.trim();
+                if (!trimmed) {
+                    return;
+                }
+
+                renderAssistantMessage('user', trimmed);
+                window.setTimeout(() => {
+                    renderAssistantMessage('assistant', buildContextReply(trimmed));
+                }, 260);
+            }
+
+            renderAssistantMessage('assistant', buildDefaultGreeting());
+
+            if (assistantRequested && assistantContext.orderId) {
+                window.setTimeout(() => {
+                    renderAssistantMessage('assistant', `I already loaded order ${assistantContext.orderId}. It is currently ${assistantContext.status} and the expected delivery is ${assistantContext.estimatedDelivery}.`);
+                }, 120);
+            }
+
+            promptButtons.forEach((button) => {
+                button.addEventListener('click', () => submitAssistantPrompt(button.dataset.prompt || ''));
+            });
+
+            assistantForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                submitAssistantPrompt(assistantInput.value);
+                assistantInput.value = '';
+                assistantInput.focus();
+            });
+        </script>
     </section>
 </body>
 </html>

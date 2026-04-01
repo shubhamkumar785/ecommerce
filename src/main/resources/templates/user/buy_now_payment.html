@@ -85,7 +85,7 @@
                                 </div>
                             </button>
 
-                            <button type="button" data-method="COD"
+                            <button th:if="${cashOnDeliveryAvailable}" type="button" data-method="COD"
                                 class="payment-option w-full border-b border-slate-100 px-3 py-3 text-left transition">
                                 <div class="flex items-start gap-2.5">
                                     <div class="flex w-8 h-8 rounded-xl bg-orange-50 text-orange-500 items-center justify-center shrink-0 text-sm">
@@ -111,15 +111,19 @@
                                 </div>
                             </button>
 
-                            <div class="flex items-center justify-between border-b border-slate-100 px-3 py-3 opacity-60">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="flex w-8 h-8 rounded-xl bg-slate-100 text-slate-400 items-center justify-center shrink-0">
+                            <button type="button" data-method="UPI"
+                                class="payment-option w-full border-b border-slate-100 px-3 py-3 text-left transition">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="flex w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 items-center justify-center shrink-0">
                                         <span class="text-xs font-black">UPI</span>
                                     </div>
-                                    <p class="text-[14px] font-bold text-slate-500">UPI</p>
+                                    <div>
+                                        <p class="text-[14px] font-bold text-slate-900 leading-tight">UPI</p>
+                                        <p class="mt-1 text-[12px] text-slate-500 font-medium leading-5">Pay instantly using any UPI app or UPI ID</p>
+                                        <p class="mt-1 text-[12px] text-emerald-600 font-bold">Available on every product</p>
+                                    </div>
                                 </div>
-                                <span class="text-[12px] font-bold text-slate-400">Unavailable</span>
-                            </div>
+                            </button>
 
                             <div class="flex items-center justify-between px-3 py-3 opacity-60">
                                 <div class="flex items-center gap-2.5">
@@ -174,7 +178,7 @@
                                 </div>
                             </div>
 
-                            <div id="panel-COD" class="payment-panel hidden bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
+                            <div th:if="${cashOnDeliveryAvailable}" id="panel-COD" class="payment-panel hidden bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
                                 <div class="flex items-center gap-3">
                                     <div class="flex w-10 h-10 rounded-2xl bg-orange-50 text-orange-500 items-center justify-center shrink-0">
                                         <i class="fa-solid fa-money-bill-wave text-base"></i>
@@ -195,6 +199,46 @@
                                     class="mt-5 w-full py-3 px-8 rounded-[16px] bg-nav text-white font-black text-[15px] shadow-xl hover:bg-slate-800 transition active:scale-95">
                                     PLACE ORDER WITH CASH ON DELIVERY
                                 </button>
+                            </div>
+
+                            <div id="panel-UPI" class="payment-panel hidden bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 items-center justify-center shrink-0">
+                                        <span class="text-sm font-black">UPI</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-bold text-slate-900">Pay with UPI</h2>
+                                        <p class="mt-1.5 text-[14px] text-slate-500 font-medium leading-6">Use your UPI ID or complete payment in any UPI app.</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 rounded-[16px] bg-emerald-50/60 border border-emerald-100 p-3.5">
+                                    <p class="text-slate-700 text-[14px] font-medium leading-6">
+                                        Enter a valid UPI ID like <span class="font-bold text-emerald-700">name@bank</span>. This option is available for every product checkout.
+                                    </p>
+                                </div>
+
+                                <div class="mt-4 space-y-3.5">
+                                    <div>
+                                        <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">UPI ID</label>
+                                        <div class="relative">
+                                            <input type="text" placeholder="yourname@upi"
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-[15px] md:text-base text-slate-700 outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition">
+                                            <i class="fa-solid fa-mobile-screen-button absolute right-4 top-1/2 -translate-y-1/2 text-emerald-300 text-base"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="rounded-[16px] border border-dashed border-slate-200 bg-slate-50 px-4 py-3">
+                                        <p class="text-[13px] text-slate-500 font-medium leading-6">
+                                            After tapping continue, you can approve the payment in your preferred UPI app.
+                                        </p>
+                                    </div>
+
+                                    <button type="submit"
+                                        class="w-full py-3 px-8 rounded-[16px] bg-emerald-500 text-white font-black text-base shadow-lg hover:bg-emerald-600 transition active:scale-95">
+                                        PAY WITH UPI
+                                    </button>
+                                </div>
                             </div>
 
                             <div id="panel-GIFT" class="payment-panel hidden bg-white rounded-[18px] p-4 border border-slate-100 shadow-sm">
@@ -291,7 +335,10 @@
             const paymentButtons = document.querySelectorAll('.payment-option');
             const paymentPanels = document.querySelectorAll('.payment-panel');
             const paymentTypeInput = document.getElementById('paymentTypeInput');
-            const initialMethod = paymentTypeInput.value || 'CARD';
+            const availableMethods = Array.from(paymentButtons).map((button) => button.dataset.method);
+            const initialMethod = availableMethods.includes(paymentTypeInput.value)
+                ? paymentTypeInput.value
+                : (availableMethods.includes('CARD') ? 'CARD' : availableMethods[0]);
 
             function activatePayment(method) {
                 paymentTypeInput.value = method;
@@ -303,6 +350,8 @@
                     button.classList.toggle('shadow-sm', isActive);
                     button.classList.toggle('bg-orange-50', isActive && method === 'COD');
                     button.classList.toggle('border-orange-300', isActive && method === 'COD');
+                    button.classList.toggle('bg-emerald-50', isActive && method === 'UPI');
+                    button.classList.toggle('border-emerald-300', isActive && method === 'UPI');
                     button.classList.toggle('bg-violet-50', isActive && method === 'GIFT');
                     button.classList.toggle('border-violet-300', isActive && method === 'GIFT');
                 });

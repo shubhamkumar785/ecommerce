@@ -4,10 +4,12 @@ import java.security.Principal;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,7 @@ import org.springframework.core.io.ClassPathResource;
 public class UserController {
 	private static final String AUTH_COOKIE = "SHOPPING_CART_TOKEN";
 	private static final String LAST_CONFIRMED_ORDER_ID = "lastConfirmedOrderId";
+	private static final double CASH_ON_DELIVERY_LIMIT = 1000.0;
 	private static final String EMAIL_OTP_CODE = "profile.email.otp.code";
 	private static final String EMAIL_OTP_VALUE = "profile.email.otp.value";
 	private static final String EMAIL_OTP_EXPIRY = "profile.email.otp.expiry";
@@ -120,7 +123,7 @@ public class UserController {
 	@GetMapping("/dashboard")
 	public String loadDashboard(Principal p, Model m) {
 		UserDtls user = getLoggedInUserDetails(p);
-		List<ProductOrder> orders = orderService.getOrdersByUser(user.getId());
+		List<ProductOrder> orders = filterVisibleOrders(orderService.getOrdersByUser(user.getId()));
 		List<Wishlist> wishlist = wishlistService.getWishlistByUser(user.getId());
 		List<Address> addresses = addressService.getAddressByUser(user.getId());
 
@@ -220,6 +223,7 @@ public class UserController {
 			m.addAttribute("orderPrice", orderPrice);
 			m.addAttribute("totalOrderPrice", totalOrderPrice);
 		}
+		m.addAttribute("cashOnDeliveryAvailable", isCashOnDeliveryEligible(carts));
 		return "/user/order";
 	}
 
@@ -265,14 +269,18 @@ public class UserController {
 		}
 
 		applyOrderRequestDefaults(request, user, selectedAddress);
-		if (!StringUtils.hasText(request.getPaymentType())) {
-			request.setPaymentType("CARD");
+		boolean cashOnDeliveryAvailable = isCashOnDeliveryEligible(product);
+		String paymentType = normalizePaymentType(request.getPaymentType());
+		if ("COD".equalsIgnoreCase(paymentType) && !cashOnDeliveryAvailable) {
+			paymentType = "CARD";
 		}
+		request.setPaymentType(paymentType);
 
 		int orderQuantity = sanitizeQuantity(quantity);
 		populateBuyNowSummary(m, product, orderQuantity);
 		m.addAttribute("orderRequest", request);
 		m.addAttribute("deliveryFullName", buildFullName(request.getFirstName(), request.getLastName()));
+		m.addAttribute("cashOnDeliveryAvailable", cashOnDeliveryAvailable);
 		m.addAttribute("hideCartButton", true);
 		return "/user/buy_now_payment";
 	}
@@ -286,8 +294,10 @@ public class UserController {
 			return "redirect:/products";
 		}
 
-		if (!StringUtils.hasText(request.getPaymentType())) {
-			request.setPaymentType("CARD");
+		request.setPaymentType(normalizePaymentType(request.getPaymentType()));
+		if ("COD".equalsIgnoreCase(request.getPaymentType()) && !isCashOnDeliveryEligible(product)) {
+			session.setAttribute("errorMsg", "Cash on Delivery is only available for products priced below ₹1000");
+			return "redirect:/user/buy-now?pid=" + pid + "&quantity=" + sanitizeQuantity(quantity);
 		}
 
 		Address selectedAddress = resolveSelectedAddress(user.getId());
@@ -302,9 +312,15 @@ public class UserController {
 	}
 
 	@PostMapping("/save-order")
-	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
+	public String saveOrder(@ModelAttribute OrderRequest request, Principal p, HttpSession session) throws Exception {
 		// System.out.println(request);
 		UserDtls user = getLoggedInUserDetails(p);
+		List<Cart> carts = cartService.getCartsByUser(user.getId());
+		request.setPaymentType(normalizePaymentType(request.getPaymentType()));
+		if ("COD".equalsIgnoreCase(request.getPaymentType()) && !isCashOnDeliveryEligible(carts)) {
+			session.setAttribute("errorMsg", "Cash on Delivery is only available when every product is priced below ₹1000");
+			return "redirect:/user/orders";
+		}
 		orderService.saveOrder(user.getId(), request);
 
 		return "redirect:/user/success";
@@ -349,11 +365,42 @@ public class UserController {
 		return "/user/order_confirmation";
 	}
 
+	@GetMapping("/order-tracking")
+	public String loadOrderTracking(@RequestParam(required = false) String orderId, Principal p, Model m, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		String resolvedOrderId = StringUtils.hasText(orderId) ? orderId
+				: (String) session.getAttribute(LAST_CONFIRMED_ORDER_ID);
+		if (!StringUtils.hasText(resolvedOrderId)) {
+			session.setAttribute("errorMsg", "We couldn't find that order");
+			return "redirect:/user/user-orders";
+		}
+
+		ProductOrder order = orderService.getOrdersByOrderId(resolvedOrderId);
+		if (order == null || order.getUser() == null || !order.getUser().getId().equals(user.getId())) {
+			session.setAttribute("errorMsg", "We couldn't find that order");
+			return "redirect:/user/user-orders";
+		}
+
+		session.setAttribute(LAST_CONFIRMED_ORDER_ID, order.getOrderId());
+		populateOrderTrackingModel(m, order);
+		return "/user/order_tracking";
+	}
+
 	@GetMapping("/user-orders")
-	public String myOrder(Model m, Principal p) {
+	public String myOrder(@RequestParam(required = false, defaultValue = "all") String view, Model m, Principal p) {
 		UserDtls loginUser = getLoggedInUserDetails(p);
-		List<ProductOrder> orders = orderService.getOrdersByUser(loginUser.getId());
-		m.addAttribute("orders", orders);
+		List<ProductOrder> userOrders = orderService.getOrdersByUser(loginUser.getId());
+		List<ProductOrder> allOrders = filterVisibleOrders(userOrders);
+		List<ProductOrder> deliveredOrders = filterDeliveredOrders(userOrders);
+		List<ProductOrder> cancelledOrders = filterCancelledOrders(userOrders);
+
+		m.addAttribute("allOrders", allOrders);
+		m.addAttribute("deliveredOrders", deliveredOrders);
+		m.addAttribute("cancelledOrders", cancelledOrders);
+		m.addAttribute("allOrdersCount", allOrders.size());
+		m.addAttribute("deliveredOrdersCount", deliveredOrders.size());
+		m.addAttribute("cancelledOrdersCount", cancelledOrders.size());
+		m.addAttribute("initialOrderFilter", normalizeOrderFilter(view));
 		return "/user/my_orders";
 	}
 
@@ -371,18 +418,40 @@ public class UserController {
 
 		ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
 
-		try {
-			commonUtil.sendMailForProductOrder(updateOrder, status);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		sendOrderStatusMailAsync(updateOrder, status);
 
 		if (!ObjectUtils.isEmpty(updateOrder)) {
-			session.setAttribute("succMsg", "Status Updated");
+			session.setAttribute("succMsg", "Cancelled".equalsIgnoreCase(status)
+					? "Order cancelled and removed from your active orders list"
+					: "Status Updated");
 		} else {
 			session.setAttribute("errorMsg", "status not updated");
 		}
-		return "redirect:/user/user-orders";
+		return "Cancelled".equalsIgnoreCase(status) ? "redirect:/user/user-orders?view=cancelled"
+				: "redirect:/user/user-orders";
+	}
+
+	@PostMapping("/orders/cancel")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> cancelOrderInstantly(@RequestParam Integer id, Principal p) {
+		UserDtls user = getLoggedInUserDetails(p);
+		ProductOrder order = resolveUserOrderById(id, user);
+		if (order == null) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "We couldn't find that order"));
+		}
+		if (isCancelledStatus(order.getStatus())) {
+			return ResponseEntity.ok(buildOrderHistoryPayload(order, user.getId(),
+					"Order is already in your cancelled orders section"));
+		}
+		if ("Delivered".equalsIgnoreCase(order.getStatus())) {
+			return ResponseEntity.badRequest().body(Map.of("success", false, "message",
+					"Delivered orders cannot be cancelled. Please use return or refund options instead."));
+		}
+
+		ProductOrder updatedOrder = orderService.updateOrderStatus(order.getId(), OrderStatus.CANCEL.getName());
+		sendOrderStatusMailAsync(updatedOrder, OrderStatus.CANCEL.getName());
+		return ResponseEntity.ok(buildOrderHistoryPayload(updatedOrder, user.getId(),
+				"Order cancelled and moved to your cancelled orders section"));
 	}
 
 	@GetMapping("/profile")
@@ -606,9 +675,11 @@ public class UserController {
 	}
 
 	@GetMapping("/customer-care")
-	public String loadCustomerCarePage(Principal p, Model m) {
+	public String loadCustomerCarePage(@RequestParam(required = false) String orderId,
+			@RequestParam(defaultValue = "false") boolean assistant, Principal p, Model m) {
 		UserDtls user = getLoggedInUserDetails(p);
-		List<ProductOrder> orders = orderService.getOrdersByUser(user.getId());
+		List<ProductOrder> orders = filterVisibleOrders(orderService.getOrdersByUser(user.getId()));
+		ProductOrder selectedSupportOrder = resolveUserOrder(orderId, user);
 
 		List<Map<String, String>> helpCategories = List.of(
 				createSupportTopic("Orders", "Track, cancel, or update order-related requests"),
@@ -642,6 +713,10 @@ public class UserController {
 		m.addAttribute("quickHelpCards", quickHelpCards);
 		m.addAttribute("latestOrders", latestOrders);
 		m.addAttribute("supportStats", buildSupportStats(orders));
+		m.addAttribute("assistantRequested", assistant);
+		m.addAttribute("selectedSupportOrder", selectedSupportOrder);
+		m.addAttribute("assistantSuggestions", buildAssistantSuggestions(selectedSupportOrder));
+		m.addAttribute("assistantContext", buildAssistantContext(selectedSupportOrder));
 		return "/user/customer_care";
 	}
 
@@ -700,6 +775,131 @@ public class UserController {
 		return stats;
 	}
 
+	private ProductOrder resolveUserOrder(String orderId, UserDtls user) {
+		if (!StringUtils.hasText(orderId) || user == null) {
+			return null;
+		}
+
+		ProductOrder order = orderService.getOrdersByOrderId(orderId);
+		if (order == null || order.getUser() == null || !order.getUser().getId().equals(user.getId())) {
+			return null;
+		}
+		return order;
+	}
+
+	private ProductOrder resolveUserOrderById(Integer id, UserDtls user) {
+		if (id == null || user == null) {
+			return null;
+		}
+
+		ProductOrder order = orderService.getOrderById(id);
+		if (order == null || order.getUser() == null || !order.getUser().getId().equals(user.getId())) {
+			return null;
+		}
+		return order;
+	}
+
+	private List<ProductOrder> filterVisibleOrders(List<ProductOrder> orders) {
+		if (orders == null) {
+			return List.of();
+		}
+
+		return orders.stream()
+				.filter(order -> order != null && !isCancelledStatus(order.getStatus()))
+				.toList();
+	}
+
+	private List<ProductOrder> filterDeliveredOrders(List<ProductOrder> orders) {
+		if (orders == null) {
+			return List.of();
+		}
+
+		return orders.stream()
+				.filter(order -> order != null && "Delivered".equalsIgnoreCase(order.getStatus()))
+				.toList();
+	}
+
+	private List<ProductOrder> filterCancelledOrders(List<ProductOrder> orders) {
+		if (orders == null) {
+			return List.of();
+		}
+
+		return orders.stream()
+				.filter(order -> order != null && isCancelledStatus(order.getStatus()))
+				.toList();
+	}
+
+	private String normalizeOrderFilter(String filter) {
+		if (!StringUtils.hasText(filter)) {
+			return "all";
+		}
+
+		String normalized = filter.trim().toLowerCase(Locale.ENGLISH);
+		return List.of("all", "delivered", "cancelled").contains(normalized) ? normalized : "all";
+	}
+
+	private Map<String, Object> buildOrderHistoryPayload(ProductOrder order, Integer userId, String message) {
+		List<ProductOrder> refreshedOrders = orderService.getOrdersByUser(userId);
+		return Map.of(
+				"success", true,
+				"message", message,
+				"orderId", order.getOrderId(),
+				"id", order.getId(),
+				"status", resolveOrderStatusLabel(order.getStatus()),
+				"allOrdersCount", filterVisibleOrders(refreshedOrders).size(),
+				"deliveredOrdersCount", filterDeliveredOrders(refreshedOrders).size(),
+				"cancelledOrdersCount", filterCancelledOrders(refreshedOrders).size());
+	}
+
+	private void sendOrderStatusMailAsync(ProductOrder order, String status) {
+		if (order == null || !StringUtils.hasText(status)) {
+			return;
+		}
+
+		CompletableFuture.runAsync(() -> {
+			try {
+				commonUtil.sendMailForProductOrder(order, status);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
+	}
+
+	private List<String> buildAssistantSuggestions(ProductOrder order) {
+		List<String> suggestions = new ArrayList<>();
+		suggestions.add("Where is my order?");
+		suggestions.add("When will it be delivered?");
+		suggestions.add("How can I change my address?");
+
+		if (order != null) {
+			suggestions.add("Tell me about payment for order " + order.getOrderId());
+			suggestions.add("Can I cancel order " + order.getOrderId() + "?");
+		} else {
+			suggestions.add("How do returns and refunds work?");
+			suggestions.add("I need help with payment");
+		}
+
+		return suggestions.stream().distinct().limit(5).toList();
+	}
+
+	private Map<String, String> buildAssistantContext(ProductOrder order) {
+		if (order == null) {
+			return Map.of();
+		}
+
+		LocalDate orderDate = order.getOrderDate() != null ? order.getOrderDate() : LocalDate.now();
+		LocalDate estimatedDeliveryDate = orderDate.plusDays(5);
+
+		Map<String, String> context = new LinkedHashMap<>();
+		context.put("orderId", order.getOrderId());
+		context.put("productTitle", order.getProduct() != null ? order.getProduct().getTitle() : "your order");
+		context.put("status", resolveOrderStatusLabel(order.getStatus()));
+		context.put("paymentLabel", resolvePaymentLabel(order.getPaymentType()));
+		context.put("estimatedDelivery", estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH)));
+		context.put("orderDate", orderDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)));
+		return context;
+	}
+
 	private String[] splitName(String fullName) {
 		if (!StringUtils.hasText(fullName)) {
 			return new String[] { "", "" };
@@ -727,6 +927,28 @@ public class UserController {
 
 	private int sanitizeQuantity(Integer quantity) {
 		return quantity == null || quantity < 1 ? 1 : quantity;
+	}
+
+	private boolean isCashOnDeliveryEligible(Product product) {
+		return resolveEffectiveProductPrice(product) < CASH_ON_DELIVERY_LIMIT;
+	}
+
+	private boolean isCashOnDeliveryEligible(List<Cart> carts) {
+		return carts != null && !carts.isEmpty()
+				&& carts.stream().allMatch(cart -> cart != null && isCashOnDeliveryEligible(cart.getProduct()));
+	}
+
+	private double resolveEffectiveProductPrice(Product product) {
+		if (product == null) {
+			return Double.MAX_VALUE;
+		}
+
+		double discountPrice = safeAmount(product.getDiscountPrice());
+		if (discountPrice > 0) {
+			return discountPrice;
+		}
+
+		return safeAmount(product.getPrice());
 	}
 
 	private void populateBuyNowSummary(Model m, Product product, int orderQuantity) {
@@ -789,6 +1011,19 @@ public class UserController {
 		return StringUtils.hasText(fullName) ? fullName : "Delivery contact";
 	}
 
+	private String normalizePaymentType(String paymentType) {
+		if (!StringUtils.hasText(paymentType)) {
+			return "CARD";
+		}
+
+		String normalized = paymentType.trim().toUpperCase(Locale.ENGLISH);
+		return switch (normalized) {
+		case "CARD", "COD", "UPI", "GIFT" -> normalized;
+		case "ONLINE" -> "CARD";
+		default -> "CARD";
+		};
+	}
+
 	private void populateOrderConfirmationModel(Model m, ProductOrder order) {
 		LocalDate orderDate = order.getOrderDate() != null ? order.getOrderDate() : LocalDate.now();
 		LocalDate estimatedDeliveryDate = orderDate.plusDays(5);
@@ -805,6 +1040,141 @@ public class UserController {
 		m.addAttribute("estimatedDeliveryLong", estimatedDeliveryDate.format(fullFormatter));
 		m.addAttribute("totalAmount", totalAmount);
 		m.addAttribute("isCashOnDelivery", "COD".equalsIgnoreCase(order.getPaymentType()));
+		m.addAttribute("paymentLabel", resolvePaymentLabel(order.getPaymentType()));
+		m.addAttribute("orderStatusLabel", resolveOrderStatusLabel(order.getStatus()));
+	}
+
+	private void populateOrderTrackingModel(Model m, ProductOrder order) {
+		populateOrderConfirmationModel(m, order);
+
+		LocalDate orderDate = order.getOrderDate() != null ? order.getOrderDate() : LocalDate.now();
+		LocalDate estimatedDeliveryDate = orderDate.plusDays(5);
+		int quantity = order.getQuantity() == null || order.getQuantity() < 1 ? 1 : order.getQuantity();
+		double listingPrice = safeAmount(order.getProduct() != null ? order.getProduct().getPrice() : 0.0) * quantity;
+		double sellingPrice = safeAmount(order.getPrice()) * quantity;
+		double totalSavings = Math.max(0.0, listingPrice - sellingPrice);
+		boolean cancelled = isCancelledStatus(order.getStatus());
+		boolean delivered = "Delivered".equalsIgnoreCase(order.getStatus());
+
+		m.addAttribute("trackingSteps", buildTrackingSteps(order, estimatedDeliveryDate));
+		m.addAttribute("listingPrice", listingPrice);
+		m.addAttribute("sellingPrice", sellingPrice);
+		m.addAttribute("totalSavings", totalSavings);
+		m.addAttribute("canCancelOrder", !cancelled && !delivered);
+		m.addAttribute("isCancelledOrder", cancelled);
+		m.addAttribute("statusSummary", resolveTrackingSummary(order.getStatus(), estimatedDeliveryDate));
+		m.addAttribute("statusHint", resolveTrackingHint(order.getStatus(), estimatedDeliveryDate));
+	}
+
+	private List<Map<String, Object>> buildTrackingSteps(ProductOrder order, LocalDate estimatedDeliveryDate) {
+		LocalDate orderDate = order.getOrderDate() != null ? order.getOrderDate() : LocalDate.now();
+		int currentStage = resolveTrackingStage(order.getStatus());
+		boolean cancelled = isCancelledStatus(order.getStatus());
+		DateTimeFormatter compactFormatter = DateTimeFormatter.ofPattern("EEE, d MMM", Locale.ENGLISH);
+
+		List<Map<String, Object>> steps = new ArrayList<>();
+		steps.add(createTrackingStep(
+				"Order confirmed",
+				"Your order was placed on " + orderDate.format(compactFormatter),
+				cancelled || currentStage > 0,
+				!cancelled && currentStage == 0));
+		steps.add(createTrackingStep(
+				"Packed & ready to ship",
+				"Expected by " + orderDate.plusDays(1).format(compactFormatter),
+				currentStage > 1,
+				!cancelled && currentStage == 1));
+		steps.add(createTrackingStep(
+				"Out for delivery",
+				"Planned for " + estimatedDeliveryDate.minusDays(1).format(compactFormatter),
+				currentStage > 2,
+				!cancelled && currentStage == 2));
+		steps.add(createTrackingStep(
+				"Delivered",
+				(currentStage == 3 ? "Delivered on " : "Expected by ") + estimatedDeliveryDate.format(compactFormatter),
+				false,
+				!cancelled && currentStage == 3));
+		return steps;
+	}
+
+	private Map<String, Object> createTrackingStep(String title, String description, boolean completed, boolean current) {
+		Map<String, Object> step = new LinkedHashMap<>();
+		step.put("title", title);
+		step.put("description", description);
+		step.put("completed", completed);
+		step.put("current", current);
+		return step;
+	}
+
+	private int resolveTrackingStage(String status) {
+		if ("Delivered".equalsIgnoreCase(status)) {
+			return 3;
+		}
+		if ("Out for Delivery".equalsIgnoreCase(status)) {
+			return 2;
+		}
+		if ("Product Packed".equalsIgnoreCase(status)) {
+			return 1;
+		}
+		return 0;
+	}
+
+	private String resolveTrackingSummary(String status, LocalDate estimatedDeliveryDate) {
+		if (isCancelledStatus(status)) {
+			return "This order has been cancelled. Reach out to support if you need help with a refund or replacement.";
+		}
+		if ("Delivered".equalsIgnoreCase(status)) {
+			return "Delivered on " + estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH));
+		}
+		if ("Out for Delivery".equalsIgnoreCase(status)) {
+			return "Your package is out for delivery and should arrive today.";
+		}
+		if ("Product Packed".equalsIgnoreCase(status)) {
+			return "Your package is packed and moving to the final delivery hub.";
+		}
+		return "Your order is confirmed and preparing for dispatch.";
+	}
+
+	private String resolveTrackingHint(String status, LocalDate estimatedDeliveryDate) {
+		if (isCancelledStatus(status)) {
+			return "You can still review the item details, payment method, and delivery information from this page.";
+		}
+		if ("Delivered".equalsIgnoreCase(status)) {
+			return "Need a return or refund? Open My Orders to start a request for delivered items.";
+		}
+		if ("Out for Delivery".equalsIgnoreCase(status)) {
+			return "Keep your phone nearby. The delivery partner may call before arrival.";
+		}
+		return "Expected delivery by " + estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH));
+	}
+
+	private String resolvePaymentLabel(String paymentType) {
+		if ("COD".equalsIgnoreCase(paymentType)) {
+			return "Cash on Delivery";
+		}
+		if (!StringUtils.hasText(paymentType)) {
+			return "Card";
+		}
+		return paymentType.toUpperCase(Locale.ENGLISH);
+	}
+
+	private String resolveOrderStatusLabel(String status) {
+		if (isCancelledStatus(status)) {
+			return "Cancelled";
+		}
+		if ("Delivered".equalsIgnoreCase(status)) {
+			return "Delivered";
+		}
+		if ("Out for Delivery".equalsIgnoreCase(status)) {
+			return "Out for delivery";
+		}
+		if ("Product Packed".equalsIgnoreCase(status)) {
+			return "Packed";
+		}
+		return "Order confirmed";
+	}
+
+	private boolean isCancelledStatus(String status) {
+		return "Cancelled".equalsIgnoreCase(status);
 	}
 
 	private void refreshLoggedInUser(UserDtls user, HttpServletRequest request, HttpServletResponse response) {

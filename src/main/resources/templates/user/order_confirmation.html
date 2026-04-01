@@ -39,7 +39,7 @@
                                     Payment method:
                                     <span class="font-bold text-slate-900" th:text="${isCashOnDelivery ? 'Cash on Delivery' : order.paymentType}">Cash on Delivery</span>
                                 </p>
-                                <a href="/user/user-orders" class="inline-flex items-center gap-2 mt-4 text-[15px] text-blue-600 font-bold hover:text-orange-500 transition">
+                                <a th:href="@{/user/order-tracking(orderId=${order.orderId})}" class="inline-flex items-center gap-2 mt-4 text-[15px] text-blue-600 font-bold hover:text-orange-500 transition">
                                     Track & manage order <i class="fa-solid fa-arrow-right-long text-xs"></i>
                                 </a>
                             </div>

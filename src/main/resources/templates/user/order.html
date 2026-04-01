@@ -104,7 +104,8 @@
 									<label class="form-label">Select Payment Type</label> <select required
 										name="paymentType" class="form-control">
 										<option value="">--select--</option>
-										<option value="COD">Cash On Delivery</option>
+										<option th:if="${cashOnDeliveryAvailable}" value="COD">Cash On Delivery</option>
+										<option value="UPI">UPI</option>
 										<option value="ONLINE">Online Payment</option>
 									</select>
 
