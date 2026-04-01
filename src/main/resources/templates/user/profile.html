@@ -5,8 +5,8 @@
 <title>My Profile | Ecom Store</title>
 </head>
 <body>
-    <section class="min-h-screen bg-pastel-bg py-12 px-4 md:px-0">
-        <div class="max-w-4xl mx-auto">
+    <section class="min-h-screen bg-pastel-bg px-4 pt-10 pb-12 sm:px-6 lg:px-8 md:pt-14 overflow-x-hidden">
+        <div class="max-w-5xl mx-auto">
             
             <!-- Header Section -->
             <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -36,10 +36,10 @@
                 <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
             </th:block>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 
                 <!-- Left Column: Profile Card -->
-                <div class="lg:col-span-1">
+                <div class="xl:col-span-1">
                     <div class="bg-white rounded-[32px] shadow-xl shadow-slate-200/50 p-8 border border-slate-50 relative overflow-hidden group">
                         <!-- Decorative circle -->
                         <div class="absolute -top-10 -right-10 w-32 h-32 bg-pastel-purple/20 rounded-full blur-3xl group-hover:bg-pastel-purple/40 transition-colors duration-500"></div>
@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- Right Column: Settings & Edits -->
-                <div class="lg:col-span-2 space-y-8">
+                <div class="xl:col-span-2 space-y-8">
                     
                     <!-- Profile Management Form -->
                     <div class="bg-white rounded-[32px] shadow-xl shadow-slate-200/50 p-8 md:p-10 border border-slate-50">
@@ -96,24 +96,65 @@
                             </div>
                         </div>
 
-                        <form action="/user/update-profile" method="post" enctype="multipart/form-data" class="space-y-6">
+                        <form id="profileForm" action="/user/update-profile" method="post" enctype="multipart/form-data" class="space-y-6">
                             <input type="hidden" name="id" th:value="${user.id}">
                             <input type="file" name="img" id="profileUpload" class="hidden">
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[13px] font-bold text-slate-700 ml-1">Full Name</label>
                                     <input required type="text" name="name" th:value="${user.name}" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[13px] font-bold text-slate-700 ml-1">Mobile Number</label>
-                                    <input required type="text" name="mobileNumber" th:value="${user.mobileNumber}" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
+                                    <div class="space-y-3 rounded-[24px] border border-slate-100 bg-slate-50/70 p-4">
+                                        <div class="flex flex-col gap-3 xl:flex-row xl:items-center">
+                                            <input required type="text" name="mobileNumber" id="mobileNumber"
+                                                   th:value="${user.mobileNumber}" th:attr="data-original=${user.mobileNumber}"
+                                                   class="min-w-0 flex-1 bg-white border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
+                                            <button type="button" id="mobileOtpBtn" data-field="mobile" data-target="mobileNumber"
+                                                    class="w-full xl:w-auto shrink-0 px-5 py-3 rounded-2xl bg-orange-50 text-orange-500 font-black text-xs uppercase tracking-widest border border-orange-100 hover:bg-orange-500 hover:text-white transition">
+                                                Send OTP
+                                            </button>
+                                        </div>
+                                        <div id="mobileOtpBlock" class="hidden space-y-3">
+                                            <div class="flex flex-col gap-3 xl:flex-row xl:items-center">
+                                                <input type="text" name="mobileOtp" id="mobileOtp" maxlength="6" placeholder="Enter OTP"
+                                                       class="min-w-0 flex-1 bg-white border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium tracking-[0.3em] focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all uppercase">
+                                                <div class="w-full xl:w-auto shrink-0 rounded-2xl bg-emerald-50 text-emerald-600 px-4 py-3 text-xs font-bold border border-emerald-100">
+                                                    Valid for 10 minutes
+                                                </div>
+                                            </div>
+                                            <div id="mobileOtpMessage" class="text-xs font-bold text-slate-500"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
                             <div class="space-y-2">
-                                <label class="text-[13px] font-bold text-slate-700 ml-1">Email Address (Read-only)</label>
-                                <input readonly type="email" th:value="${user.email}" class="w-full bg-slate-100 border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium text-slate-400 cursor-not-allowed">
+                                <label class="text-[13px] font-bold text-slate-700 ml-1">Email Address</label>
+                                <div class="space-y-3 rounded-[24px] border border-slate-100 bg-slate-50/70 p-4">
+                                    <div class="flex flex-col gap-3 xl:flex-row xl:items-center">
+                                        <input required type="email" name="email" id="emailAddress"
+                                               th:value="${user.email}" th:attr="data-original=${user.email}"
+                                               class="min-w-0 flex-1 bg-white border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
+                                        <button type="button" id="emailOtpBtn" data-field="email" data-target="emailAddress"
+                                                class="w-full xl:w-auto shrink-0 px-5 py-3 rounded-2xl bg-blue-50 text-blue-600 font-black text-xs uppercase tracking-widest border border-blue-100 hover:bg-blue-600 hover:text-white transition">
+                                            Send OTP
+                                        </button>
+                                    </div>
+                                    <div id="emailOtpBlock" class="hidden space-y-3">
+                                        <div class="flex flex-col gap-3 xl:flex-row xl:items-center">
+                                            <input type="text" name="emailOtp" id="emailOtp" maxlength="6" placeholder="Enter OTP"
+                                                   class="min-w-0 flex-1 bg-white border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-medium tracking-[0.3em] focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all uppercase">
+                                            <div class="w-full xl:w-auto shrink-0 rounded-2xl bg-blue-50 text-blue-600 px-4 py-3 text-xs font-bold border border-blue-100">
+                                                Email verification required
+                                            </div>
+                                        </div>
+                                        <div id="emailOtpMessage" class="text-xs font-bold text-slate-500"></div>
+                                    </div>
+                                </div>
+                                <p class="text-[11px] font-bold text-slate-400 ml-1">If you change your phone number or email address, an OTP verification step is required before the update is saved.</p>
                             </div>
 
                             <div class="pt-4">
@@ -143,6 +184,79 @@
         </div>
 
         <script>
+            async function requestContactOtp(field, inputId, blockId, messageId, button) {
+                const input = document.getElementById(inputId);
+                const nextValue = input.value.trim();
+                const originalValue = (input.dataset.original || '').trim();
+                const message = document.getElementById(messageId);
+                const block = document.getElementById(blockId);
+
+                if (!nextValue) {
+                    message.textContent = 'Please enter a value before requesting an OTP.';
+                    message.className = 'text-xs font-bold text-red-500';
+                    block.classList.remove('hidden');
+                    return;
+                }
+
+                if (nextValue.toLowerCase() === originalValue.toLowerCase()) {
+                    block.classList.add('hidden');
+                    message.textContent = '';
+                    return;
+                }
+
+                const originalLabel = button.textContent;
+                button.disabled = true;
+                button.textContent = 'Sending...';
+
+                try {
+                    const body = new URLSearchParams({ field, value: nextValue });
+                    const response = await fetch('/user/request-contact-otp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: body.toString()
+                    });
+                    const data = await response.json();
+                    block.classList.remove('hidden');
+                    message.className = response.ok && data.success ? 'text-xs font-bold text-emerald-600' : 'text-xs font-bold text-red-500';
+                    message.textContent = data.message || 'Unable to process OTP request.';
+
+                    if (data.otpPreview) {
+                        message.textContent += ` OTP Preview: ${data.otpPreview}`;
+                    }
+                } catch (error) {
+                    block.classList.remove('hidden');
+                    message.className = 'text-xs font-bold text-red-500';
+                    message.textContent = 'OTP request failed. Please try again.';
+                } finally {
+                    button.disabled = false;
+                    button.textContent = originalLabel;
+                }
+            }
+
+            document.getElementById('mobileOtpBtn').addEventListener('click', function() {
+                requestContactOtp('mobile', 'mobileNumber', 'mobileOtpBlock', 'mobileOtpMessage', this);
+            });
+
+            document.getElementById('emailOtpBtn').addEventListener('click', function() {
+                requestContactOtp('email', 'emailAddress', 'emailOtpBlock', 'emailOtpMessage', this);
+            });
+
+            document.getElementById('mobileNumber').addEventListener('input', function() {
+                if (this.value.trim() === (this.dataset.original || '').trim()) {
+                    document.getElementById('mobileOtpBlock').classList.add('hidden');
+                    document.getElementById('mobileOtp').value = '';
+                    document.getElementById('mobileOtpMessage').textContent = '';
+                }
+            });
+
+            document.getElementById('emailAddress').addEventListener('input', function() {
+                if (this.value.trim().toLowerCase() === ((this.dataset.original || '').trim().toLowerCase())) {
+                    document.getElementById('emailOtpBlock').classList.add('hidden');
+                    document.getElementById('emailOtp').value = '';
+                    document.getElementById('emailOtpMessage').textContent = '';
+                }
+            });
+
             document.getElementById('profileUpload').addEventListener('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {

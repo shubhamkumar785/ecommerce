@@ -12,6 +12,8 @@ public interface UserService {
 
 	public UserDtls getUserByEmail(String email);
 
+	public UserDtls getUserByEmailOrMobile(String identifier);
+
 	public List<UserDtls> getUsers(String role);
 
 	public Boolean updateAccountStatus(Integer id, Boolean status);
@@ -30,7 +32,11 @@ public interface UserService {
 
 	public UserDtls updateUser(UserDtls user);
 
+	public UserDtls updatePassword(Integer userId, String encodedPassword);
+
 	public UserDtls updateUserProfile(UserDtls user, MultipartFile img);
+
+	public UserDtls updateUserProfileWithContact(UserDtls user, MultipartFile img, String email, String mobileNumber);
 
 	public UserDtls saveAdmin(UserDtls user);
 

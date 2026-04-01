@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 import java.util.Map;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,12 +21,16 @@ import com.ecommerce.config.CustomUser;
 import com.ecommerce.config.JwtUtil;
 import com.ecommerce.dto.AuthLoginRequest;
 import com.ecommerce.dto.AuthLoginResponse;
+import com.ecommerce.model.OtpChannel;
+import com.ecommerce.model.OtpPurpose;
 import com.ecommerce.model.UserDtls;
+import com.ecommerce.service.OtpService;
 import com.ecommerce.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,15 +56,32 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private OtpService otpService;
+
     @PostMapping("/api/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthLoginRequest request, HttpServletRequest servletRequest,
             HttpServletResponse servletResponse) {
         try {
+            UserDtls user = userService.getUserByEmailOrMobile(request.email());
+            String loginEmail = user != null ? user.getEmail() : request.email();
+
+            if (user != null && StringUtils.hasText(request.role())) {
+                String requestedRole = normalizeRole(request.role());
+                String actualRole = normalizeRole(user.getRole());
+                if (!requestedRole.equals(actualRole)) {
+                    String message = "ROLE_SELLER".equals(requestedRole)
+                            ? "Please log in with a seller account."
+                            : "Please log in with a customer account.";
+                    return ResponseEntity.status(403).body(Map.of("message", message));
+                }
+            }
+
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+                    new UsernamePasswordAuthenticationToken(loginEmail, request.password()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            UserDtls user = userService.getUserByEmail(request.email());
+            user = userService.getUserByEmail(loginEmail);
             if (user == null) {
                 return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
             }
@@ -73,7 +95,11 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/signup")
-    public ResponseEntity<?> signup(@ModelAttribute UserDtls user, @RequestParam(value = "img", required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> signup(@ModelAttribute UserDtls user,
+            @RequestParam(value = "img", required = false) MultipartFile file,
+            @RequestParam(value = "mobileOtp", required = false) String mobileOtp,
+            @RequestParam(value = "emailOtp", required = false) String emailOtp,
+            HttpServletRequest request, HttpServletResponse response) {
         if (userService.existsEmail(user.getEmail())) {
             return ResponseEntity.badRequest().body(Map.of("message", "Email already exists"));
         }
@@ -81,6 +107,17 @@ public class AuthController {
         // Default role is ROLE_USER if none provided
         if (ObjectUtils.isEmpty(user.getRole())) {
             user.setRole("ROLE_USER");
+        }
+
+        if ("ROLE_SELLER".equals(user.getRole())) {
+            try {
+                otpService.verifyOtp(OtpPurpose.SELLER_SIGNUP, OtpChannel.SMS, user.getMobileNumber(), mobileOtp);
+                otpService.verifyOtp(OtpPurpose.SELLER_SIGNUP, OtpChannel.EMAIL, user.getEmail(), emailOtp);
+                otpService.assertVerified(OtpPurpose.SELLER_SIGNUP, OtpChannel.SMS, user.getMobileNumber());
+                otpService.assertVerified(OtpPurpose.SELLER_SIGNUP, OtpChannel.EMAIL, user.getEmail());
+            } catch (IllegalStateException ex) {
+                return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+            }
         }
 
         String imageName = (file == null || file.isEmpty()) ? "default.png" : file.getOriginalFilename();
@@ -104,6 +141,11 @@ public class AuthController {
             // Generate Token and Login Automatically
             String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole());
             response.addHeader(HttpHeaders.SET_COOKIE, buildCookie(token, request.isSecure()).toString());
+
+            if ("ROLE_SELLER".equals(savedUser.getRole())) {
+                otpService.consumeVerified(OtpPurpose.SELLER_SIGNUP, OtpChannel.SMS, savedUser.getMobileNumber());
+                otpService.consumeVerified(OtpPurpose.SELLER_SIGNUP, OtpChannel.EMAIL, savedUser.getEmail());
+            }
 
             return ResponseEntity.ok(Map.of(
                 "message", "Registered successfully", 
@@ -191,6 +233,21 @@ public class AuthController {
     }
 
     private String redirectFor(UserDtls user) {
+        if (user != null && "ROLE_SELLER".equals(user.getRole())) {
+            return "/seller/dashboard";
+        }
+        if (user != null && "ROLE_ADMIN".equals(user.getRole())) {
+            return "/admin/dashboard";
+        }
         return "/";
+    }
+
+    private String normalizeRole(String role) {
+        if (!StringUtils.hasText(role)) {
+            return "";
+        }
+
+        String normalizedRole = role.trim().toUpperCase(Locale.ROOT);
+        return normalizedRole.startsWith("ROLE_") ? normalizedRole : "ROLE_" + normalizedRole;
     }
 }

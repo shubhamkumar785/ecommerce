@@ -1,244 +1,506 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{base_modern::layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+
 <head>
-<meta charset="ISO-8859-1">
-<title>Product Details</title>
+    <meta charset="ISO-8859-1">
+    <title th:text="${product.title} + ' | Ecom Store'"></title>
 </head>
+
 <body>
-	<section class="pb-28 md:pb-12 pt-0 max-w-[1200px] mx-auto relative">
-        
-        <!-- Toast Alerts -->
-        <th:block th:if="${session.succMsg}">
-            <div class="fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:origin-top-right md:left-auto md:translate-x-0 bg-green-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm">
-                <i class="fa-solid fa-circle-check text-lg"></i> [[${session.succMsg}]]
-            </div>
-            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-        </th:block>
+    <section class="bg-white min-h-screen pb-20">
+        <div class="max-w-[1280px] mx-auto px-4 py-4">
 
-        <th:block th:if="${session.errorMsg}">
-            <div class="fixed top-24 left-1/2 -translate-x-1/2 md:right-8 md:-translate-x-0 bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl z-[100] flex items-center gap-2 font-bold w-[90%] md:w-auto text-sm">
-                <i class="fa-solid fa-circle-exclamation text-lg"></i> [[${session.errorMsg}]]
-            </div>
-            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-        </th:block>
+            <!-- Breadcrumbs -->
+            <nav
+                class="flex text-[12px] text-gray-500 mb-4 items-center gap-1 overflow-x-auto whitespace-nowrap no-scrollbar">
+                <a href="/" class="hover:text-blue-600">Home</a>
+                <i class="fa-solid fa-chevron-right text-[8px] opacity-50"></i>
+                <a th:href="@{'/products?category=' + ${product.category}}" th:text="${product.category}"
+                    class="hover:text-blue-600"></a>
+                <i class="fa-solid fa-chevron-right text-[8px] opacity-50"></i>
+                <span class="text-gray-900 truncate" th:text="${product.title}"></span>
+            </nav>
 
-        <!-- Mobile Back Button -->
-		<div class="px-5 mt-4 flex items-center justify-between md:hidden absolute z-50">
-            <button onclick="history.back()" class="w-11 h-11 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100 text-slate-700 hover:text-orange-500 transition active:scale-95">
-                <i class="fa-solid fa-chevron-left text-sm"></i>
-            </button>
-        </div>
+            <div class="flex flex-col lg:flex-row gap-8 items-start">
 
-        <div class="flex flex-col lg:flex-row gap-6 md:gap-12 mt-0 md:mt-8">
-            <!-- Left Column: Image -->
-            <div class="w-full lg:w-1/2 flex flex-col items-center">
-                <!-- Main Image Area -->
-                <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[600px] md:rounded-3xl overflow-hidden flex items-center justify-center bg-[#fcfcf5] shadow-sm z-10" id="image-container">
-                    
-                    <!-- 360 view dots decoration on bottom -->
-                    <div class="absolute bottom-16 w-3/4 h-8 border-b-[3px] border-dashed border-orange-300 rounded-[100%] absolute pointer-events-none opacity-40 z-0 hidden md:block"></div>
+                <!-- Left: Media Gallery -->
+                <div class="w-full lg:w-[42%] lg:sticky lg:top-24">
+                    <div class="flex gap-4">
+                        <!-- Thumbnails (Desktop) -->
+                        <div class="hidden md:flex flex-col gap-3 w-16">
+                            <div
+                                class="w-16 h-16 border-2 border-blue-600 p-1 flex items-center justify-center cursor-pointer rounded">
+                                <img th:src="@{'/img/product_img/'+${product.image}}"
+                                    class="max-w-full max-h-full object-contain">
+                            </div>
+                            <div th:each="i : ${#numbers.sequence(1,3)}"
+                                class="w-16 h-16 border border-gray-200 p-1 flex items-center justify-center cursor-pointer hover:border-blue-600 rounded">
+                                <img th:src="@{'/img/product_img/'+${product.image}}"
+                                    class="max-w-full max-h-full object-contain opacity-50">
+                            </div>
+                        </div>
 
-                    <!-- Main Product Image -->
-                    <img th:src="@{'/img/product_img/'+${product.image}}" class="w-[85%] h-[85%] object-contain mix-blend-multiply drop-shadow-[0_20px_20px_rgba(0,0,0,0.15)] z-10 transition-transform duration-500 ease-in-out hover:scale-[1.12] cursor-crosshair">
-                    
-                    <!-- 360 icon button -->
-                    <div class="absolute bottom-6 z-20">
-                        <div class="bg-nav/95 backdrop-blur-sm text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl flex items-center gap-1.5 border border-white/10 select-none cursor-pointer hover:bg-slate-800 transition">
-                            <i class="fa-solid fa-chevron-left text-[9px] text-white/70"></i> 
-                            <span class="tracking-wide text-xs">360&deg;</span> 
-                            <i class="fa-solid fa-chevron-right text-[9px] text-white/70"></i>
+                        <!-- Main Image Area -->
+                        <div
+                            class="flex-1 relative border border-gray-100 p-8 flex items-center justify-center group h-[450px] md:h-[550px]">
+                            <img th:src="@{'/img/product_img/'+${product.image}}"
+                                class="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                                id="mainImage">
+
+                            <!-- Wishlist & Share -->
+                            <div class="absolute top-4 right-4 flex flex-col gap-3">
+                                <button th:onclick="'addToWishlistAjax(' + ${product.id} + ')'"
+                                    class="w-10 h-10 bg-white rounded-full border border-gray-200 flex items-center justify-center shadow-sm hover:text-red-500 transition active:scale-95">
+                                    <i class="fa-regular fa-heart text-lg"></i>
+                                </button>
+                                <div class="relative">
+                                    <button onclick="toggleShareSheet()" class="w-10 h-10 bg-white rounded-full border border-gray-200 flex items-center justify-center shadow-sm hover:text-blue-500 transition active:scale-95">
+                                        <i class="fa-solid fa-share-nodes text-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Desktop only: small thumbnails -->
-                <div class="hidden md:flex items-center gap-4 mt-6">
-                    <button class="w-20 h-20 bg-white rounded-2xl border-2 border-[#1F223D] p-2 hover:shadow-md transition">
-                       <img th:href="@{'/img/product_img/'+${product.image}}" onerror="this.src='/img/product_img/'+'[[${product.image}]]'" class="w-full h-full object-contain mix-blend-multiply">
-                    </button>
-                    <button class="w-20 h-20 bg-white rounded-2xl border border-slate-200 p-2 hover:border-[#FF8833] hover:shadow-md transition opacity-60 hover:opacity-100">
-                       <img th:href="@{'/img/product_img/'+${product.image}}" onerror="this.src='/img/product_img/'+'[[${product.image}]]'" class="w-full h-full object-contain mix-blend-multiply grayscale">
-                    </button>
-                    <button class="w-20 h-20 bg-white rounded-2xl border border-slate-200 p-2 hover:border-[#FF8833] hover:shadow-md transition opacity-60 hover:opacity-100">
-                       <img th:href="@{'/img/product_img/'+${product.image}}" onerror="this.src='/img/product_img/'+'[[${product.image}]]'" class="w-full h-full object-contain mix-blend-multiply grayscale">
-                    </button>
-                </div>
-            </div>
-
-            <!-- Right Column: Details -->
-            <div class="w-full lg:w-1/2 px-5 md:px-0 flex flex-col mt-4 md:mt-2">
-                <!-- Rating -->
-                <div class="flex items-center gap-1.5 mb-2 md:mb-3 bg-white w-fit px-3 py-1.5 rounded-full shadow-sm border border-slate-100">
-                    <i class="fa-solid fa-star text-orange-400 text-[13px]"></i>
-                    <span class="text-[13px] font-bold text-slate-800">4.9 / 5</span>
-                    <span class="text-[11px] text-slate-400 font-medium ml-1">(320 reviews)</span>
-                </div>
-
-                <!-- Title & Stock -->
-                <div class="flex items-start justify-between gap-4 mb-6">
-                    <h1 class="text-3xl md:text-[42px] font-heading font-extrabold text-[#1F223D] leading-[1.15] w-3/4">[[${product.title}]]</h1>
-                    <span class="text-xs font-semibold text-slate-400 mt-2 whitespace-nowrap bg-slate-100 px-3 py-1 rounded-full">[[${product.stock}]] in stock</span>
-                </div>
-
-                <!-- Size Selector -->
-                <div class="mb-8">
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <button onclick="selectSize(this)" class="size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-slate-200 text-slate-700 text-sm md:text-base font-bold hover:border-[#FF8833] hover:text-[#FF8833] transition bg-white shadow-sm">S</button>
-                        <button onclick="selectSize(this)" class="size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-slate-200 text-slate-700 text-sm md:text-base font-bold hover:border-[#FF8833] hover:text-[#FF8833] transition bg-white shadow-sm">M</button>
-                        <button onclick="selectSize(this)" class="size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-transparent bg-[#FF8833] text-white text-sm md:text-base font-bold shadow-lg shadow-orange-200 transition scale-110">L</button>
-                        <button onclick="selectSize(this)" class="size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-slate-200 text-slate-700 text-sm md:text-base font-bold hover:border-[#FF8833] hover:text-[#FF8833] transition bg-white shadow-sm">XL</button>
-                        <button onclick="selectSize(this)" class="size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-slate-200 text-slate-700 text-sm md:text-base font-bold hover:border-[#FF8833] hover:text-[#FF8833] transition bg-white shadow-sm">XXL</button>
-                    </div>
-                </div>
-
-                <!-- Price & Quantity -->
-                <div class="flex items-center justify-between mb-8 pb-8 border-b border-slate-100">
-                    <div class="text-[32px] md:text-[38px] font-extrabold text-[#2d3a98] tracking-tight flex items-baseline gap-2">
-                        &#8377;[[${product.discountPrice}]]
-                        <span class="text-[15px] font-bold text-[#1F223D] opacity-60">INR</span>
-                    </div>
-
-                    <div class="flex items-center bg-white rounded-full p-1.5 border border-slate-200 shadow-sm w-fit">
-                        <button onclick="updateQty(-1)" class="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-white hover:shadow-sm hover:text-slate-800 transition active:scale-95 border border-slate-100"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                        <span id="qty" class="w-10 text-center font-bold text-slate-800 text-[15px]">1</span>
-                        <button onclick="updateQty(1)" class="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-white hover:shadow-sm hover:text-slate-800 transition active:scale-95 border border-slate-100"><i class="fa-solid fa-plus text-[10px]"></i></button>
-                    </div>
-                </div>
-
-                <!-- Product Details (Description) -->
-                <div class="mb-4">
-                    <h3 class="font-bold text-slate-800 mb-3 text-lg">Product Details:</h3>
-                    <p class="text-[14px] md:text-[15px] text-slate-500 leading-[1.8] font-medium mb-6">[[${product.description}]]</p>
-                    
-                    <!-- Feature Grid -->
-                    <div class="grid grid-cols-2 gap-4 text-[13px] md:text-sm text-slate-600 font-medium">
-                        <div class="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
-                            <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="fa-solid fa-tag text-[11px]"></i></div>
-                             Category: [[${product.category}]]
-                        </div>
-                        <div class="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-box text-[11px]"></i></div>
-                            Status: <span th:text="${product.stock > 0 ? 'Available' : 'Out of Stock'}" class="font-bold"></span>
-                        </div>
-                        <div class="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
-                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"><i class="fa-solid fa-rotate-left text-[11px]"></i></div>
-                            7 Days Return
-                        </div>
-                        <div class="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
-                            <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center"><i class="fa-solid fa-truck-fast text-[11px]"></i></div>
-                            Free Shipping
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Desktop Inline Add to Cart (Hidden on Mobile) -->
-                <div class="hidden md:flex items-center gap-4 w-full mt-10">
-                    <th:block th:if="${product.stock>0}">
-                        <a th:href="@{${user == null} ? '/signin' : ('/user/addCart?pid='+product.id+'&uid='+user.id)}" 
-                           class="flex-1 bg-nav text-white rounded-[24px] py-[22px] font-bold text-[17px] flex items-center justify-center gap-3 shadow-[0_15px_30px_rgba(31,34,61,0.2)] hover:bg-slate-800 transition hover:-translate-y-1 active:translate-y-0 active:scale-[0.98]">
-                            <i class="fa-solid fa-bag-shopping text-sm bg-white/20 p-2 rounded-full"></i> Add to cart
-                        </a>
-                        <!-- Wishlist Button -->
-                        <a th:href="@{'/user/add-wishlist?pid='+${product.id}}" 
-                           class="w-[66px] h-[66px] bg-white border border-slate-100 rounded-[24px] flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100 shadow-sm transition-all hover:shadow-md active:scale-95 group">
-                            <i class="fa-regular fa-heart text-xl group-hover:scale-110 transition-transform"></i>
-                        </a>
-                    </th:block>
-                     <th:block th:unless="${product.stock>0}">
-                         <button class="w-full bg-slate-200 text-slate-500 rounded-[24px] py-[22px] font-bold text-[17px] flex items-center justify-center gap-2 cursor-not-allowed">
+                    <!-- Action Buttons (Desktop Inline) -->
+                    <div class="hidden lg:flex gap-3 mt-4">
+                        <th:block th:if="${product.stock > 0}">
+                            <button th:onclick="'addToCartAjax(' + ${product.id} + ')'"
+                                class="flex-1 py-4 bg-[#ff9f00] text-white font-black uppercase text-sm rounded shadow-md hover:shadow-lg transition text-center flex items-center justify-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                            </button>
+                            <a th:href="@{${user == null} ? '/signin' : ('/user/save-order?pid='+product.id+'&uid='+user.id)}"
+                                class="flex-1 py-4 bg-[#fb641b] text-white font-black uppercase text-sm rounded shadow-md hover:shadow-lg transition text-center flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-bolt"></i> Buy Now
+                            </a>
+                        </th:block>
+                        <button th:unless="${product.stock > 0}" disabled
+                            class="w-full py-4 bg-gray-200 text-gray-500 font-bold uppercase rounded cursor-not-allowed">
                             Out of Stock
                         </button>
-                    </th:block>
+                    </div>
+                </div>
+
+                <!-- Right: Product Details -->
+                <div class="flex-1 space-y-6">
+                    <div>
+                        <h1 class="text-xl md:text-2xl text-gray-900 font-medium mb-2" th:text="${product.title}"></h1>
+
+                        <!-- Rating & Assured -->
+                        <div class="flex items-center gap-3 mt-1">
+                            <div
+                                class="flex items-center bg-green-700 text-white text-[12px] font-bold px-1.5 py-0.5 rounded gap-1 shadow-sm">
+                                <span th:text="${reviewCount > 0 ? #numbers.formatDecimal(averageRating, 1, 1) : 'New'}"></span> <i
+                                    class="fa-solid fa-star text-[8px]"></i>
+                            </div>
+                            <a href="#reviews" class="text-gray-500 text-sm font-bold hover:underline cursor-pointer"
+                                th:text="${reviewCountText}"></a>
+                            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                                class="h-4.5 ml-1" alt="Assured">
+                        </div>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="space-y-1">
+                        <div class="text-green-700 text-sm font-bold">Special price</div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl font-medium text-gray-900">₹[[${product.discountPrice}]]</span>
+                            <span class="text-gray-500 line-through text-base">₹[[${product.price}]]</span>
+                            <span class="text-green-700 font-bold text-base">[[${product.discount}]]% off</span>
+                            <i class="fa-solid fa-circle-info text-gray-300 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- Available Offers -->
+                    <div class="space-y-3">
+                        <h3 class="text-base font-bold text-gray-900">Available offers</h3>
+                        <div class="space-y-2.5">
+                            <div th:each="i : ${#numbers.sequence(1,4)}"
+                                class="flex items-start gap-3 text-[14px] text-gray-800">
+                                <img src="https://rukminim2.flixcart.com/www/36/36/promos/06/09/2016/c22c02f0-22c4-4563-9c5d-abc151226459.png?q=90"
+                                    class="w-4.5 h-4.5 mt-0.5 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold">Bank Offer</span> 10% instant discount on XYZ Credit Cards,
+                                    up to ₹1000. <a href="#" class="text-blue-600 font-bold hover:underline">T&C</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Details -->
+                    <div class="py-4 border-y border-gray-100 space-y-4">
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <div class="flex items-center gap-2 text-gray-500 min-w-[100px]">
+                                <i class="fa-solid fa-location-dot"></i> <span
+                                    class="text-sm font-medium">Delivery</span>
+                            </div>
+                            <div class="relative max-w-[250px] w-full">
+                                <input type="text" placeholder="Enter Delivery Pincode"
+                                    class="w-full border-b-2 border-blue-600 py-2 pr-12 focus:outline-none text-sm font-bold">
+                                <button
+                                    class="absolute right-0 top-1/2 -translate-y-1/2 text-blue-600 font-black text-[12px] uppercase">Check</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="min-w-[100px]"></div>
+                            <div class="font-bold text-gray-900">Delivery by 8 Apr, Wednesday | <span
+                                    class="text-green-700">Free</span> <span
+                                    class="text-gray-400 line-through ml-1">₹40</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Highlights & Specs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-400 mb-4">Highlights</h3>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li class="flex items-center gap-3"><span
+                                        class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span> Fabric:
+                                    [[${product.category == 'Clothing' ? 'Pure Cotton' : 'Premium Material'}]]</li>
+                                <li class="flex items-center gap-3"><span
+                                        class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span> Pattern: Solid / Textured
+                                </li>
+                                <li class="flex items-center gap-3"><span
+                                        class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span> Suitable For: Western Wear
+                                </li>
+                                <li class="flex items-center gap-3"><span
+                                        class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span> Sleeve:
+                                    [[${product.category == 'Clothing' ? 'Half Sleeve' : 'N/A'}]]</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-400 mb-4">Services</h3>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li class="flex items-center gap-3"><i
+                                        class="fa-solid fa-rotate-left text-blue-600 text-[10px]"></i> 10-Day Return
+                                    Policy</li>
+                                <li class="flex items-center gap-3"><i
+                                        class="fa-solid fa-circle-check text-blue-600 text-[10px]"></i> Cash on Delivery
+                                    available</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="border border-gray-100 rounded p-4">
+                        <button class="flex items-center justify-between w-full font-bold text-gray-900 text-sm py-2">
+                            Description <i class="fa-solid fa-chevron-down opacity-50"></i>
+                        </button>
+                        <p class="text-sm text-gray-600 leading-relaxed mt-2" th:text="${product.description}"></p>
+                    </div>
+
+                    <!-- Detailed Rating Breakdown -->
+                    <div id="reviews" class="pt-8 border-t border-gray-100 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-2xl font-bold text-gray-900">Ratings & Reviews</h2>
+                            <a th:if="${user == null}" href="/signin"
+                                class="px-6 py-2 border border-gray-200 text-gray-900 font-bold rounded shadow-sm hover:bg-gray-50 transition text-sm">
+                                Sign In to Review
+                            </a>
+                            <a th:if="${user != null and canReview}" href="#review-form"
+                                class="px-6 py-2 border border-gray-200 text-gray-900 font-bold rounded shadow-sm hover:bg-gray-50 transition text-sm"
+                                th:text="${userReview != null ? 'Update Review' : 'Rate Product'}"></a>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-center gap-10">
+                            <div class="text-center md:border-r md:border-gray-100 md:pr-10">
+                                <div class="text-[32px] font-bold text-gray-900 mb-1">
+                                    <span th:text="${reviewCount > 0 ? #numbers.formatDecimal(averageRating, 1, 1) : '0.0'}"></span> <i
+                                        class="fa-solid fa-star text-[18px]"></i></div>
+                                <div class="text-gray-400 text-sm font-medium" th:text="${reviewCountText}"></div>
+                            </div>
+                            <div class="flex-1 w-full space-y-2 max-w-[300px]">
+                                <div th:each="item : ${ratingBreakdown}" class="flex items-center gap-3">
+                                    <span class="text-xs font-bold text-gray-900 min-w-[10px]"
+                                        th:text="${item.stars}"></span>
+                                    <i class="fa-solid fa-star text-[8px] text-gray-400"></i>
+                                    <div class="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full"
+                                            th:classappend="${item.barClass}"
+                                            th:style="'width: ' + ${item.percentage} + '%'">
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-gray-400 min-w-[30px]"
+                                        th:text="${item.count}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${user != null and canReview}" id="review-form"
+                            class="border border-gray-100 rounded-2xl p-6 bg-gray-50/70 space-y-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900"
+                                    th:text="${userReview != null ? 'Update your review' : 'Write a review'}"></h3>
+                                <p class="text-sm text-gray-500">Only customers with delivered orders can review this product.</p>
+                            </div>
+                            <form action="/user/submit-review" method="post" class="space-y-4">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <div class="grid gap-4 md:grid-cols-[180px,1fr]">
+                                    <div>
+                                        <label for="rating" class="block text-sm font-bold text-gray-700 mb-2">Rating</label>
+                                        <select id="rating" name="rating" required
+                                            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                            <option value="" disabled th:selected="${userReview == null or userReview.rating == null}">Select rating</option>
+                                            <option th:each="star : ${#numbers.sequence(5,1)}" th:value="${star}"
+                                                th:text="${star + (star == 1 ? ' Star' : ' Stars')}"
+                                                th:selected="${userReview != null and userReview.rating == star}"></option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="comment" class="block text-sm font-bold text-gray-700 mb-2">Comment</label>
+                                        <textarea id="comment" name="comment" rows="4" maxlength="1000"
+                                            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                            placeholder="Tell other shoppers what stood out about the product."
+                                            th:text="${userReview != null ? userReview.comment : ''}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-sm hover:bg-blue-700 transition"
+                                        th:text="${userReview != null ? 'Update Review' : 'Submit Review'}"></button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div th:if="${user != null and !canReview}" class="border border-dashed border-gray-200 rounded-2xl p-6 text-sm text-gray-500 bg-gray-50">
+                            Reviews open after this product is delivered. Once your order reaches you, you can rate it here.
+                        </div>
+
+                        <!-- Customer Reviews -->
+                        <div class="space-y-4">
+                            <div th:if="${#lists.isEmpty(reviews)}" class="p-6 border border-dashed border-gray-200 rounded-2xl text-sm text-gray-500 bg-white">
+                                No customer reviews yet. The first delivered buyer can set the tone here.
+                            </div>
+                            <div th:each="review : ${reviews}" class="p-6 border-b border-gray-100">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <div
+                                        class="bg-green-700 text-white text-[10px] font-bold px-1 py-0.5 rounded flex items-center gap-1">
+                                        <span th:text="${review.rating}"></span> <i class="fa-solid fa-star text-[6px]"></i>
+                                    </div>
+                                    <span class="font-bold text-gray-900 text-sm"
+                                        th:text="${review.rating >= 4 ? 'Loved it' : (review.rating == 3 ? 'Worth considering' : 'Needs improvement')}"></span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-4 leading-relaxed"
+                                    th:text="${#strings.isEmpty(review.comment) ? 'Verified buyer shared a star rating without a written comment.' : review.comment}"></p>
+                                <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between text-[12px] text-gray-400">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-bold text-gray-500" th:text="${review.user.name}"></span>
+                                        <i class="fa-solid fa-circle-check text-green-700"></i>
+                                        <span>Verified Buyer</span>
+                                        <span th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sticky Bottom Mobile Cart (Hidden on Desktop) -->
-        <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-5 shadow-[0_-15px_40px_rgba(0,0,0,0.08)] z-50 md:hidden pb-10">
-            <th:block th:if="${product.stock>0}">
-                <a th:href="@{${user == null} ? '/signin' : ('/user/addCart?pid='+product.id+'&uid='+user.id)}" 
-                   class="w-full bg-nav text-white rounded-[20px] py-[18px] font-bold text-[17px] flex items-center justify-center gap-3 shadow-[0_10px_20px_rgba(31,34,61,0.2)] active:scale-[0.98] transition">
-                    <i class="fa-solid fa-bag-shopping text-xs bg-white/20 p-2 rounded-full"></i> Add to cart
+        <!-- Sticky Mobile Actions -->
+        <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex p-3 gap-2 z-50">
+            <th:block th:if="${product.stock > 0}">
+                <button th:onclick="'addToCartAjax(' + ${product.id} + ')'"
+                    class="flex-1 py-3 text-gray-900 font-bold uppercase text-xs rounded border border-gray-200 flex items-center justify-center gap-2 shadow-sm active:scale-95">
+                    Add to Cart
+                </button>
+                <a th:href="@{${user == null} ? '/signin' : ('/user/save-order?pid='+product.id+'&uid='+user.id)}"
+                    class="flex-1 py-3 bg-[#fb641b] text-white font-bold uppercase text-xs rounded shadow-md flex items-center justify-center gap-2">
+                    Buy Now
                 </a>
             </th:block>
-            <th:block th:unless="${product.stock>0}">
-                 <button class="w-full bg-slate-200 text-slate-500 rounded-[20px] py-[18px] font-bold text-[17px] flex items-center justify-center gap-2 cursor-not-allowed">
-                    Out of Stock
-                </button>
-            </th:block>
-        </div>
-
-        <!-- User Reviews Section -->
-        <div class="mt-16 md:mt-24 mb-16 md:mb-12 px-5 md:px-0">
-            <div class="flex items-center justify-between mb-8 border-b border-slate-100 pb-4">
-                <h2 class="text-2xl font-heading font-bold text-nav">User Reviews</h2>
-                <a href="#" class="text-[13px] font-bold text-orange-500 hover:text-orange-600 transition flex items-center gap-1 bg-orange-50 px-4 py-2 rounded-full">Write Review <i class="fa-solid fa-pen text-[10px]"></i></a>
-            </div>
-
-            <!-- Review Cards -->
-            <div class="space-y-4 md:grid md:grid-cols-2 md:space-y-0 md:gap-5">
-                <div class="bg-white p-6 rounded-[28px] shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 bg-gradient-to-br from-pastel-blue to-[#8AE2FC] rounded-full flex items-center justify-center font-bold text-[#1F223D] border border-white shadow-sm ring-2 ring-slate-50">
-                                AK
-                            </div>
-                            <div>
-                                <p class="font-bold text-[14px] text-slate-800">Alicia Keys</p>
-                                <p class="text-[11px] text-slate-400 font-medium">2 days ago</p>
-                            </div>
-                        </div>
-                        <div class="flex text-orange-400 text-[11px] gap-[2px]">
-                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-[14px] leading-relaxed text-slate-600 font-medium">This product exceeded my expectations! The quality is amazing and it arrived exactly on time. Highly recommend grabbing this while it's in stock.</p>
-                </div>
-
-                <div class="bg-white p-6 rounded-[28px] shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 bg-gradient-to-br from-pastel-yellow to-[#FFD166] rounded-full flex items-center justify-center font-bold text-[#1F223D] border border-white shadow-sm ring-2 ring-slate-50">
-                                JB
-                            </div>
-                            <div>
-                                <p class="font-bold text-[14px] text-slate-800">John Bradley</p>
-                                <p class="text-[11px] text-slate-400 font-medium">1 week ago</p>
-                            </div>
-                        </div>
-                        <div class="flex text-orange-400 text-[11px] gap-[2px]">
-                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
-                        </div>
-                    </div>
-                    <p class="text-[14px] leading-relaxed text-slate-600 font-medium whitespace-break-spaces text-balance">Good product, great material, but the packaging was slightly damaged during shipping. The customer service immediately compensated me which was great!</p>
-                </div>
-            </div>
-            
-            <button class="w-full md:w-auto md:mx-auto md:px-12 md:flex md:justify-center mt-8 py-3.5 border border-slate-200 rounded-full font-bold text-[14px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition active:bg-slate-100 shadow-sm block text-center">
-                View All Reviews (320)
+            <button th:unless="${product.stock > 0}" disabled
+                class="w-full py-3 bg-gray-200 text-gray-500 font-bold uppercase rounded cursor-not-allowed">
+                Out of Stock
             </button>
         </div>
 
-        <!-- JS for Interactivity -->
-        <script>
-            let currentQuantity = 1;
-            function updateQty(amount) {
-                const qtySpan = document.getElementById('qty');
-                currentQuantity += amount;
-                if(currentQuantity < 1) currentQuantity = 1;
-                qtySpan.innerText = currentQuantity;
+        <style>
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
+
+        <!-- Premium Share Sheet Modal -->
+        <div id="shareSheetOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-end md:items-center justify-center p-0 md:p-4 transition-opacity duration-300 opacity-0" onclick="if(event.target === this) toggleShareSheet()">
+            <div id="shareSheet" class="w-full md:max-w-md bg-white rounded-t-[32px] md:rounded-[32px] overflow-hidden transform translate-y-full transition-transform duration-500 ease-out shadow-2xl">
+                <!-- Header -->
+                <div class="flex items-center gap-4 px-6 py-5 border-b border-gray-50 uppercase tracking-wider">
+                    <button onclick="toggleShareSheet()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-xmark text-gray-500 text-lg"></i>
+                    </button>
+                    <h2 class="text-xs font-black text-gray-400">Share</h2>
+                </div>
+
+                <!-- Product Preview -->
+                <div class="flex items-center gap-4 px-6 py-4 bg-gray-50/50 text-left">
+                    <div class="w-16 h-16 bg-white rounded-2xl border border-gray-100 p-2 flex items-center justify-center shadow-sm">
+                        <img th:src="@{'/img/product_img/'+${product.image}}" class="max-w-full max-h-full object-contain mix-blend-multiply">
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                        <h3 class="font-bold text-gray-900 truncate" th:text="${product.title}"></h3>
+                        <p class="text-[11px] text-gray-500 truncate" th:text="${product.category}"></p>
+                    </div>
+                </div>
+
+                <!-- Options Grid -->
+                <div class="p-8 grid grid-cols-3 gap-y-10 gap-x-4 max-h-[65vh] overflow-y-auto no-scrollbar">
+                    <!-- Copy Link -->
+                    <button th:onclick="'shareProduct(\'copy\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#2E7CF6] flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-200 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600 whitespace-nowrap">Copy Link</span>
+                    </button>
+
+                    <!-- WhatsApp -->
+                    <button th:onclick="'shareProduct(\'whatsapp\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#25D366] flex items-center justify-center text-white text-3xl shadow-lg shadow-green-200 group-hover:scale-110 transition">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600">WhatsApp</span>
+                    </button>
+
+                    <!-- Facebook -->
+                    <button th:onclick="'shareProduct(\'facebook\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#1877F2] flex items-center justify-center text-white text-3xl shadow-lg shadow-blue-200 group-hover:scale-110 transition">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600">Facebook</span>
+                    </button>
+
+                    <!-- Messenger -->
+                    <button th:onclick="'shareProduct(\'messenger\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#006AFF] to-[#00E2FF] flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-100 group-hover:scale-110 transition">
+                            <i class="fa-brands fa-facebook-messenger"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600 text-center leading-tight">Messenger</span>
+                    </button>
+
+                    <!-- Gmail -->
+                    <button th:onclick="'shareProduct(\'gmail\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-lg group-hover:scale-110 transition overflow-hidden p-4">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" class="w-full h-full object-contain">
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600 text-center">Gmail</span>
+                    </button>
+
+                    <!-- SMS -->
+                    <button th:onclick="'shareProduct(\'sms\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#1FA3FF] flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-100 group-hover:scale-110 transition border border-blue-300">
+                            <i class="fa-solid fa-comment-dots"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600">SMS</span>
+                    </button>
+
+                    <!-- LinkedIn -->
+                    <button th:onclick="'shareProduct(\'linkedin\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#0077B5] flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-200 group-hover:scale-110 transition">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600">LinkedIn</span>
+                    </button>
+
+                    <!-- Hangouts -->
+                    <button th:onclick="'shareProduct(\'hangouts\', \'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#0F9D58] flex items-center justify-center text-white text-2xl shadow-lg shadow-green-100 group-hover:scale-110 transition overflow-hidden">
+                            <i class="fa-solid fa-quote-right scale-x-[-1]"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600 text-center">Hangouts</span>
+                    </button>
+
+                    <!-- More -->
+                    <button th:onclick="'openNativeShare(\'' + ${product.title} + '\')'" class="flex flex-col items-center gap-3 active:scale-95 transition group">
+                        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-2xl shadow-inner group-hover:scale-110 transition">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-gray-600">More</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            function toggleShareSheet() {
+                const overlay = document.getElementById('shareSheetOverlay');
+                const sheet = document.getElementById('shareSheet');
+                
+                if (overlay.classList.contains('hidden')) {
+                    overlay.classList.remove('hidden');
+                    setTimeout(() => {
+                        overlay.style.opacity = '1';
+                        sheet.style.transform = 'translateY(0)';
+                    }, 10);
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    overlay.style.opacity = '0';
+                    sheet.style.transform = window.innerWidth < 768 ? 'translateY(100%)' : 'translateY(40px)';
+                    setTimeout(() => {
+                        overlay.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }, 300);
+                }
             }
 
-            function selectSize(btn) {
-                // Remove active classes
-                document.querySelectorAll('.size-btn').forEach(b => {
-                    b.className = "size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-slate-200 text-slate-700 text-sm md:text-base font-bold hover:border-[#FF8833] hover:text-[#FF8833] transition bg-white shadow-sm";
-                });
-                // Add active state
-                btn.className = "size-btn w-12 h-12 md:w-[56px] md:h-[56px] rounded-[18px] flex items-center justify-center border border-transparent bg-[#FF8833] text-white text-sm md:text-base font-bold shadow-lg shadow-orange-200 transition scale-110";
+            function shareProduct(platform, title) {
+                const url = window.location.href;
+                const encodedUrl = encodeURIComponent(url);
+                const encodedTitle = encodeURIComponent(title);
+                let shareUrl = '';
+
+                switch(platform) {
+                    case 'whatsapp':
+                        shareUrl = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
+                        break;
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                        break;
+                    case 'messenger':
+                        shareUrl = `fb-messenger://share/?link=${encodedUrl}&app_id=123456789`;
+                        break;
+                    case 'gmail':
+                        shareUrl = `mailto:?subject=${encodedTitle}&body=Check this out: ${encodedUrl}`;
+                        break;
+                    case 'sms':
+                        shareUrl = `sms:?body=${encodedTitle}%20${encodedUrl}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+                        break;
+                    case 'hangouts':
+                        shareUrl = `https://hangouts.google.com/chat/person/share?url=${encodedUrl}`;
+                        break;
+                    case 'copy':
+                        navigator.clipboard.writeText(url).then(() => {
+                            if (window.showToast) {
+                                showToast('Link copied to clipboard!', 'success');
+                            } else {
+                                alert('Link copied to clipboard!');
+                            }
+                        });
+                        toggleShareSheet();
+                        return;
+                }
+
+                if (shareUrl && platform !== 'messenger') {
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                } else if (platform === 'messenger') {
+                    window.location.href = shareUrl;
+                }
+                toggleShareSheet();
+            }
+
+            function openNativeShare(title) {
+                if (navigator.share) {
+                    navigator.share({
+                        title: title,
+                        url: window.location.href
+                    }).catch(console.error);
+                } else {
+                    shareProduct('copy', title);
+                }
             }
         </script>
-	</section>
+    </section>
 </body>
+
 </html>

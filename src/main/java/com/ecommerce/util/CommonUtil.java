@@ -103,6 +103,25 @@ public class CommonUtil {
 		mailSender.send(message);
 	}
 
+	public void sendProfileOtp(String recipientEmail, String userName, String otp)
+			throws UnsupportedEncodingException, MessagingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("daspabitra55@gmail.com", "Shopping Cart Support");
+		helper.setTo(recipientEmail);
+
+		String content = "<h3>Verify your profile update</h3>" + "<p>Dear " + userName + ",</p>"
+				+ "<p>Use the OTP below to confirm your profile change request:</p>"
+				+ "<p style='font-size:24px;font-weight:700;letter-spacing:4px;'>" + otp + "</p>"
+				+ "<p>This OTP is valid for 10 minutes.</p>"
+				+ "<p>If you did not request this change, you can ignore this email.</p>";
+
+		helper.setSubject("Profile Update OTP");
+		helper.setText(content, true);
+		mailSender.send(message);
+	}
+
 	public UserDtls getLoggedInUserDetails(Principal p) {
 		String email = p.getName();
 		UserDtls userDtls = userService.getUserByEmail(email);

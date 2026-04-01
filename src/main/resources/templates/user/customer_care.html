@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>24x7 Customer Care | Ecom Store</title>
+</head>
+<body>
+    <section class="min-h-screen bg-[#eef2f7]">
+        <div class="bg-[#2f6fe4] text-white shadow-lg">
+            <div class="max-w-[1440px] mx-auto px-4 md:px-8">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 py-5">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-3 pr-4 border-r border-white/20">
+                            <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-black uppercase tracking-[0.2em] text-white/70">Ecom Support</p>
+                                <h1 class="text-2xl font-heading font-black">Help Center</h1>
+                            </div>
+                        </div>
+                        <div class="hidden md:block text-white/80 text-sm max-w-2xl leading-6">
+                            Reach order support, payment help, return assistance, and account guidance from one place.
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <div class="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                            <p class="text-white/65 text-[10px] font-black uppercase tracking-wider">Orders</p>
+                            <p class="text-lg font-black" th:text="${supportStats['totalOrders']}">0</p>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                            <p class="text-white/65 text-[10px] font-black uppercase tracking-wider">Open Issues</p>
+                            <p class="text-lg font-black" th:text="${supportStats['openIssues']}">0</p>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                            <p class="text-white/65 text-[10px] font-black uppercase tracking-wider">Delivered</p>
+                            <p class="text-lg font-black" th:text="${supportStats['delivered']}">0</p>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                            <p class="text-white/65 text-[10px] font-black uppercase tracking-wider">Response</p>
+                            <p class="text-lg font-black" th:text="${supportStats['responseTime']}">Within minutes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white border-b border-slate-200 shadow-sm">
+            <div class="max-w-[1440px] mx-auto px-4 md:px-8">
+                <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-4">
+                    <div th:each="nav,iter : ${supportNav}"
+                         th:classappend="${iter.index == 0} ? 'bg-orange-50 text-orange-500 border-orange-100' : 'bg-slate-50 text-slate-600 border-slate-100'"
+                         class="shrink-0 rounded-full border px-5 py-2.5 min-w-fit">
+                        <span class="text-sm font-black" th:text="${nav.label}">Help Centre</span>
+                        <span class="ml-2 text-[11px] font-bold opacity-70" th:text="${nav.value}">Overview</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-[1440px] mx-auto px-4 md:px-8 py-8 md:py-10">
+            <div class="mb-8">
+                <div class="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400 mb-4">
+                    <a href="/" class="hover:text-orange-500 transition">Home</a>
+                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span class="text-slate-700">Help Center</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-heading font-black text-slate-900 mb-4">Ecom Help Center | 24&#215;7 Customer Care Support</h2>
+                <p class="text-slate-500 leading-8 max-w-6xl">
+                    Use this support page to resolve order, delivery, payment, return, and account queries quickly. It is designed
+                    to keep recent shopping issues, self-serve help topics, and guided support options in one structured experience.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-[320px,1fr] gap-6 items-start">
+                <aside class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-5 sticky top-24">
+                    <div class="flex items-center justify-between mb-4 px-2">
+                        <h3 class="text-sm font-black uppercase tracking-[0.18em] text-slate-400">Support Topics</h3>
+                        <i class="fa-solid fa-list text-slate-300"></i>
+                    </div>
+                    <div class="max-h-[720px] overflow-y-auto pr-1 space-y-2 no-scrollbar">
+                        <div th:each="topic,iter : ${helpCategories}"
+                             th:classappend="${iter.index == 0} ? 'bg-blue-50 border-blue-100' : 'hover:bg-slate-50 border-transparent'"
+                             class="rounded-[24px] border px-4 py-4 transition">
+                            <p class="text-sm font-bold text-slate-900" th:text="${topic.title}">Orders</p>
+                            <p class="text-xs text-slate-500 mt-1 leading-5" th:text="${topic.subtitle}">Help subtitle</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="space-y-6">
+                    <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+                        <div class="px-6 py-5 border-b border-slate-100">
+                            <p class="text-sm font-bold text-slate-500">Help Centre</p>
+                        </div>
+                        <div class="p-6">
+                            <div th:each="card,iter : ${quickHelpCards}"
+                                 th:classappend="${iter.index > 0} ? 'mt-4' : ''"
+                                 class="rounded-[28px] bg-[#edf5ff] border border-blue-100 px-5 py-5 flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-11 h-11 rounded-2xl bg-white text-orange-500 shadow-sm flex items-center justify-center">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold text-slate-900" th:text="${card.title}">GST Rate Updates</h4>
+                                        <p class="text-slate-500 text-sm mt-1" th:text="${card.subtitle}">Quick answers to all your queries</p>
+                                    </div>
+                                </div>
+                                <a href="#support-article" class="shrink-0 text-blue-600 font-bold hover:text-blue-700 transition">
+                                    Know more <i class="fa-solid fa-chevron-right text-xs ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+                        <div class="px-6 py-6 border-b border-slate-100">
+                            <h3 class="text-3xl font-heading font-black text-slate-900">Which item are you facing an issue with?</h3>
+                            <p class="text-slate-500 mt-2">Pick a recent order to get support for delivery, payment, return, or status-related concerns.</p>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(latestOrders)}" class="p-12 text-center">
+                            <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 text-slate-300 flex items-center justify-center text-3xl mb-5">
+                                <i class="fa-solid fa-box-open"></i>
+                            </div>
+                            <p class="text-xl font-bold text-slate-900">No recent orders available</p>
+                            <p class="text-slate-500 mt-2">Once you place an order, it will appear here for fast support access.</p>
+                            <a href="/products" class="inline-flex mt-6 items-center gap-2 px-6 py-3 rounded-full bg-nav text-white font-bold hover:bg-slate-800 transition">
+                                Continue Shopping <i class="fa-solid fa-arrow-right-long text-xs opacity-70"></i>
+                            </a>
+                        </div>
+
+                        <div th:unless="${#lists.isEmpty(latestOrders)}" class="divide-y divide-slate-100">
+                            <article th:each="o : ${latestOrders}" class="px-6 py-6 flex flex-col md:flex-row md:items-center gap-5 hover:bg-slate-50/60 transition">
+                                <div class="w-28 h-28 rounded-[24px] bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden shrink-0">
+                                    <img th:src="@{'/img/product_img/'+${o.product.image}}" class="max-w-[80%] max-h-[80%] object-contain mix-blend-multiply" th:alt="${o.product.title}">
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-2xl font-bold text-slate-900 leading-tight" th:text="${o.product.title}">Product name</h4>
+                                    <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-slate-500">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                                            <span th:text="${o.status}">Order Not Placed</span>
+                                        </span>
+                                        <span>Order ID: <span class="font-bold text-slate-700" th:text="${o.orderId}">123</span></span>
+                                        <span>Placed on <span class="font-bold text-slate-700" th:text="${o.orderDate}">2026-04-01</span></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3 md:items-end">
+                                    <a th:href="@{'/product/'+${o.product.id}}" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition">
+                                        View product
+                                    </a>
+                                    <a href="#support-article" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition">
+                                        Get help
+                                    </a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div id="support-article" class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 md:p-8">
+                        <h3 class="text-2xl font-heading font-black text-slate-900 mb-5">Ecom Help Centre: Get All Shopping Solutions Here</h3>
+                        <div class="space-y-4 text-slate-500 leading-8 text-[15px]">
+                            <p>
+                                Once you place an order on any online shopping store, the next natural step is to wait for the product to arrive.
+                                This wait becomes much easier when a clear support system helps you track orders, manage deliveries, and resolve issues without friction.
+                            </p>
+                            <p>
+                                The Ecom Help Centre is designed to keep your shopping experience simple and reassuring. From order updates and delivery concerns to returns,
+                                refunds, payment support, and profile-related help, every major customer need is organized into a guided structure so you can move from problem to solution quickly.
+                            </p>
+                            <p>
+                                The 24&#215;7 Customer Care section gives you a faster way to find support topics, recent order references, and actionable next steps.
+                                Whether your issue is with an item that has not shipped, a delivered order, or an account-level concern, this page centralizes help in a familiar account-first layout.
+                            </p>
+                            <p>
+                                Apart from order-related guidance, you can also use this support page to understand returns, refund timing, payment questions, coupon behavior, saved addresses,
+                                and profile settings. The structure above mirrors a real commerce help center while staying aligned with the existing Ecom visual language.
+                            </p>
+                        </div>
+                        <div class="mt-6 flex flex-wrap items-center gap-3 text-sm">
+                            <span class="font-bold text-slate-600">Related Pages:</span>
+                            <a href="/user/user-orders" class="text-blue-600 font-bold hover:underline">Track Orders</a>
+                            <a href="/user/address" class="text-blue-600 font-bold hover:underline">Manage Addresses</a>
+                            <a href="/user/settings" class="text-blue-600 font-bold hover:underline">Account Settings</a>
+                            <a href="/user/wishlist" class="text-blue-600 font-bold hover:underline">Wishlist Help</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
+    </section>
+</body>
+</html>

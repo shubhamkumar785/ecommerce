@@ -8,7 +8,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +31,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.model.Category;
 import com.ecommerce.model.Product;
+import com.ecommerce.model.Review;
 import com.ecommerce.model.UserDtls;
 import com.ecommerce.service.CartService;
 import com.ecommerce.service.CategoryService;
 import com.ecommerce.service.ProductService;
+import com.ecommerce.service.ReviewService;
 import com.ecommerce.service.UserService;
 import com.ecommerce.util.CommonUtil;
 
@@ -60,6 +64,9 @@ public class HomeController {
 
 	@Autowired
 	private CartService cartService;
+
+	@Autowired
+	private ReviewService reviewService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -131,9 +138,44 @@ public class HomeController {
 	}
 
 	@GetMapping("/product/{id}")
-	public String product(@PathVariable int id, Model m) {
-		Product productById = productService.getProductById(id);
+	public String product(@PathVariable int id, Model m, Principal p) {
+		Product productById = productService.getLiveProductById(id);
+		if (productById == null) {
+			return "redirect:/products";
+		}
+		List<Review> reviews = reviewService.getReviewsByProduct(id);
+		Long reviewCount = reviewService.countProductReviews(id);
+		Double averageRating = reviewService.getAverageRatingByProduct(id);
+		List<Map<String, Object>> ratingBreakdown = new ArrayList<>();
+
+		for (int stars = 5; stars >= 1; stars--) {
+			final int star = stars;
+			long count = reviews.stream().filter(review -> Integer.valueOf(star).equals(review.getRating())).count();
+			long percentage = reviewCount > 0 ? Math.round((count * 100.0) / reviewCount) : 0;
+			String barClass = stars >= 4 ? "bg-green-700"
+					: (stars == 3 ? "bg-green-500" : (stars == 2 ? "bg-yellow-500" : "bg-red-500"));
+			ratingBreakdown.add(Map.of("stars", star, "count", count, "percentage", percentage, "barClass", barClass));
+		}
+
+		boolean canReview = false;
+		Review userReview = null;
+		if (p != null) {
+			UserDtls loginUser = userService.getUserByEmail(p.getName());
+			if (loginUser != null) {
+				canReview = reviewService.canUserReviewProduct(loginUser.getId(), id);
+				userReview = reviewService.getUserReviewForProduct(loginUser.getId(), id);
+			}
+		}
+
 		m.addAttribute("product", productById);
+		m.addAttribute("reviews", reviews);
+		m.addAttribute("reviewCount", reviewCount);
+		m.addAttribute("averageRating", averageRating);
+		m.addAttribute("ratingBreakdown", ratingBreakdown);
+		m.addAttribute("reviewCountText",
+				reviewCount == 0 ? "No reviews yet" : reviewCount + (reviewCount == 1 ? " Review" : " Reviews"));
+		m.addAttribute("canReview", canReview);
+		m.addAttribute("userReview", userReview);
 		return "view_product";
 	}
 
@@ -267,11 +309,6 @@ public class HomeController {
 		List<Category> categories = categoryService.getAllActiveCategory();
 		m.addAttribute("categories", categories);
 		return "product";
-	}
-
-	@GetMapping("/become-seller")
-	public String becomeSeller() {
-		return "seller_landing";
 	}
 
 	@GetMapping("/become-seller")

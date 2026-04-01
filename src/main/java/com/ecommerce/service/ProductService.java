@@ -11,11 +11,15 @@ public interface ProductService {
 
 	public Product saveProduct(Product product);
 
+	public Product saveSellerProduct(Product product, MultipartFile image, Integer sellerId);
+
 	public List<Product> getAllProducts();
 
 	public Boolean deleteProduct(Integer id);
 
 	public Product getProductById(Integer id);
+
+	public Product getLiveProductById(Integer id);
 
 	public Product updateProduct(Product product, MultipartFile file);
 

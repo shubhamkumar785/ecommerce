@@ -30,8 +30,14 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public Cart saveCart(Integer productId, Integer userId) {
 
-		UserDtls userDtls = userRepository.findById(userId).get();
-		Product product = productRepository.findById(productId).get();
+		UserDtls userDtls = userRepository.findById(userId).orElse(null);
+		Product product = productRepository.findById(productId).orElse(null);
+		if (userDtls == null || product == null) {
+			return null;
+		}
+		if (!Boolean.TRUE.equals(product.getIsActive()) || product.getStock() <= 0) {
+			return null;
+		}
 
 		Cart cartStatus = cartRepository.findByProductIdAndUserId(productId, userId);
 
@@ -44,6 +50,9 @@ public class CartServiceImpl implements CartService {
 			cart.setQuantity(1);
 			cart.setTotalPrice(1 * product.getDiscountPrice());
 		} else {
+			if (cartStatus.getQuantity() >= product.getStock()) {
+				return null;
+			}
 			cart = cartStatus;
 			cart.setQuantity(cart.getQuantity() + 1);
 			cart.setTotalPrice(cart.getQuantity() * cart.getProduct().getDiscountPrice());
@@ -79,7 +88,10 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public void updateQuantity(String sy, Integer cid) {
 
-		Cart cart = cartRepository.findById(cid).get();
+		Cart cart = cartRepository.findById(cid).orElse(null);
+		if (cart == null) {
+			return;
+		}
 		int updateQuantity;
 
 		if (sy.equalsIgnoreCase("de")) {
@@ -94,6 +106,9 @@ public class CartServiceImpl implements CartService {
 
 		} else {
 			updateQuantity = cart.getQuantity() + 1;
+			if (cart.getProduct() == null || updateQuantity > cart.getProduct().getStock()) {
+				return;
+			}
 			cart.setQuantity(updateQuantity);
 			cartRepository.save(cart);
 		}

@@ -53,6 +53,34 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserDtls getUserByEmailOrMobile(String identifier) {
+		if (!StringUtils.hasText(identifier)) {
+			return null;
+		}
+
+		String trimmedIdentifier = identifier.trim();
+		UserDtls user = userRepository.findByEmail(trimmedIdentifier.toLowerCase());
+		if (user != null) {
+			return applyAccountDefaults(user);
+		}
+
+		String digits = trimmedIdentifier.replaceAll("[^0-9]", "");
+		if (digits.length() == 10) {
+			user = userRepository.findByMobileNumber(digits);
+			if (user == null) {
+				user = userRepository.findByMobileNumber("+91" + digits);
+			}
+		} else if (digits.length() >= 11) {
+			user = userRepository.findByMobileNumber("+" + digits);
+			if (user == null && digits.startsWith("91")) {
+				user = userRepository.findByMobileNumber(digits.substring(2));
+			}
+		}
+
+		return applyAccountDefaults(user);
+	}
+
+	@Override
 	public List<UserDtls> getUsers(String role) {
 		return userRepository.findByRole(role);
 	}
@@ -144,7 +172,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserDtls updatePassword(Integer userId, String encodedPassword) {
+		Optional<UserDtls> findByUser = userRepository.findById(userId);
+		if (findByUser.isEmpty()) {
+			return null;
+		}
+
+		UserDtls dbUser = findByUser.get();
+		dbUser.setPassword(encodedPassword);
+		return userRepository.save(dbUser);
+	}
+
+	@Override
 	public UserDtls updateUserProfile(UserDtls user, MultipartFile img) {
+		return updateUserProfileWithContact(user, img, user.getEmail(), user.getMobileNumber());
+	}
+
+	@Override
+	public UserDtls updateUserProfileWithContact(UserDtls user, MultipartFile img, String email, String mobileNumber) {
 
 		UserDtls dbUser = userRepository.findById(user.getId()).get();
 
@@ -154,7 +199,8 @@ public class UserServiceImpl implements UserService {
 
 		if (!ObjectUtils.isEmpty(dbUser)) {
 			dbUser.setName(user.getName());
-			dbUser.setMobileNumber(user.getMobileNumber());
+			dbUser.setMobileNumber(mobileNumber);
+			dbUser.setEmail(email);
 			dbUser.setAddress(user.getAddress());
 			dbUser.setCity(user.getCity());
 			dbUser.setState(user.getState());

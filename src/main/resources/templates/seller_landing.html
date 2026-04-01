@@ -20,7 +20,7 @@
             </div>
             <div class="hidden md:flex items-center gap-4">
                 <button onclick="openLoginModal()" class="text-sm font-bold text-slate-700 hover:text-orange-500 transition">Login</button>
-                <button onclick="openRegisterModal()"
+                <button onclick="openSellerLogin()"
                     class="bg-[#FFC200] text-nav px-6 py-2 rounded-lg font-black text-sm hover:shadow-lg transition active:scale-95 shadow-orange-200 shadow-sm uppercase tracking-tight">Start
                     Selling</button>
             </div>
@@ -46,7 +46,7 @@
                     growing community of entrepreneurs and reach millions of customers instantly.</p>
 
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <button onclick="openRegisterModal()"
+                    <button onclick="openSellerLogin()"
                         class="bg-[#FFC200] text-nav px-10 py-4 rounded-xl font-black text-lg hover:shadow-2xl hover:scale-105 transition-all active:scale-95 text-center">Start
                         Selling</button>
                 </div>
@@ -346,7 +346,7 @@
                 <p class="text-slate-400 text-lg mb-12 font-medium">Join over 1 million sellers who have chosen Ecom for their business growth. setup takes less than 5 minutes.</p>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                    <button onclick="openRegisterModal()" class="w-full sm:w-auto bg-[#FFC200] text-nav px-12 py-5 rounded-2xl font-black text-xl hover:shadow-[0_20px_50px_rgba(255,194,0,0.3)] transition-all transform hover:-translate-y-1 active:scale-95">START SELLING NOW</button>
+                    <button onclick="openSellerLogin()" class="w-full sm:w-auto bg-[#FFC200] text-nav px-12 py-5 rounded-2xl font-black text-xl hover:shadow-[0_20px_50px_rgba(255,194,0,0.3)] transition-all transform hover:-translate-y-1 active:scale-95">START SELLING NOW</button>
                 </div>
 
                 <p class="mt-8 text-xs text-slate-500 font-bold uppercase tracking-widest">No hidden charges • 24/7 support • secure payments</p>
@@ -490,11 +490,23 @@
                 <!-- Modal Body -->
                 <div class="p-8 pb-12 space-y-8">
                     <div class="space-y-2">
-                        <input type="text" placeholder="Username or phone number or email" 
+                        <input type="text" id="sellerLoginIdentifier" placeholder="Username or phone number or email" 
                                class="w-full px-5 py-5 bg-white border border-slate-300 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition text-base font-medium text-slate-800">
                     </div>
-                    
-                    <button class="w-full bg-[#B0D1F3] text-white py-5 rounded-xl font-bold text-lg cursor-not-allowed transition hover:bg-[#8ebce9] shadow-sm">
+
+                    <div id="sellerLoginPasswordWrap" class="hidden space-y-2">
+                        <div class="relative">
+                            <input type="password" id="sellerLoginPassword" placeholder="Enter password"
+                                   class="w-full px-5 py-5 pr-14 bg-white border border-slate-300 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition text-base font-medium text-slate-800">
+                            <button type="button" onclick="toggleSellerLoginPassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition">
+                                <i id="sellerLoginPasswordEye" class="fa-regular fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p id="sellerLoginError" class="hidden text-sm font-bold text-red-500"></p>
+
+                    <button id="sellerLoginNextBtn" onclick="handleSellerLoginAction()" class="w-full bg-[#B0D1F3] text-white py-5 rounded-xl font-bold text-lg transition hover:bg-[#8ebce9] shadow-sm">
                         Next
                     </button>
                     
@@ -572,6 +584,15 @@
                                     <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'otp6')" id="otp5" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
                                     <input type="text" maxlength="1" id="otp6" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition">
                                 </div>
+
+                                <div class="flex items-center justify-between gap-4 mb-4">
+                                    <button type="button" onclick="verifyMobileOtp()" class="px-5 py-3 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-100 transition">
+                                        Verify OTP
+                                    </button>
+                                    <p id="mobileOtpStatus" class="text-xs font-bold text-slate-400"></p>
+                                </div>
+
+                                <p id="mobileOtpPreview" class="hidden text-xs font-bold text-blue-600 mb-4"></p>
                                 
                                 <p id="otpError" class="text-xs text-red-500 font-bold hidden mb-4">Please enter OTP</p>
                                 <p class="text-xs text-slate-500 font-bold">Resend OTP in <span id="otpTimer">30</span> seconds.</p>
@@ -598,6 +619,15 @@
                                     <input type="text" maxlength="1" onkeyup="moveOTPFocus(this, 'e-otp6')" id="e-otp5" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
                                     <input type="text" maxlength="1" id="e-otp6" class="w-12 h-14 border border-slate-200 rounded-xl text-center font-black text-xl focus:border-blue-400 outline-none transition uppercase">
                                 </div>
+
+                                <div class="flex items-center justify-between gap-4 mb-4">
+                                    <button type="button" onclick="verifyEmailOtp()" class="px-5 py-3 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-100 transition">
+                                        Verify OTP
+                                    </button>
+                                    <p id="emailOtpStatus" class="text-xs font-bold text-slate-400"></p>
+                                </div>
+
+                                <p id="emailOtpPreview" class="hidden text-xs font-bold text-blue-600 mb-4"></p>
                                 
                                 <p id="emailOtpError" class="text-xs text-red-500 font-bold hidden mb-4">Please enter OTP</p>
                                 <p class="text-xs text-slate-500 font-bold">Resend OTP in <span id="emailOtpTimer">30</span> seconds.</p>
@@ -816,15 +846,16 @@
                 </main>
             </div>
         </div>
-            #loginModal.flex, #registerModal.flex {
+        <style>
+            #loginModal.flex, #registerModal.flex, #onboardingDashboard.flex {
                 display: flex !important;
             }
 
-            /* Force hide all site-wide navigation except our seller hub toolbar */
-            nav:not(.seller-hub-toolbar), 
-            header, 
-            footer,
-            .mobile-nav-bottom {
+            /* Hide only the shared shell from base_modern, not this page's own content */
+            body > nav,
+            body > header,
+            body > footer,
+            body > div.fixed.bottom-4.inset-x-4.z-50 {
                 display: none !important;
             }
 
@@ -879,12 +910,19 @@
                 modal.classList.add('flex');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden'; // Stop scrolling
+                resetSellerLoginModal();
+            }
+
+            function openSellerLogin() {
+                closeRegisterModal();
+                openLoginModal();
             }
 
             function closeLoginModal() {
                 const modal = document.getElementById('loginModal');
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
+                resetSellerLoginModal();
                 if (!document.getElementById('registerModal').classList.contains('flex')) {
                     document.body.style.overflow = 'auto'; // Resume scrolling only if other modal is not open
                 }
@@ -908,43 +946,307 @@
                 
                 // Reset OTP state when modal closes
                 document.getElementById('otpSection').classList.add('hidden');
-                document.getElementById('sendOtpBtn').classList.remove('hidden');
+                document.getElementById('emailOtpSection').classList.add('hidden');
+                resetMobileVerification(false);
+                resetEmailVerification(false);
+                document.getElementById('sendOtpBtn').disabled = false;
+                document.getElementById('sendEmailOtpBtn').disabled = false;
+                document.getElementById('sendOtpBtn').classList.remove('opacity-60', 'pointer-events-none');
+                document.getElementById('sendEmailOtpBtn').classList.remove('opacity-60', 'pointer-events-none');
+                document.getElementById('otpTimer').innerText = '30';
+                document.getElementById('emailOtpTimer').innerText = '30';
+                if (mobileOtpTimerInterval) clearInterval(mobileOtpTimerInterval);
+                if (emailOtpTimerInterval) clearInterval(emailOtpTimerInterval);
             }
 
-            // OTP Functionality
-            let lastGeneratedOTP = null;
+            const OTP_PURPOSE = 'SELLER_SIGNUP';
+            let mobileOtpVerified = false;
+            let emailOtpVerified = false;
+            let verifiedMobileValue = '';
+            let verifiedEmailValue = '';
+            let mobileOtpTimerInterval = null;
+            let emailOtpTimerInterval = null;
+            let sellerLoginStep = 'identifier';
 
-            function triggerOTP() {
-                const mobileInput = document.getElementById('sellerMobile');
-                if (!mobileInput.value || mobileInput.value.length < 10) {
-                    alert('Please enter a valid 10-digit mobile number');
+            function notify(message, type = 'success') {
+                if (typeof showToast === 'function') {
+                    showToast(message, type === 'success' ? 'success' : 'error');
                     return;
                 }
-                
-                // Generate simulated OTP
-                lastGeneratedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                
-                // Simulate sending OTP (Alert for demo)
-                alert(`OTP Sent to ${mobileInput.value}\n\n[DEMO MODE] Your OTP is: ${lastGeneratedOTP}`);
-                
-                document.getElementById('otpSection').classList.remove('hidden');
-                document.getElementById('sendOtpBtn').classList.add('hidden');
-                
-                // Reset inputs
-                for(let i=1; i<=6; i++) document.getElementById(`otp${i}`).value = '';
-                document.getElementById('otp1').focus();
 
-                // Mock Timer
-                let count = 30;
-                const timerElem = document.getElementById('otpTimer');
+                alert(message);
+            }
+
+            function showSellerLoginError(message) {
+                const errorElem = document.getElementById('sellerLoginError');
+                errorElem.textContent = message;
+                errorElem.classList.remove('hidden');
+            }
+
+            function hideSellerLoginError() {
+                const errorElem = document.getElementById('sellerLoginError');
+                errorElem.textContent = '';
+                errorElem.classList.add('hidden');
+            }
+
+            function resetSellerLoginModal() {
+                sellerLoginStep = 'identifier';
+                const identifierInput = document.getElementById('sellerLoginIdentifier');
+                const passwordInput = document.getElementById('sellerLoginPassword');
+                const passwordWrap = document.getElementById('sellerLoginPasswordWrap');
+                const nextBtn = document.getElementById('sellerLoginNextBtn');
+                const passwordEye = document.getElementById('sellerLoginPasswordEye');
+
+                if (identifierInput) {
+                    identifierInput.value = '';
+                }
+                if (passwordInput) {
+                    passwordInput.value = '';
+                    passwordInput.type = 'password';
+                }
+                if (passwordWrap) {
+                    passwordWrap.classList.add('hidden');
+                }
+                if (nextBtn) {
+                    nextBtn.innerText = 'Next';
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
+                if (passwordEye) {
+                    passwordEye.classList.remove('fa-eye');
+                    passwordEye.classList.add('fa-eye-slash');
+                }
+                hideSellerLoginError();
+            }
+
+            function toggleSellerLoginPassword() {
+                const passwordInput = document.getElementById('sellerLoginPassword');
+                const passwordEye = document.getElementById('sellerLoginPasswordEye');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    passwordEye.classList.remove('fa-eye-slash');
+                    passwordEye.classList.add('fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    passwordEye.classList.remove('fa-eye');
+                    passwordEye.classList.add('fa-eye-slash');
+                }
+            }
+
+            async function handleSellerLoginAction() {
+                const identifierInput = document.getElementById('sellerLoginIdentifier');
+                const passwordInput = document.getElementById('sellerLoginPassword');
+                const passwordWrap = document.getElementById('sellerLoginPasswordWrap');
+                const nextBtn = document.getElementById('sellerLoginNextBtn');
+
+                hideSellerLoginError();
+
+                if (sellerLoginStep === 'identifier') {
+                    if (!identifierInput.value.trim()) {
+                        showSellerLoginError('Please enter your email or mobile number.');
+                        return;
+                    }
+
+                    sellerLoginStep = 'password';
+                    passwordWrap.classList.remove('hidden');
+                    nextBtn.innerText = 'Login';
+                    passwordInput.focus();
+                    return;
+                }
+
+                if (!passwordInput.value) {
+                    showSellerLoginError('Please enter your password.');
+                    return;
+                }
+
+                const originalText = nextBtn.innerHTML;
+                nextBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Logging in...';
+                nextBtn.disabled = true;
+                nextBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: identifierInput.value.trim(),
+                            password: passwordInput.value,
+                            role: 'ROLE_SELLER'
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        showSellerLoginError(data.message || 'Invalid credentials.');
+                        nextBtn.innerHTML = originalText;
+                        nextBtn.disabled = false;
+                        nextBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                        return;
+                    }
+
+                    notify('Login successful!', 'success');
+                    window.location.href = data.redirectUrl || '/seller/dashboard';
+                } catch (error) {
+                    showSellerLoginError('Unable to login right now. Please try again.');
+                    nextBtn.innerHTML = originalText;
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
+            }
+
+            function updateOtpStatus(elementId, message, type = 'neutral') {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+
+                element.textContent = message || '';
+                element.classList.remove('text-slate-400', 'text-green-600', 'text-red-500', 'text-blue-500');
+                if (type === 'success') {
+                    element.classList.add('text-green-600');
+                } else if (type === 'error') {
+                    element.classList.add('text-red-500');
+                } else if (type === 'info') {
+                    element.classList.add('text-blue-500');
+                } else {
+                    element.classList.add('text-slate-400');
+                }
+            }
+
+            function updateOtpPreview(elementId, previewOtp, deliveryMode) {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+
+                if (previewOtp) {
+                    element.textContent = `Development OTP (${deliveryMode}): ${previewOtp}`;
+                    element.classList.remove('hidden');
+                    return;
+                }
+
+                element.textContent = '';
+                element.classList.add('hidden');
+            }
+
+            function startOtpCooldown(buttonId, timerId, seconds, type) {
+                const button = document.getElementById(buttonId);
+                const timer = document.getElementById(timerId);
+                let remaining = seconds;
+
+                if (type === 'mobile' && mobileOtpTimerInterval) {
+                    clearInterval(mobileOtpTimerInterval);
+                }
+                if (type === 'email' && emailOtpTimerInterval) {
+                    clearInterval(emailOtpTimerInterval);
+                }
+
+                button.disabled = true;
+                button.classList.add('opacity-60', 'pointer-events-none');
+                timer.innerText = remaining;
+
                 const interval = setInterval(() => {
-                    count--;
-                    timerElem.innerText = count;
-                    if (count <= 0) {
+                    remaining--;
+                    timer.innerText = Math.max(remaining, 0);
+                    if (remaining <= 0) {
                         clearInterval(interval);
-                        document.getElementById('sendOtpBtn').classList.remove('hidden');
+                        button.disabled = false;
+                        button.classList.remove('opacity-60', 'pointer-events-none');
                     }
                 }, 1000);
+
+                if (type === 'mobile') {
+                    mobileOtpTimerInterval = interval;
+                } else {
+                    emailOtpTimerInterval = interval;
+                }
+            }
+
+            function collectOtp(type) {
+                const ids = type === 'mobile'
+                    ? ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6']
+                    : ['e-otp1', 'e-otp2', 'e-otp3', 'e-otp4', 'e-otp5', 'e-otp6'];
+
+                return ids.map(id => document.getElementById(id).value.trim()).join('');
+            }
+
+            function clearOtpInputs(type) {
+                const ids = type === 'mobile'
+                    ? ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6']
+                    : ['e-otp1', 'e-otp2', 'e-otp3', 'e-otp4', 'e-otp5', 'e-otp6'];
+
+                ids.forEach(id => document.getElementById(id).value = '');
+            }
+
+            function resetMobileVerification(clearInputs = false) {
+                mobileOtpVerified = false;
+                verifiedMobileValue = '';
+                document.getElementById('otpError').classList.add('hidden');
+                updateOtpStatus('mobileOtpStatus', '', 'neutral');
+                updateOtpPreview('mobileOtpPreview', '', '');
+                if (clearInputs) {
+                    clearOtpInputs('mobile');
+                }
+            }
+
+            function resetEmailVerification(clearInputs = false) {
+                emailOtpVerified = false;
+                verifiedEmailValue = '';
+                document.getElementById('emailOtpError').classList.add('hidden');
+                updateOtpStatus('emailOtpStatus', '', 'neutral');
+                updateOtpPreview('emailOtpPreview', '', '');
+                if (clearInputs) {
+                    clearOtpInputs('email');
+                }
+            }
+
+            async function sendOtpRequest(channel, destination, name) {
+                const response = await fetch('/api/otp/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        channel: channel,
+                        purpose: OTP_PURPOSE,
+                        destination: destination,
+                        name: name
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Unable to send OTP.');
+                }
+
+                return data;
+            }
+
+            async function triggerOTP() {
+                const mobileInput = document.getElementById('sellerMobile');
+                if (!mobileInput.value || mobileInput.value.replace(/\D/g, '').length < 10) {
+                    notify('Please enter a valid mobile number.', 'error');
+                    return;
+                }
+
+                const sendOtpBtn = document.getElementById('sendOtpBtn');
+                const originalText = sendOtpBtn.innerText;
+                resetMobileVerification(true);
+                updateOtpStatus('mobileOtpStatus', 'Sending OTP...', 'info');
+                sendOtpBtn.innerText = 'Sending...';
+
+                try {
+                    const data = await sendOtpRequest('SMS', mobileInput.value, 'Seller');
+                    document.getElementById('otpSection').classList.remove('hidden');
+                    document.getElementById('otp1').focus();
+                    updateOtpStatus('mobileOtpStatus', `OTP sent to ${data.maskedDestination}`, 'info');
+                    updateOtpPreview('mobileOtpPreview', data.previewOtp, data.deliveryMode);
+                    notify(data.message, 'success');
+                    if (data.previewOtp) {
+                        notify(`Development mobile OTP: ${data.previewOtp}`, 'success');
+                    }
+                    startOtpCooldown('sendOtpBtn', 'otpTimer', data.resendAfterSeconds || 30, 'mobile');
+                } catch (error) {
+                    updateOtpStatus('mobileOtpStatus', error.message, 'error');
+                    updateOtpPreview('mobileOtpPreview', '', '');
+                    notify(error.message, 'error');
+                } finally {
+                    sendOtpBtn.innerText = originalText;
+                }
             }
 
             function moveOTPFocus(current, nextFieldId) {
@@ -954,66 +1256,134 @@
                 }
             }
 
-            // Email OTP Functionality
-            let lastGeneratedEmailOTP = null;
-
-            function triggerEmailOTP() {
+            async function triggerEmailOTP() {
                 const emailInput = document.getElementById('sellerEmail');
                 if (!emailInput.value || !emailInput.value.includes('@')) {
-                    alert('Please enter a valid email address');
+                    notify('Please enter a valid email address.', 'error');
                     return;
                 }
-                
-                // Generate simulated OTP
-                lastGeneratedEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                
-                // Simulate sending OTP (Alert for demo)
-                alert(`OTP Sent to ${emailInput.value}\n\n[DEMO MODE] Your Email OTP is: ${lastGeneratedEmailOTP}`);
-                
-                document.getElementById('emailOtpSection').classList.remove('hidden');
-                document.getElementById('sendEmailOtpBtn').classList.add('hidden');
-                
-                // Reset inputs
-                for(let i=1; i<=6; i++) document.getElementById(`e-otp${i}`).value = '';
-                document.getElementById('e-otp1').focus();
 
-                // Mock Timer
-                let count = 30;
-                const timerElem = document.getElementById('emailOtpTimer');
-                const interval = setInterval(() => {
-                    count--;
-                    timerElem.innerText = count;
-                    if (count <= 0) {
-                        clearInterval(interval);
-                        document.getElementById('sendEmailOtpBtn').classList.remove('hidden');
+                const sendEmailOtpBtn = document.getElementById('sendEmailOtpBtn');
+                const originalText = sendEmailOtpBtn.innerText;
+                resetEmailVerification(true);
+                updateOtpStatus('emailOtpStatus', 'Sending OTP...', 'info');
+                sendEmailOtpBtn.innerText = 'Sending...';
+
+                try {
+                    const data = await sendOtpRequest('EMAIL', emailInput.value, emailInput.value.split('@')[0] || 'Seller');
+                    document.getElementById('emailOtpSection').classList.remove('hidden');
+                    document.getElementById('e-otp1').focus();
+                    updateOtpStatus('emailOtpStatus', `OTP sent to ${data.maskedDestination}`, 'info');
+                    updateOtpPreview('emailOtpPreview', data.previewOtp, data.deliveryMode);
+                    notify(data.message, 'success');
+                    if (data.previewOtp) {
+                        notify(`Development email OTP: ${data.previewOtp}`, 'success');
                     }
-                }, 1000);
+                    startOtpCooldown('sendEmailOtpBtn', 'emailOtpTimer', data.resendAfterSeconds || 30, 'email');
+                } catch (error) {
+                    updateOtpStatus('emailOtpStatus', error.message, 'error');
+                    updateOtpPreview('emailOtpPreview', '', '');
+                    notify(error.message, 'error');
+                } finally {
+                    sendEmailOtpBtn.innerText = originalText;
+                }
+            }
+
+            async function verifyMobileOtp() {
+                const mobile = document.getElementById('sellerMobile').value;
+                const enteredMobileOTP = collectOtp('mobile');
+
+                if (enteredMobileOTP.length !== 6) {
+                    document.getElementById('otpError').classList.remove('hidden');
+                    document.getElementById('otpError').innerText = 'Please enter the 6-digit OTP.';
+                    return;
+                }
+
+                const response = await fetch('/api/otp/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        channel: 'SMS',
+                        purpose: OTP_PURPOSE,
+                        destination: mobile,
+                        otp: enteredMobileOTP
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    mobileOtpVerified = false;
+                    verifiedMobileValue = '';
+                    document.getElementById('otpError').classList.remove('hidden');
+                    document.getElementById('otpError').innerText = data.message || 'Invalid OTP.';
+                    updateOtpStatus('mobileOtpStatus', data.message || 'Verification failed.', 'error');
+                    return;
+                }
+
+                document.getElementById('otpError').classList.add('hidden');
+                mobileOtpVerified = true;
+                verifiedMobileValue = mobile;
+                updateOtpStatus('mobileOtpStatus', 'Mobile number verified.', 'success');
+                notify(data.message || 'OTP verified successfully.', 'success');
+            }
+
+            async function verifyEmailOtp() {
+                const email = document.getElementById('sellerEmail').value;
+                const enteredEmailOTP = collectOtp('email');
+
+                if (enteredEmailOTP.length !== 6) {
+                    document.getElementById('emailOtpError').classList.remove('hidden');
+                    document.getElementById('emailOtpError').innerText = 'Please enter the 6-digit OTP.';
+                    return;
+                }
+
+                const response = await fetch('/api/otp/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        channel: 'EMAIL',
+                        purpose: OTP_PURPOSE,
+                        destination: email,
+                        otp: enteredEmailOTP
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    emailOtpVerified = false;
+                    verifiedEmailValue = '';
+                    document.getElementById('emailOtpError').classList.remove('hidden');
+                    document.getElementById('emailOtpError').innerText = data.message || 'Invalid OTP.';
+                    updateOtpStatus('emailOtpStatus', data.message || 'Verification failed.', 'error');
+                    return;
+                }
+
+                document.getElementById('emailOtpError').classList.add('hidden');
+                emailOtpVerified = true;
+                verifiedEmailValue = email;
+                updateOtpStatus('emailOtpStatus', 'Email address verified.', 'success');
+                notify(data.message || 'OTP verified successfully.', 'success');
             }
 
             async function verifyAndContinue() {
-                // Collect Mobile OTP
-                let enteredMobileOTP = '';
-                for(let i=1; i<=6; i++) enteredMobileOTP += document.getElementById(`otp${i}`).value;
-
-                // Collect Email OTP
-                let enteredEmailOTP = '';
-                for(let i=1; i<=6; i++) enteredEmailOTP += document.getElementById(`e-otp${i}`).value;
+                const enteredMobileOTP = collectOtp('mobile');
+                const enteredEmailOTP = collectOtp('email');
 
                 // Validation Logic
                 if (document.getElementById('otpSection').classList.contains('hidden')) {
-                    alert('Please verify your mobile number first');
+                    notify('Please verify your mobile number first.', 'error');
                     return;
                 }
                 if (document.getElementById('emailOtpSection').classList.contains('hidden')) {
-                    alert('Please verify your email ID first');
+                    notify('Please verify your email ID first.', 'error');
                     return;
                 }
-                if (enteredMobileOTP !== lastGeneratedOTP) {
-                    alert('Invalid Mobile OTP');
+                if (!mobileOtpVerified || verifiedMobileValue !== document.getElementById('sellerMobile').value) {
+                    notify('Please verify your mobile OTP before continuing.', 'error');
                     return;
                 }
-                if (enteredEmailOTP !== lastGeneratedEmailOTP) {
-                    alert('Invalid Email OTP');
+                if (!emailOtpVerified || verifiedEmailValue !== document.getElementById('sellerEmail').value) {
+                    notify('Please verify your email OTP before continuing.', 'error');
                     return;
                 }
 
@@ -1024,7 +1394,7 @@
                 const confirmPassword = document.getElementById('sellerConfirmPass').value;
 
                 if (!password || password !== confirmPassword) {
-                    alert('Passwords do not match or are empty');
+                    notify('Passwords do not match or are empty.', 'error');
                     return;
                 }
 
@@ -1041,6 +1411,8 @@
                 formData.append('email', email);
                 formData.append('password', password);
                 formData.append('role', 'ROLE_SELLER');
+                formData.append('mobileOtp', enteredMobileOTP);
+                formData.append('emailOtp', enteredEmailOTP);
 
                 try {
                     const response = await fetch('/api/auth/signup', {
@@ -1071,13 +1443,13 @@
                         
                         document.body.style.overflow = 'hidden';
                     } else {
-                        alert(data.message || 'Registration failed');
+                        notify(data.message || 'Registration failed', 'error');
                         regBtn.innerHTML = originalHtml;
                         regBtn.disabled = false;
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('An error occurred during registration');
+                    notify('An error occurred during registration', 'error');
                     regBtn.innerHTML = originalHtml;
                     regBtn.disabled = false;
                 }
@@ -1119,6 +1491,9 @@
                         
                         saveBtn.innerHTML = 'DETAILS SAVED';
                         saveBtn.classList.replace('bg-[#2874f0]', 'bg-green-500');
+                        setTimeout(() => {
+                            window.location.href = '/seller/dashboard';
+                        }, 600);
                     } else {
                         alert(data.message || 'Failed to save store details. Make sure you are registered.');
                         saveBtn.innerHTML = originalHtml;
@@ -1131,13 +1506,31 @@
                     saveBtn.disabled = false;
                 }
             }
-            
-            // Script to ensure site-wide nav is hidden via JS as a fallback
-            document.addEventListener("DOMContentLoaded", function() {
-                const navs = document.querySelectorAll('nav');
-                navs.forEach(nav => {
-                    if (!nav.classList.contains('seller-hub-toolbar')) {
-                        nav.style.setProperty('display', 'none', 'important');
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('sellerMobile').addEventListener('input', function() {
+                    if (this.value !== verifiedMobileValue) {
+                        resetMobileVerification(false);
+                    }
+                });
+
+                document.getElementById('sellerEmail').addEventListener('input', function() {
+                    if (this.value !== verifiedEmailValue) {
+                        resetEmailVerification(false);
+                    }
+                });
+
+                document.getElementById('sellerLoginIdentifier').addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleSellerLoginAction();
+                    }
+                });
+
+                document.getElementById('sellerLoginPassword').addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleSellerLoginAction();
                     }
                 });
             });

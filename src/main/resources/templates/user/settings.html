@@ -7,14 +7,12 @@
 <body>
     <section class="min-h-screen bg-pastel-bg py-12 px-4 md:px-0">
         <div class="max-w-4xl mx-auto">
-            
-            <!-- Header Section -->
+
             <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">Account Settings ⚙️</h2>
+                    <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight mb-2">Account Settings</h2>
                     <p class="text-slate-500 font-medium">Manage your security preferences and notifications.</p>
                 </div>
-                <!-- Breadcrumbs -->
                 <div class="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">
                     <a href="/" class="hover:text-orange-500 transition">Home</a>
                     <i class="fa-solid fa-chevron-right text-[8px]"></i>
@@ -22,9 +20,21 @@
                 </div>
             </div>
 
+            <th:block th:if="${session.succMsg}">
+                <div class="mb-8 p-4 bg-green-50 border border-green-100 rounded-2xl flex items-center gap-3 text-green-600 font-bold text-sm">
+                    <i class="fa-solid fa-circle-check text-lg"></i> [[${session.succMsg}]]
+                </div>
+                <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+            </th:block>
+            <th:block th:if="${session.errorMsg}">
+                <div class="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 font-bold text-sm">
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i> [[${session.errorMsg}]]
+                </div>
+                <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+            </th:block>
+
             <div class="space-y-8">
-                
-                <!-- Password Management Card -->
+
                 <div class="bg-white rounded-[32px] shadow-xl shadow-slate-200/50 p-8 md:p-12 border border-slate-50">
                     <div class="flex items-center gap-6 mb-10">
                         <div class="w-16 h-16 rounded-[24px] bg-nav/5 flex items-center justify-center text-nav shadow-inner">
@@ -42,29 +52,31 @@
                                 <label class="text-[13px] font-bold text-slate-700 ml-1">Current Password</label>
                                 <div class="relative flex items-center group">
                                     <i class="fa-solid fa-lock-open absolute left-4 text-slate-300 group-focus-within:text-orange-400 transition-colors"></i>
-                                    <input required name="currentPassword" type="password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-5 py-4 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
+                                    <input required name="currentPassword" type="password" placeholder="Enter current password" class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-5 py-4 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
                                 </div>
                             </div>
-                            
+
                             <hr class="border-slate-50">
-                            
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[13px] font-bold text-slate-700 ml-1">New Password</label>
                                     <div class="relative flex items-center group">
                                         <i class="fa-solid fa-shield-halved absolute left-4 text-slate-300 group-focus-within:text-orange-400 transition-colors"></i>
-                                        <input required name="newPassword" type="password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-5 py-4 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
+                                        <input required name="newPassword" type="password" minlength="6" placeholder="Enter new password" class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-5 py-4 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
                                     </div>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[13px] font-bold text-slate-700 ml-1">Confirm New Password</label>
                                     <div class="relative flex items-center group">
                                         <i class="fa-solid fa-check-double absolute left-4 text-slate-300 group-focus-within:text-orange-400 transition-colors"></i>
-                                        <input required type="password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-5 py-4 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
+                                        <input required name="confirmNewPassword" type="password" minlength="6" placeholder="Confirm new password" class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-5 py-4 text-sm font-medium focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none transition-all">
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <p class="text-[11px] text-slate-400 font-semibold text-center">The password is updated in the database only after your current password is verified and the new password is confirmed.</p>
 
                         <div class="pt-6 flex justify-center">
                             <button type="submit" class="w-full max-w-[340px] mx-auto bg-nav text-white rounded-[20px] py-3 px-8 font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition active:scale-95 flex items-center justify-center gap-3 tracking-widest uppercase text-lg">
@@ -74,7 +86,6 @@
                     </form>
                 </div>
 
-                <!-- Notifications (Optional Placeholder) -->
                 <div class="bg-white rounded-[32px] shadow-xl shadow-slate-200/50 p-8 border border-slate-50 opacity-60">
                      <div class="flex items-center justify-between">
                          <div class="flex items-center gap-4">

@@ -13,6 +13,8 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrder, Inte
 
 	List<ProductOrder> findByUserId(Integer userId);
 
+	boolean existsByUserIdAndProductIdAndStatus(Integer userId, Integer productId, String status);
+
 	ProductOrder findByOrderId(String orderId);
 
 	@Query(value = """

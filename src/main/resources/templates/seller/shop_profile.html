@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Profile | Ecom Store</title>
+</head>
+<body>
+<section class="min-h-screen bg-slate-50/70">
+    <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row">
+        <aside th:replace="~{base_modern::sellerSideBar('shop_profile')}"></aside>
+
+        <div class="flex-1 px-4 md:px-8 py-8 space-y-6">
+            <div>
+                <p class="text-[11px] font-black tracking-[0.25em] uppercase text-slate-400">Brand Presence</p>
+                <h1 class="text-3xl md:text-4xl font-heading font-black text-slate-900 mt-2">Shop profile</h1>
+                <p class="text-slate-500 font-medium mt-2">This is how your seller identity is currently represented inside the platform.</p>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
+                <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-8 space-y-6">
+                    <div class="flex items-center gap-5">
+                        <div class="w-20 h-20 rounded-[28px] bg-orange-50 text-orange-500 flex items-center justify-center text-3xl">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-widest text-slate-400">Display Name</p>
+                            <h2 class="text-2xl font-black text-slate-900" th:text="${user.storeName != null ? user.storeName : user.name}">Seller Store</h2>
+                            <p class="text-sm text-slate-500 mt-1" th:text="${user.email}">seller@example.com</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="rounded-2xl bg-slate-50 px-5 py-4">
+                            <p class="text-slate-400 font-bold text-xs uppercase tracking-wider">Store Owner</p>
+                            <p class="text-slate-900 font-black mt-1" th:text="${user.name}">Seller User</p>
+                        </div>
+                        <div class="rounded-2xl bg-slate-50 px-5 py-4">
+                            <p class="text-slate-400 font-bold text-xs uppercase tracking-wider">Products Live</p>
+                            <p class="text-slate-900 font-black mt-1" th:text="${productCount}">0</p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-[28px] bg-slate-50 p-6">
+                        <p class="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-3">Store Description</p>
+                        <p class="text-slate-600 font-medium leading-relaxed"
+                           th:text="${user.storeDescription != null and !#strings.isEmpty(user.storeDescription) ? user.storeDescription : 'You have not added a store description yet. Update your profile to introduce your brand and products to customers.'}">
+                            Store description goes here.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-8 space-y-5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-black text-slate-900">Recent Products</h3>
+                        <a href="/seller/products" class="text-sm font-bold text-orange-500 hover:text-orange-600 transition">View all</a>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(sellerProducts)}" class="rounded-[28px] bg-slate-50 p-8 text-center text-slate-500">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-400 mb-4">
+                            <i class="fa-solid fa-box-open text-2xl"></i>
+                        </div>
+                        <p class="font-bold text-slate-700">No products added yet</p>
+                    </div>
+
+                    <div th:unless="${#lists.isEmpty(sellerProducts)}" class="space-y-4">
+                        <div th:each="p : ${sellerProducts}" class="flex items-center gap-4 rounded-2xl bg-slate-50 px-4 py-4">
+                            <div class="w-16 h-16 rounded-2xl bg-white border border-slate-100 flex items-center justify-center p-2 overflow-hidden">
+                                <img th:src="@{'/img/product_img/'+${p.image}}" class="max-w-full max-h-full object-contain mix-blend-multiply" th:alt="${p.title}">
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-black text-slate-900 truncate" th:text="${p.title}">Product</p>
+                                <p class="text-xs text-slate-500 mt-1">₹<span th:text="${#numbers.formatDecimal(p.discountPrice, 1, 2)}">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

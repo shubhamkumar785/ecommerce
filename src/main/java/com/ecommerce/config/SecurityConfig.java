@@ -80,9 +80,10 @@ public class SecurityConfig {
 				.authorizeHttpRequests(req -> req
 						.requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/signin"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/register"), new AntPathRequestMatcher("/saveUser"), new AntPathRequestMatcher("/products"),
 								new AntPathRequestMatcher("/product/**"), new AntPathRequestMatcher("/search"), new AntPathRequestMatcher("/forgot-password"), new AntPathRequestMatcher("/reset-password"), new AntPathRequestMatcher("/auth/google"),
-								new AntPathRequestMatcher("/api/auth/login"), new AntPathRequestMatcher("/api/auth/signup"), new AntPathRequestMatcher("/api/products"), new AntPathRequestMatcher("/become-seller"), new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/js/**"), new AntPathRequestMatcher("/img/**"), new AntPathRequestMatcher("/static/**"), new AntPathRequestMatcher("/error"))
+								new AntPathRequestMatcher("/api/auth/login"), new AntPathRequestMatcher("/api/auth/signup"), new AntPathRequestMatcher("/api/otp/**"), new AntPathRequestMatcher("/api/products"), new AntPathRequestMatcher("/become-seller"), new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/js/**"), new AntPathRequestMatcher("/img/**"), new AntPathRequestMatcher("/static/**"), new AntPathRequestMatcher("/error"))
 						.permitAll()
 						.requestMatchers("/user/**").hasRole("USER")
+						.requestMatchers("/seller/**").hasRole("SELLER")
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler))
 				.formLogin(form -> form.loginPage("/signin")
@@ -102,7 +103,7 @@ public class SecurityConfig {
 									.maxAge(0)
 									.build();
 							response.addHeader(HttpHeaders.SET_COOKIE, authCookie.toString());
-							response.sendRedirect("/signin?logout");
+							response.sendRedirect("/");
 						})
 						.permitAll());
 
