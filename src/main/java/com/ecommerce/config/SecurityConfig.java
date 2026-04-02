@@ -84,6 +84,7 @@ public class SecurityConfig {
 						.permitAll()
 						.requestMatchers("/user/**").hasRole("USER")
 						.requestMatchers("/seller/**").hasRole("SELLER")
+						.requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler))
 				.formLogin(form -> form.loginPage("/signin")

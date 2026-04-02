@@ -30,7 +30,7 @@ public class CommonUtil {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-		helper.setFrom("daspabitra55@gmail.com", "Shooping Cart");
+		helper.setFrom("daspabitra100@gmail.com", "Shooping Cart");
 		helper.setTo(reciepentEmail);
 
 		String content = "<p>Hello,</p>" + "<p>You have requested to reset your password.</p>"
@@ -67,7 +67,7 @@ public class CommonUtil {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-		helper.setFrom("daspabitra55@gmail.com", "Shooping Cart");
+		helper.setFrom("daspabitra100@gmail.com", "Shooping Cart");
 		helper.setTo(order.getOrderAddress().getEmail());
 
 		msg=msg.replace("[[name]]",order.getOrderAddress().getFirstName());
@@ -88,7 +88,7 @@ public class CommonUtil {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-		helper.setFrom("daspabitra55@gmail.com", "Shopping Cart Support");
+		helper.setFrom("daspabitra100@gmail.com", "Shopping Cart Support");
 		helper.setTo(user.getEmail());
 
 		String content = "<h3>Account Created Successfully</h3>"
@@ -108,7 +108,7 @@ public class CommonUtil {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-		helper.setFrom("daspabitra55@gmail.com", "Shopping Cart Support");
+		helper.setFrom("daspabitra100@gmail.com", "Shopping Cart Support");
 		helper.setTo(recipientEmail);
 
 		String content = "<h3>Verify your profile update</h3>" + "<p>Dear " + userName + ",</p>"
@@ -122,11 +122,37 @@ public class CommonUtil {
 		mailSender.send(message);
 	}
 
+	public void sendOrderConfirmationEmail(ProductOrder order) throws Exception {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("daspabitra100@gmail.com", "Ecom Team");
+		helper.setTo(order.getOrderAddress().getEmail());
+
+		Double totalAmount = order.getPrice() * order.getQuantity();
+
+		String content = "<p>Dear Customer,</p>"
+				+ "<p>Thank you for your purchase from <b>Ecom</b>!</p>"
+				+ "<p>Your order has been successfully placed.</p>"
+				+ "<p><b>Order Details:</b></p>"
+				+ "<ul>"
+				+ "<li>Order Number: <b>" + order.getOrderId() + "</b></li>"
+				+ "<li>Total Amount: <b>₹" + totalAmount + "</b></li>"
+				+ "</ul>"
+				+ "<p>We appreciate your trust in us. Your order is now being processed, and you will be notified once it is shipped.</p>"
+				+ "<p>Thank you for visiting Ecom. We look forward to serving you again.</p>"
+				+ "<br>"
+				+ "<p>Best regards,<br>Ecom Team</p>";
+
+		helper.setSubject("Order Confirmation - Thank You for Your Purchase!");
+		helper.setText(content, true);
+		mailSender.send(message);
+	}
+
 	public UserDtls getLoggedInUserDetails(Principal p) {
 		String email = p.getName();
 		UserDtls userDtls = userService.getUserByEmail(email);
 		return userDtls;
 	}
-	
 
 }

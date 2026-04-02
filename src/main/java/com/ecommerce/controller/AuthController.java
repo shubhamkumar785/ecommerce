@@ -237,7 +237,7 @@ public class AuthController {
             return "/seller/dashboard";
         }
         if (user != null && "ROLE_ADMIN".equals(user.getRole())) {
-            return "/admin/dashboard";
+            return "/admin/";
         }
         return "/";
     }

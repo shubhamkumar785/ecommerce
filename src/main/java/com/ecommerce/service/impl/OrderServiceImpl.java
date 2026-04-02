@@ -74,15 +74,34 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	@Transactional
 	public ProductOrder updateOrderStatus(Integer id, String status) {
 		Optional<ProductOrder> findById = orderRepository.findById(id);
 		if (findById.isPresent()) {
 			ProductOrder productOrder = findById.get();
+			String oldStatus = productOrder.getStatus();
 			productOrder.setStatus(status);
 			ProductOrder updateOrder = orderRepository.save(productOrder);
+
+			// If the order is cancelled, return the stock to the product
+			if (OrderStatus.CANCEL.getName().equalsIgnoreCase(status) && !OrderStatus.CANCEL.getName().equalsIgnoreCase(oldStatus)) {
+				returnStock(updateOrder.getProduct(), updateOrder.getQuantity());
+			}
+
 			return updateOrder;
 		}
 		return null;
+	}
+
+	private void returnStock(Product product, int quantity) {
+		if (product == null || product.getId() == null) {
+			return;
+		}
+		Product latestProduct = productRepository.findById(product.getId()).orElse(null);
+		if (latestProduct != null) {
+			latestProduct.setStock(latestProduct.getStock() + quantity);
+			productRepository.save(latestProduct);
+		}
 	}
 
 	@Override
@@ -191,7 +210,7 @@ public class OrderServiceImpl implements OrderService {
 
 	private void sendOrderMailSafely(ProductOrder order) {
 		try {
-			commonUtil.sendMailForProductOrder(order, "success");
+			commonUtil.sendOrderConfirmationEmail(order);
 		} catch (Exception ex) {
 			log.warn("Order {} was placed but confirmation email could not be sent: {}", order.getOrderId(), ex.getMessage());
 		}

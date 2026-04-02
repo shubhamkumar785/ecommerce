@@ -48,7 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	Optional<Product> findByIdAndIsActiveTrueAndSellerIsNotNull(Integer id);
 
 	@Query("SELECT p FROM Product p WHERE p.seller.id = :sellerId")
-	Page<Product> findBySellerId(@org.springframework.web.bind.annotation.RequestParam("sellerId") Integer sellerId,
+	Page<Product> findBySellerId(@Param("sellerId") Integer sellerId,
 			Pageable pageable);
 
 	@Query("SELECT p FROM Product p WHERE p.isActive = true " +
