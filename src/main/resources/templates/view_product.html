@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="ISO-8859-1">
-    <title th:text="${product.title} + ' | Ecom Store'"></title>
+    <title th:text="${product.title} + ' | Ecom'"></title>
 </head>
 
 <body>
@@ -42,7 +42,7 @@
 
                         <!-- Main Image Area -->
                         <div
-                            class="flex-1 relative border border-gray-100 p-8 flex items-center justify-center group h-[450px] md:h-[550px]">
+                            class="flex-1 relative border border-gray-100 p-6 flex items-center justify-center group h-[400px] md:h-[500px]">
                             <img th:src="@{'/img/product_img/'+${product.image}}"
                                 class="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
                                 id="mainImage">
@@ -79,7 +79,7 @@
                             </a>
                         </th:block>
                         <button th:unless="${product.stock > 0}" disabled
-                            class="w-full py-4 bg-gray-200 text-gray-500 font-bold uppercase rounded cursor-not-allowed">
+                            class="w-full py-3 bg-gray-200 text-gray-500 font-bold uppercase rounded-xl cursor-not-allowed text-xs">
                             Out of Stock
                         </button>
                     </div>
@@ -109,7 +109,7 @@
                     <div class="space-y-1">
                         <div class="text-green-700 text-sm font-bold">Special price</div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl font-medium text-gray-900">₹[[${product.discountPrice}]]</span>
+                            <span class="text-2xl font-black text-gray-900">₹[[${product.discountPrice}]]</span>
                             <span class="text-gray-500 line-through text-base">₹[[${product.price}]]</span>
                             <span class="text-green-700 font-bold text-base">[[${product.discount}]]% off</span>
                             <i class="fa-solid fa-circle-info text-gray-300 text-xs"></i>
@@ -187,7 +187,7 @@
                     </div>
 
                     <!-- Description -->
-                    <div class="border border-gray-100 rounded p-4">
+                    <div class="border border-gray-100 rounded-xl p-4">
                         <button class="flex items-center justify-between w-full font-bold text-gray-900 text-sm py-2">
                             Description <i class="fa-solid fa-chevron-down opacity-50"></i>
                         </button>
@@ -197,7 +197,7 @@
                     <!-- Detailed Rating Breakdown -->
                     <div id="reviews" class="pt-8 border-t border-gray-100 space-y-6">
                         <div class="flex items-center justify-between">
-                            <h2 class="text-2xl font-bold text-gray-900">Ratings & Reviews</h2>
+                            <h2 class="text-xl font-bold text-gray-900">Ratings & Reviews</h2>
                             <a th:if="${user == null}" href="/signin"
                                 class="px-6 py-2 border border-gray-200 text-gray-900 font-bold rounded shadow-sm hover:bg-gray-50 transition text-sm">
                                 Sign In to Review

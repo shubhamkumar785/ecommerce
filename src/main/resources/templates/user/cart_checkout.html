@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${product.title} + ' | Checkout'">Checkout</title>
+    <title>Cart Checkout | Ecom Store</title>
 </head>
 <body>
     <section class="min-h-screen bg-pastel-bg py-8 px-4 md:px-0">
@@ -16,8 +16,8 @@
                     </h1>
                     <p class="text-sm text-slate-500 font-medium mt-2">Everything is ready. Confirm the details below and continue to place your order.</p>
                 </div>
-                <a th:href="@{'/product/' + ${product.id}}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-slate-700 font-bold hover:border-orange-200 hover:text-orange-500 transition shadow-sm">
-                    <i class="fa-solid fa-arrow-left text-xs"></i> Back to Product
+                <a href="/user/cart" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-slate-700 font-bold hover:border-orange-200 hover:text-orange-500 transition shadow-sm">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back to Cart
                 </a>
             </div>
 
@@ -53,9 +53,7 @@
                 </div>
             </div>
 
-            <form action="/user/buy-now" method="post" class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6 items-start">
-                <input type="hidden" name="pid" th:value="${product.id}">
-                <input type="hidden" name="quantity" th:value="${quantity}">
+            <form action="/user/cart-checkout" method="post" class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6 items-start">
                 <input type="hidden" name="firstName" th:value="${firstName}">
                 <input type="hidden" name="lastName" th:value="${lastName}">
                 <input type="hidden" name="email" th:value="${user.email}">
@@ -66,7 +64,8 @@
                 <input type="hidden" name="pincode" th:value="${selectedAddress.pincode}">
                 <input type="hidden" name="paymentType" value="CARD">
 
-                <div class="space-y-6">
+                <div class="space-y-5">
+                    <!-- Delivery Address Article -->
                     <article class="bg-white rounded-2xl p-6 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-50">
                         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
                             <div>
@@ -88,81 +87,58 @@
                         </div>
                     </article>
 
-                    <article class="bg-white rounded-2xl p-6 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-50">
-                        <div class="flex flex-col md:flex-row gap-6">
-                            <div class="md:w-[130px] flex flex-col items-center gap-3">
-                                <div class="w-full h-[150px] rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center p-4 shadow-inner">
-                                    <img th:src="@{'/img/product_img/'+${product.image}}" th:alt="${product.title}" class="max-w-full max-h-full object-contain mix-blend-multiply">
+                    <!-- Cart Items Articles -->
+                    <div class="space-y-4">
+                        <article th:each="cart : ${carts}" class="bg-white rounded-2xl p-6 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-50 h-full">
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <div class="md:w-[130px] flex flex-col items-center gap-3">
+                                    <div class="w-full h-[150px] rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center p-4 shadow-inner">
+                                        <img th:src="@{'/img/product_img/'+${cart.product.image}}" th:alt="${cart.product.title}" class="max-w-full max-h-full object-contain mix-blend-multiply">
+                                    </div>
+                                    <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm text-sm font-bold text-slate-700">
+                                        <span>Qty</span>
+                                        <span class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">[[${cart.quantity}]]</span>
+                                    </div>
                                 </div>
-                                <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm text-sm font-bold text-slate-700">
-                                    <span>Qty</span>
-                                    <span class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">[[${quantity}]]</span>
-                                </div>
-                            </div>
 
-                            <div class="flex-1">
-                                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-                                    <div class="max-w-xl">
-                                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-3">Selected Product</p>
-                                        <h2 class="text-2xl md:text-2xl font-bold text-slate-900 leading-tight" th:text="${product.title}">Product title</h2>
+                                <div class="flex-1">
+                                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+                                        <div class="max-w-xl">
+                                            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-3">Item details</p>
+                                            <h2 class="text-2xl md:text-2xl font-bold text-slate-900 leading-tight" th:text="${cart.product.title}">Product title</h2>
 
-                                        <div class="mt-4 flex flex-wrap items-center gap-3">
-                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-600 text-white text-xs font-black shadow-sm">
-                                                <span th:text="${product.rating != null and product.rating > 0 ? #numbers.formatDecimal(product.rating,1,1) : '4.2'}">4.2</span>
-                                                <i class="fa-solid fa-star text-[10px]"></i>
-                                            </span>
-                                            <span class="text-sm font-bold text-slate-400" th:text="${product.category}">Laptop</span>
-                                            <span th:if="${product.size != null and !#strings.isEmpty(product.size)}" class="text-sm font-bold text-slate-400" th:text="'Size: ' + ${product.size}">Size: L</span>
-                                            <span th:if="${product.color != null and !#strings.isEmpty(product.color)}" class="text-sm font-bold text-slate-400" th:text="'Color: ' + ${product.color}">Color: Black</span>
+                                            <div class="mt-4 flex flex-wrap items-center gap-3">
+                                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-600 text-white text-xs font-black shadow-sm">
+                                                    <span th:text="${cart.product.rating != null and cart.product.rating > 0 ? #numbers.formatDecimal(cart.product.rating,1,1) : '4.2'}">4.2</span>
+                                                    <i class="fa-solid fa-star text-[10px]"></i>
+                                                </span>
+                                                <span class="text-sm font-bold text-slate-400" th:text="${cart.product.category}">Category</span>
+                                                <span class="text-sm font-bold text-slate-400" th:text="'Seller: ' + ${cart.product.seller?.name ?: 'Ecom Store'}">Seller</span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="md:min-w-[170px] md:text-right">
-                                        <p class="text-sm font-bold uppercase tracking-widest text-green-600">[[${product.discount}]]% off applied</p>
-                                        <div class="mt-2.5 space-y-1">
-                                            <p class="text-sm text-slate-400 line-through">&#8377;[[${mrp}]]</p>
-                                            <p class="text-2xl font-black text-slate-900 leading-none">&#8377;[[${sellingPrice}]]</p>
+                                        <div class="md:min-w-[190px] md:text-right">
+                                            <p class="text-sm font-bold uppercase tracking-widest text-green-600">[[${cart.product.discount}]]% off</p>
+                                            <div class="mt-2.5 space-y-1">
+                                                <p class="text-base text-slate-400 line-through">&#8377;[[${cart.product.price * cart.quantity}]]</p>
+                                                <p class="text-[2rem] font-black text-slate-900 leading-none">&#8377;[[${cart.product.discountPrice * cart.quantity}]]</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="rounded-xl bg-slate-50 border border-slate-100 p-4">
-                                        <p class="text-[10px] font-black uppercase tracking-[0.28em] text-slate-400 mb-3">Delivery Promise</p>
-                                        <p class="text-[1rem] font-bold text-slate-900" th:text="${estimatedDelivery}">Delivery by 8 Apr, Wednesday</p>
-                                        <p class="text-sm text-green-600 font-bold mt-2">Free shipping included</p>
-                                    </div>
-                                    <div class="rounded-xl bg-pastel-yellow/40 border border-amber-100 p-4">
-                                        <p class="text-[10px] font-black uppercase tracking-[0.28em] text-amber-500 mb-3">Care Note</p>
-                                        <p class="text-[13px] font-medium leading-6 text-slate-700">
-                                            Delivery agent will let you inspect the package for the correct product, visible damage, or missing items before acceptance.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="mt-6 flex flex-wrap gap-3">
-                                    <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 text-sm font-bold">
-                                        <i class="fa-solid fa-shield-heart"></i>
-                                        Safe checkout
-                                    </div>
-                                    <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 text-sm font-bold">
-                                        <i class="fa-solid fa-rotate-left"></i>
-                                        Easy return policy
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
+                    </div>
                 </div>
 
                 <aside class="lg:sticky lg:top-20 space-y-5">
                     <div class="bg-white rounded-2xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50">
                         <div class="px-5 py-4 border-b border-slate-100">
-                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Price Details</h3>
+                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Order Summary</h3>
                         </div>
                         <div class="p-5 space-y-4">
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-600 font-medium">MRP</span>
+                                <span class="text-slate-600 font-medium">Price ([[${itemsCount}]] items)</span>
                                 <span class="text-slate-900 font-semibold">&#8377;[[${mrp}]]</span>
                             </div>
                             <div class="flex justify-between text-sm">

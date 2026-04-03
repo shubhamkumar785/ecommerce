@@ -44,7 +44,16 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.addHeader(HttpHeaders.SET_COOKIE, authCookie.toString());
         }
 
-        // Default: customer
-        response.sendRedirect("/");
+        if (user != null) {
+            if ("ROLE_ADMIN".equals(user.getRole())) {
+                response.sendRedirect("/admin/");
+            } else if ("ROLE_SELLER".equals(user.getRole())) {
+                response.sendRedirect("/seller/dashboard");
+            } else {
+                response.sendRedirect("/");
+            }
+        } else {
+            response.sendRedirect("/");
+        }
     }
 }

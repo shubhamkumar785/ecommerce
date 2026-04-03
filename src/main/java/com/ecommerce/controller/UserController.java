@@ -88,7 +88,8 @@ public class UserController {
 	private static final String MOBILE_OTP_EXPIRY = "profile.mobile.otp.expiry";
 	private static final String PENDING_UPI_CHECKOUTS = "pendingUpiCheckouts";
 	private static final long OTP_VALIDITY_MS = 10 * 60 * 1000L;
-	private static final Pattern UPI_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$");
+	private static final Pattern UPI_ID_PATTERN = Pattern
+			.compile("^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$");
 
 	@Autowired
 	private UserService userService;
@@ -162,15 +163,15 @@ public class UserController {
 	}
 
 	@GetMapping("/addCart")
-	public String addToCart(@RequestParam Integer pid, @RequestParam(required = false) Integer uid, 
+	public String addToCart(@RequestParam Integer pid, @RequestParam(required = false) Integer uid,
 			Principal p, jakarta.servlet.http.HttpServletRequest request, HttpSession session) {
-		
+
 		Integer userId = uid;
 		if (userId == null || userId == 0) {
 			UserDtls user = getLoggedInUserDetails(p);
 			userId = user.getId();
 		}
-		
+
 		Cart saveCart = cartService.saveCart(pid, userId);
 
 		if (ObjectUtils.isEmpty(saveCart)) {
@@ -178,12 +179,12 @@ public class UserController {
 		} else {
 			session.setAttribute("succMsg", "Product added to cart");
 		}
-		
+
 		String referer = request.getHeader("Referer");
 		if (referer != null && !referer.isEmpty()) {
 			return "redirect:" + referer;
 		}
-		
+
 		return "redirect:/product/" + pid;
 	}
 
@@ -193,23 +194,23 @@ public class UserController {
 		UserDtls user = getLoggedInUserDetails(p);
 		List<Cart> carts = cartService.getCartsByUser(user.getId());
 		m.addAttribute("carts", carts);
-		
+
 		if (carts.size() > 0) {
 			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
 			m.addAttribute("totalOrderPrice", totalOrderPrice);
-            
-            // Calculate full price breakdown
-            Double totalMrp = 0.0;
-            for (Cart c : carts) {
-                totalMrp += (c.getProduct().getPrice() * c.getQuantity());
-            }
-            m.addAttribute("totalMrp", totalMrp);
-            m.addAttribute("totalDiscount", totalMrp - totalOrderPrice);
-            m.addAttribute("itemsCount", carts.size());
+
+			// Calculate full price breakdown
+			Double totalMrp = 0.0;
+			for (Cart c : carts) {
+				totalMrp += (c.getProduct().getPrice() * c.getQuantity());
+			}
+			m.addAttribute("totalMrp", totalMrp);
+			m.addAttribute("totalDiscount", totalMrp - totalOrderPrice);
+			m.addAttribute("itemsCount", carts.size());
 		}
-        
-        m.addAttribute("userAddress", user.getAddress() + ", " + user.getCity() + " - " + user.getPincode());
-        
+
+		m.addAttribute("userAddress", user.getAddress() + ", " + user.getCity() + " - " + user.getPincode());
+
 		return "/user/cart";
 	}
 
@@ -239,6 +240,61 @@ public class UserController {
 		m.addAttribute("razorpayConfigured", paymentGatewayService.isConfigured());
 		m.addAttribute("razorpayKeyId", paymentGatewayService.getPublicKey());
 		return "/user/order";
+	}
+
+	@GetMapping("/cart-checkout")
+	public String loadCartCheckoutPage(Principal p, Model m, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		List<Cart> carts = cartService.getCartsByUser(user.getId());
+		if (carts == null || carts.isEmpty()) {
+			session.setAttribute("errorMsg", "Your cart is empty");
+			return "redirect:/user/cart";
+		}
+
+		Address selectedAddress = resolveSelectedAddress(user.getId());
+		if (selectedAddress == null) {
+			session.setAttribute("errorMsg", "Please add a delivery address before placing your order");
+			return "redirect:/user/address";
+		}
+
+		String[] nameParts = splitName(selectedAddress.getFullName());
+		populateCartSummary(m, carts);
+		m.addAttribute("firstName", nameParts[0]);
+		m.addAttribute("lastName", nameParts[1]);
+		m.addAttribute("selectedAddress", selectedAddress);
+		return "/user/cart_checkout";
+	}
+
+	@PostMapping("/cart-checkout")
+	public String loadCartPaymentPage(@ModelAttribute OrderRequest request, Principal p, Model m, HttpSession session) {
+		UserDtls user = getLoggedInUserDetails(p);
+		List<Cart> carts = cartService.getCartsByUser(user.getId());
+		if (carts == null || carts.isEmpty()) {
+			session.setAttribute("errorMsg", "Your cart is empty");
+			return "redirect:/user/cart";
+		}
+
+		Address selectedAddress = resolveSelectedAddress(user.getId());
+		if (selectedAddress == null) {
+			session.setAttribute("errorMsg", "Please add a delivery address before placing your order");
+			return "redirect:/user/address";
+		}
+
+		applyOrderRequestDefaults(request, user, selectedAddress);
+		boolean cashOnDeliveryAvailable = isCashOnDeliveryEligible(carts);
+		String paymentType = normalizePaymentType(request.getPaymentType());
+		if ("COD".equalsIgnoreCase(paymentType) && !cashOnDeliveryAvailable) {
+			paymentType = "CARD";
+		}
+		request.setPaymentType(paymentType);
+
+		populateCartSummary(m, carts);
+		m.addAttribute("orderRequest", request);
+		m.addAttribute("deliveryFullName", buildFullName(request.getFirstName(), request.getLastName()));
+		m.addAttribute("cashOnDeliveryAvailable", cashOnDeliveryAvailable);
+		m.addAttribute("razorpayConfigured", paymentGatewayService.isConfigured());
+		m.addAttribute("razorpayKeyId", paymentGatewayService.getPublicKey());
+		return "/user/cart_payment";
 	}
 
 	@GetMapping("/buy-now")
@@ -335,7 +391,8 @@ public class UserController {
 
 		ProductOrder placedOrder;
 		try {
-			placedOrder = orderService.saveSingleProductOrder(user.getId(), product, sanitizeQuantity(quantity), request);
+			placedOrder = orderService.saveSingleProductOrder(user.getId(), product, sanitizeQuantity(quantity),
+					request);
 		} catch (IllegalStateException ex) {
 			session.setAttribute("errorMsg", ex.getMessage());
 			return "redirect:/product/" + pid;
@@ -356,7 +413,8 @@ public class UserController {
 			return "redirect:/user/orders";
 		}
 		if ("COD".equalsIgnoreCase(request.getPaymentType()) && !isCashOnDeliveryEligible(carts)) {
-			session.setAttribute("errorMsg", "Cash on Delivery is only available when every product is priced below ₹1000");
+			session.setAttribute("errorMsg",
+					"Cash on Delivery is only available when every product is priced below ₹1000");
 			return "redirect:/user/orders";
 		}
 		try {
@@ -371,12 +429,14 @@ public class UserController {
 
 	@PostMapping("/payments/upi/initiate-buy-now")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> initiateBuyNowUpiPayment(@RequestBody UpiCheckoutInitiationRequest request,
+	public ResponseEntity<Map<String, Object>> initiateBuyNowUpiPayment(
+			@RequestBody UpiCheckoutInitiationRequest request,
 			Principal p, HttpSession session) {
 		UserDtls user = getLoggedInUserDetails(p);
 		Product product = validateBuyNowProduct(request.getPid(), session);
 		if (product == null) {
-			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Selected product is unavailable"));
+			return ResponseEntity.badRequest()
+					.body(Map.of("success", false, "message", "Selected product is unavailable"));
 		}
 		if (!paymentGatewayService.isConfigured()) {
 			return ResponseEntity.badRequest().body(
@@ -385,7 +445,8 @@ public class UserController {
 
 		String upiId = normalizeUpiId(request.getUpiId());
 		if (!isValidUpiId(upiId)) {
-			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Enter a valid UPI ID like name@bank"));
+			return ResponseEntity.badRequest()
+					.body(Map.of("success", false, "message", "Enter a valid UPI ID like name@bank"));
 		}
 
 		Address selectedAddress = resolveSelectedAddress(user.getId());
@@ -425,7 +486,8 @@ public class UserController {
 
 		String upiId = normalizeUpiId(request.getUpiId());
 		if (!isValidUpiId(upiId)) {
-			return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Enter a valid UPI ID like name@bank"));
+			return ResponseEntity.badRequest()
+					.body(Map.of("success", false, "message", "Enter a valid UPI ID like name@bank"));
 		}
 
 		request.setPaymentType("UPI");
@@ -553,7 +615,8 @@ public class UserController {
 	}
 
 	@GetMapping("/order-confirmation")
-	public String loadOrderConfirmation(@RequestParam(required = false) String orderId, Principal p, Model m, HttpSession session) {
+	public String loadOrderConfirmation(@RequestParam(required = false) String orderId, Principal p, Model m,
+			HttpSession session) {
 		UserDtls user = getLoggedInUserDetails(p);
 		String resolvedOrderId = StringUtils.hasText(orderId) ? orderId
 				: (String) session.getAttribute(LAST_CONFIRMED_ORDER_ID);
@@ -574,7 +637,8 @@ public class UserController {
 	}
 
 	@GetMapping("/order-tracking")
-	public String loadOrderTracking(@RequestParam(required = false) String orderId, Principal p, Model m, HttpSession session) {
+	public String loadOrderTracking(@RequestParam(required = false) String orderId, Principal p, Model m,
+			HttpSession session) {
 		UserDtls user = getLoggedInUserDetails(p);
 		String resolvedOrderId = StringUtils.hasText(orderId) ? orderId
 				: (String) session.getAttribute(LAST_CONFIRMED_ORDER_ID);
@@ -669,7 +733,8 @@ public class UserController {
 
 	@PostMapping("/update-profile")
 	public String updateProfile(@ModelAttribute UserDtls user, @RequestParam MultipartFile img,
-			@RequestParam(required = false) String emailOtp, @RequestParam(required = false) String mobileOtp, Principal p,
+			@RequestParam(required = false) String emailOtp, @RequestParam(required = false) String mobileOtp,
+			Principal p,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		UserDtls loggedInUser = getLoggedInUserDetails(p);
 		String requestedEmail = normalizeEmail(user.getEmail());
@@ -692,7 +757,8 @@ public class UserController {
 				session.setAttribute("errorMsg", "Email already exists");
 				return "redirect:/user/profile";
 			}
-			String emailOtpError = validateOtp(session, EMAIL_OTP_CODE, EMAIL_OTP_VALUE, EMAIL_OTP_EXPIRY, requestedEmail,
+			String emailOtpError = validateOtp(session, EMAIL_OTP_CODE, EMAIL_OTP_VALUE, EMAIL_OTP_EXPIRY,
+					requestedEmail,
 					emailOtp, "email");
 			if (emailOtpError != null) {
 				session.setAttribute("errorMsg", emailOtpError);
@@ -701,7 +767,8 @@ public class UserController {
 		}
 
 		if (mobileChanged) {
-			String mobileOtpError = validateOtp(session, MOBILE_OTP_CODE, MOBILE_OTP_VALUE, MOBILE_OTP_EXPIRY, requestedMobile,
+			String mobileOtpError = validateOtp(session, MOBILE_OTP_CODE, MOBILE_OTP_VALUE, MOBILE_OTP_EXPIRY,
+					requestedMobile,
 					mobileOtp, "mobile number");
 			if (mobileOtpError != null) {
 				session.setAttribute("errorMsg", mobileOtpError);
@@ -713,7 +780,8 @@ public class UserController {
 		loggedInUser.setEmail(requestedEmail);
 		loggedInUser.setMobileNumber(requestedMobile);
 
-		UserDtls updateUserProfile = userService.updateUserProfileWithContact(loggedInUser, img, requestedEmail, requestedMobile);
+		UserDtls updateUserProfile = userService.updateUserProfileWithContact(loggedInUser, img, requestedEmail,
+				requestedMobile);
 		if (ObjectUtils.isEmpty(updateUserProfile)) {
 			session.setAttribute("errorMsg", "Profile not updated");
 		} else {
@@ -830,11 +898,12 @@ public class UserController {
 	}
 
 	@GetMapping("/add-wishlist")
-	public String addToWishlist(@RequestParam Integer pid, Principal p, HttpServletRequest request, HttpSession session) {
+	public String addToWishlist(@RequestParam Integer pid, Principal p, HttpServletRequest request,
+			HttpSession session) {
 		UserDtls user = getLoggedInUserDetails(p);
 		wishlistService.addToWishlist(user.getId(), pid);
 		session.setAttribute("succMsg", "Product added to wishlist");
-		
+
 		String referer = request.getHeader("Referer");
 		if (referer != null && !referer.isEmpty()) {
 			return "redirect:" + referer;
@@ -945,14 +1014,15 @@ public class UserController {
 		if (!file.isEmpty()) {
 			String fileName = file.getOriginalFilename();
 			returnRequest.setProofImage(fileName);
-			
+
 			File saveFile = new ClassPathResource("static/img").getFile();
-			Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "proof_img" + File.separator + fileName);
-			
-			if(!Files.exists(path.getParent())) {
+			Path path = Paths
+					.get(saveFile.getAbsolutePath() + File.separator + "proof_img" + File.separator + fileName);
+
+			if (!Files.exists(path.getParent())) {
 				Files.createDirectories(path.getParent());
 			}
-			
+
 			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 		}
 
@@ -1103,7 +1173,8 @@ public class UserController {
 		context.put("productTitle", order.getProduct() != null ? order.getProduct().getTitle() : "your order");
 		context.put("status", resolveOrderStatusLabel(order.getStatus()));
 		context.put("paymentLabel", resolvePaymentLabel(order.getPaymentType()));
-		context.put("estimatedDelivery", estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH)));
+		context.put("estimatedDelivery",
+				estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH)));
 		context.put("orderDate", orderDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)));
 		return context;
 	}
@@ -1172,6 +1243,30 @@ public class UserController {
 		m.addAttribute("estimatedDelivery", "Delivery by 8 Apr, Wednesday");
 	}
 
+	private void populateCartSummary(Model m, List<Cart> carts) {
+		double totalMrp = 0.0;
+		double totalSellingPrice = 0.0;
+		int itemsCount = 0;
+
+		for (Cart cart : carts) {
+			if (cart != null && cart.getProduct() != null) {
+				int qty = cart.getQuantity() != null ? cart.getQuantity() : 1;
+				totalMrp += safeAmount(cart.getProduct().getPrice()) * qty;
+				totalSellingPrice += safeAmount(cart.getProduct().getDiscountPrice()) * qty;
+				itemsCount++;
+			}
+		}
+
+		double totalDiscount = Math.max(0.0, totalMrp - totalSellingPrice);
+
+		m.addAttribute("carts", carts);
+		m.addAttribute("itemsCount", itemsCount);
+		m.addAttribute("mrp", totalMrp);
+		m.addAttribute("sellingPrice", totalSellingPrice);
+		m.addAttribute("discountAmount", totalDiscount);
+		m.addAttribute("estimatedDelivery", "Delivery by 8 Apr, Wednesday");
+	}
+
 	private Address resolveSelectedAddress(Integer userId) {
 		List<Address> addresses = addressService.getAddressByUser(userId);
 		if (addresses == null || addresses.isEmpty()) {
@@ -1226,9 +1321,9 @@ public class UserController {
 
 		String normalized = paymentType.trim().toUpperCase(Locale.ENGLISH);
 		return switch (normalized) {
-		case "CARD", "COD", "UPI", "GIFT" -> normalized;
-		case "ONLINE" -> "CARD";
-		default -> "CARD";
+			case "CARD", "COD", "UPI", "GIFT" -> normalized;
+			case "ONLINE" -> "CARD";
+			default -> "CARD";
 		};
 	}
 
@@ -1427,7 +1522,8 @@ public class UserController {
 		return steps;
 	}
 
-	private Map<String, Object> createTrackingStep(String title, String description, boolean completed, boolean current) {
+	private Map<String, Object> createTrackingStep(String title, String description, boolean completed,
+			boolean current) {
 		Map<String, Object> step = new LinkedHashMap<>();
 		step.put("title", title);
 		step.put("description", description);
@@ -1454,7 +1550,8 @@ public class UserController {
 			return "This order has been cancelled. Reach out to support if you need help with a refund or replacement.";
 		}
 		if ("Delivered".equalsIgnoreCase(status)) {
-			return "Delivered on " + estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH));
+			return "Delivered on "
+					+ estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH));
 		}
 		if ("Out for Delivery".equalsIgnoreCase(status)) {
 			return "Your package is out for delivery and should arrive today.";
@@ -1475,7 +1572,8 @@ public class UserController {
 		if ("Out for Delivery".equalsIgnoreCase(status)) {
 			return "Keep your phone nearby. The delivery partner may call before arrival.";
 		}
-		return "Expected delivery by " + estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH));
+		return "Expected delivery by "
+				+ estimatedDeliveryDate.format(DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH));
 	}
 
 	private String resolvePaymentLabel(String paymentType) {
@@ -1513,13 +1611,15 @@ public class UserController {
 				new CustomUser(user).getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		ResponseCookie authCookie = ResponseCookie.from(AUTH_COOKIE, jwtUtil.generateToken(user.getEmail(), user.getRole()))
+		ResponseCookie authCookie = ResponseCookie
+				.from(AUTH_COOKIE, jwtUtil.generateToken(user.getEmail(), user.getRole()))
 				.httpOnly(true).secure(request.isSecure()).sameSite("Lax").path("/")
 				.maxAge(jwtUtil.getExpirationSeconds()).build();
 		response.addHeader(HttpHeaders.SET_COOKIE, authCookie.toString());
 	}
 
-	private String validateOtp(HttpSession session, String codeKey, String valueKey, String expiryKey, String expectedValue,
+	private String validateOtp(HttpSession session, String codeKey, String valueKey, String expiryKey,
+			String expectedValue,
 			String submittedOtp, String label) {
 		Object savedOtp = session.getAttribute(codeKey);
 		Object savedValue = session.getAttribute(valueKey);
@@ -1541,7 +1641,8 @@ public class UserController {
 		return null;
 	}
 
-	private void storeOtp(HttpSession session, String codeKey, String valueKey, String expiryKey, String otp, String value,
+	private void storeOtp(HttpSession session, String codeKey, String valueKey, String expiryKey, String otp,
+			String value,
 			long expiry) {
 		session.setAttribute(codeKey, otp);
 		session.setAttribute(valueKey, value);

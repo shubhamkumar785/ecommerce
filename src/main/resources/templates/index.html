@@ -46,30 +46,30 @@
      ============================================================ -->
 <div class="flex items-center gap-3 mt-4 mb-4">
     <!-- Search -->
-    <div class="flex-1 bg-white rounded-2xl flex items-center px-4 py-3 shadow-sm border border-slate-100 focus-within:ring-2 focus-within:ring-orange-200 transition">
+    <div class="flex-1 bg-white rounded-2xl flex items-center px-4 py-2.5 shadow-sm border border-slate-100 focus-within:ring-2 focus-within:ring-orange-200 transition">
         <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3"></i>
         <input id="searchInput" type="text" placeholder="Search products, brands, categories..."
                class="bg-transparent border-none outline-none w-full text-sm text-slate-700 font-medium placeholder-slate-400">
     </div>
     <!-- Sort -->
     <select id="sortSelect" onchange="applyFilters()"
-            class="bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 outline-none cursor-pointer hover:border-orange-300 transition hidden md:block shadow-sm">
+            class="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 outline-none cursor-pointer hover:border-orange-300 transition hidden md:block shadow-sm">
         <option value="">Sort: Newest</option>
         <option value="price_asc">Price: Low to High</option>
         <option value="price_desc">Price: High to Low</option>
     </select>
     <!-- Filter Toggle Button -->
     <button id="filterBtn" onclick="toggleDesktopFilter()"
-            class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-5 py-3 text-sm font-bold text-slate-700 hover:border-orange-400 hover:text-orange-500 shadow-sm transition hidden lg:flex">
+            class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-5 py-2.5 text-sm font-bold text-slate-700 hover:border-orange-400 hover:text-orange-500 shadow-sm transition hidden lg:flex">
         <i class="fa-solid fa-sliders text-base"></i>
         Filters
         <span id="filterCountBadge" class="hidden bg-orange-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center">0</span>
     </button>
     <!-- Mobile Filter Button -->
     <button onclick="toggleMobileFilter()"
-            class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:border-orange-400 shadow-sm transition lg:hidden">
+            class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-bold text-slate-600 hover:border-orange-400 shadow-sm transition lg:hidden">
         <i class="fa-solid fa-sliders"></i>
-        <span>Filter</span>
+        <span class="hidden sm:inline">Filter</span>
     </button>
 </div>
 
@@ -93,7 +93,7 @@
 
     <!-- DESKTOP SIDEBAR (hidden by default) -->
     <div id="desktopFilterPanel">
-        <div class="bg-white rounded-[24px] shadow-sm border border-slate-100 sticky top-24 p-6 w-72">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 sticky top-24 p-5 w-72">
             <!-- Header -->
             <div class="flex items-center justify-between mb-6">
                 <h3 class="font-heading font-bold text-[#1F223D] text-lg">Filters</h3>
@@ -182,14 +182,14 @@
     <div class="flex-1 min-w-0">
         <!-- Skeleton -->
         <div id="skeletonGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56 hidden sm:block"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56 hidden sm:block"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56 hidden lg:block"></div>
-            <div class="rounded-[24px] bg-slate-100 animate-pulse h-56 hidden xl:block"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56 hidden sm:block"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56 hidden sm:block"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56 hidden lg:block"></div>
+            <div class="rounded-2xl bg-slate-100 animate-pulse h-56 hidden xl:block"></div>
         </div>
         <!-- Products -->
         <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 hidden"></div>
@@ -346,7 +346,7 @@ function renderCategoryPills(categories) {
 
     var pills = [
         '<button onclick="selectCategory(\'\')" id="cat-all"'
-        + ' class="cat-pill flex-shrink-0 flex items-center gap-2 rounded-full px-4 py-2 border border-slate-100 font-bold text-sm text-white shadow-sm transition active"'
+        + ' class="cat-pill flex-shrink-0 flex items-center gap-2 rounded-full px-4 py-1.5 border border-slate-100 font-bold text-sm text-white shadow-sm transition active"'
         + ' style="background:linear-gradient(to right,#FF8833,#FF9E54);">'
         + 'All Products</button>'
     ];
@@ -355,7 +355,7 @@ function renderCategoryPills(categories) {
         pills.push(
             '<button onclick="selectCategory(' + JSON.stringify(category.name || '') + ')"'
             + ' id="' + categoryButtonId(category.name) + '"'
-            + ' class="cat-pill flex-shrink-0 flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-slate-100 text-slate-700 hover:text-[#FF8833] font-bold text-sm shadow-sm transition">'
+            + ' class="cat-pill flex-shrink-0 flex items-center gap-2 bg-white rounded-full px-3.5 py-1.5 border border-slate-100 text-slate-700 hover:text-[#FF8833] font-bold text-sm shadow-sm transition">'
             + '<div class="w-7 h-7 rounded-full overflow-hidden bg-slate-50 flex items-center justify-center">'
             + '<img src="/img/category_img/' + escapeHtml(category.imageName || 'default.png') + '"'
             + ' onerror="this.src=\'https://placehold.co/56x56/f8fafc/94a3b8?text=Cat\'"'
@@ -387,12 +387,12 @@ function renderHeroBanner(banner) {
         : 'Freshly added to the catalog.';
 
     container.innerHTML =
-        '<div class="rounded-[32px] overflow-hidden relative min-h-[180px] md:min-h-[280px] shadow-lg group border border-slate-100">'
+        '<div class="rounded-2xl overflow-hidden relative min-h-[180px] md:min-h-[280px] shadow-lg group border border-slate-100">'
         + '<img src="/img/product_img/' + escapeHtml(banner.image || 'default.png') + '"'
         + ' onerror="this.src=\'https://placehold.co/1600x600/e2e8f0/64748b?text=Live+Catalog\'"'
         + ' class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"'
         + ' alt="' + escapeHtml(banner.title || 'Featured product') + '">'
-        + '<div class="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-r from-black/70 via-black/25 to-transparent p-6 md:p-12 flex flex-col justify-center">'
+        + '<div class="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-r from-black/70 via-black/25 to-transparent p-6 md:px-10 flex flex-col justify-center">'
         + '<div class="max-w-xl">'
         + '<div class="flex items-center gap-2 mb-3">'
         + '<span class="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-widest shadow-sm">'
@@ -406,7 +406,7 @@ function renderHeroBanner(banner) {
         + escapeHtml(banner.title || 'Featured Product') + '<br/>'
         + '<span class="text-orange-400">' + discountText + '</span>'
         + '</h2>'
-        + '<a href="/product/' + escapeHtml(banner.id) + '" class="inline-flex items-center gap-2 bg-white text-[#1F223D] px-7 py-3 rounded-full font-black text-xs hover:bg-orange-500 hover:text-white transition-all shadow-2xl hover:-translate-y-1 active:scale-95">'
+        + '<a href="/product/' + escapeHtml(banner.id) + '" class="inline-flex items-center gap-2 bg-white text-[#1F223D] px-6 py-2.5 rounded-full font-black text-xs hover:bg-orange-500 hover:text-white transition-all shadow-2xl hover:-translate-y-1 active:scale-95">'
         + 'View Product <i class="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>'
         + '</a>'
         + '</div></div></div>';
@@ -435,7 +435,7 @@ function renderCategoryHighlights(items) {
         var stats = (item.productCount || 0) + ' live products';
         var badge = Number(item.discount || 0) > 0 ? item.discount + '% OFF' : 'Top picks';
         return '<a href="/products?category=' + encodeURIComponent(title) + '"'
-            + ' class="group relative rounded-[40px] p-8 md:p-10 overflow-hidden h-[280px] md:h-[340px] transition-all duration-700 hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 cursor-pointer block"'
+            + ' class="group relative rounded-3xl p-6 md:p-8 overflow-hidden h-[280px] md:h-[340px] transition-all duration-700 hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 cursor-pointer block"'
             + ' style="background-color:' + tone.bg + ';">'
             + '<div class="relative z-10 max-w-[220px] md:max-w-[280px]">'
             + '<p class="text-[11px] font-black uppercase tracking-[0.25em] text-slate-500 mb-4">' + escapeHtml(stats) + '</p>'
@@ -445,7 +445,7 @@ function renderCategoryHighlights(items) {
             + 'Explore <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-3 text-sm"></i>'
             + '</span>'
             + '</div>'
-            + '<div class="absolute top-8 right-8 rounded-full bg-white/70 px-4 py-2 text-[11px] font-black text-orange-500 shadow-sm">' + escapeHtml(badge) + '</div>'
+            + '<div class="absolute top-6 right-6 rounded-full bg-white/70 px-4 py-2 text-[11px] font-black text-orange-500 shadow-sm">' + escapeHtml(badge) + '</div>'
             + '<div class="absolute top-1/2 left-1/4 w-32 h-32 ' + tone.glow + ' rounded-full blur-[80px] -z-0"></div>'
             + '<div class="absolute bottom-0 right-0 w-[200px] md:w-[320px] h-[95%] flex items-end">'
             + '<img src="/img/product_img/' + escapeHtml(item.image || 'default.png') + '"'
@@ -594,7 +594,7 @@ function buildCard(p, idx) {
       ? '<button onclick="addToCartAjax('+p.id+')" class="w-8 h-8 bg-white shadow-lg rounded-full flex items-center justify-center text-slate-700 hover:text-orange-500 transition active:scale-90"><i class="fa-solid fa-bag-shopping text-xs"></i></button>'
       : '<button disabled class="w-8 h-8 bg-white/80 shadow-sm rounded-full flex items-center justify-center text-red-400 cursor-not-allowed"><i class="fa-solid fa-ban text-xs"></i></button>';
     var sz = p.size ? '<span class="text-[9px] bg-white/60 rounded-full px-2 py-0.5 font-bold text-slate-500 ml-1">'+p.size+'</span>' : '';
-    return '<div class="pcard group relative rounded-[24px] p-4 flex flex-col overflow-hidden border border-slate-50" style="background:'+bg+'">'
+    return '<div class="pcard group relative rounded-2xl p-4 flex flex-col overflow-hidden border border-slate-50" style="background:'+bg+'">'
       + badge
       + '<a href="/product/' + p.id + '" class="absolute inset-0 z-0"></a>'
       + '<div class="flex flex-col gap-2 absolute top-3 right-3 z-20 translate-x-6 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">'
@@ -605,9 +605,9 @@ function buildCard(p, idx) {
       + '<img src="/img/product_img/'+p.image+'" onerror="this.src=\'https://placehold.co/200x200/e2e8f0/94a3b8?text=Product\'" class="max-w-[80%] max-h-[80%] object-contain mix-blend-multiply drop-shadow-md transform transition group-hover:scale-110 duration-500">'
       + '</div>'
       + '<div class="mt-auto flex flex-col gap-0.5">'
-      + '<div class="flex items-start justify-between gap-1">'
-      + '<a href="/product/'+p.id+'" class="font-heading font-bold text-slate-800 text-[13px] leading-tight w-[60%] hover:underline line-clamp-2">'+p.title+'</a>'
-      + '<div class="text-right w-[40%]"><p class="text-[13px] font-bold text-[#2d3a98]">&#8377;'+Number(p.discountPrice).toLocaleString('en-IN')+'</p>'+stk+'</div>'
+      + '<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1">'
+      + '<a href="/product/'+p.id+'" class="font-heading font-bold text-slate-800 text-[13px] leading-tight w-full sm:w-[60%] hover:underline line-clamp-2">'+p.title+'</a>'
+      + '<div class="text-left sm:text-right w-full sm:w-[40%]"><p class="text-[13px] font-bold text-[#2d3a98]">&#8377;'+Number(p.discountPrice).toLocaleString('en-IN')+'</p>'+stk+'</div>'
       + '</div>'
       + '<div class="flex items-center justify-between mt-0.5"><div>'+starsHtml(p.rating)+'</div><p class="text-[9px] text-slate-400 font-medium">'+p.category+sz+'</p></div>'
       + '</div></div>';
@@ -624,16 +624,16 @@ function buildSecondaryAd() {
         ? 'Save ' + escapeHtml(banner.discount) + '% on this pick.'
         : 'Freshly synced from the seller catalog.';
 
-    return '<div class="col-span-full my-6 rounded-[32px] overflow-hidden relative min-h-[180px] md:min-h-[260px] shadow-lg group active:scale-[0.99] transition-transform border border-slate-100">'
+    return '<div class="col-span-full my-6 rounded-2xl overflow-hidden relative min-h-[180px] md:min-h-[260px] shadow-lg group active:scale-[0.99] transition-transform border border-slate-100">'
       + '<img src="/img/product_img/' + escapeHtml(banner.image || 'default.png') + '" onerror="this.src=\'https://placehold.co/1600x400/e2e8f0/64748b?text=Featured+Catalog\'" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="' + escapeHtml(banner.title || 'Featured product') + '">'
-      + '<div class="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent p-6 md:p-12 flex flex-col justify-center">'
+      + '<div class="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent p-6 md:px-10 flex flex-col justify-center">'
       + '<div class="max-w-xl">'
       + '<div class="flex items-center gap-2 mb-3">'
       + '<span class="bg-orange-500 text-white text-[9px] font-black px-2 py-0.5 rounded-sm uppercase tracking-widest shadow-sm">' + escapeHtml(banner.badge || 'Live') + '</span>'
       + '<span class="text-white font-bold text-[11px] uppercase tracking-widest drop-shadow-sm">' + escapeHtml(banner.subtitle || banner.category || 'Storefront') + '</span>'
       + '</div>'
       + '<h2 class="text-2xl md:text-4xl font-heading font-black text-white leading-[1.1] mb-5 drop-shadow-lg">' + escapeHtml(banner.title || 'Featured Product') + '<br/><span class="text-orange-400">' + discountText + '</span></h2>'
-      + '<a href="/product/' + escapeHtml(banner.id) + '" class="inline-flex items-center gap-2 bg-white text-[#1F223D] px-7 py-3 rounded-full font-black text-xs hover:bg-orange-500 hover:text-white transition-all shadow-2xl hover:-translate-y-1 active:scale-95">'
+      + '<a href="/product/' + escapeHtml(banner.id) + '" class="inline-flex items-center gap-2 bg-white text-[#1F223D] px-6 py-2.5 rounded-full font-black text-xs hover:bg-orange-500 hover:text-white transition-all shadow-2xl hover:-translate-y-1 active:scale-95">'
       + 'View Product <i class="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>'
       + '</a>'
       + '</div></div></div>';

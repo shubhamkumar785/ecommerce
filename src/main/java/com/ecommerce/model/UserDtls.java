@@ -61,9 +61,19 @@ public class UserDtls {
 	
 	private String resetToken;
 	
-	private String storeName;
+	@jakarta.persistence.OneToOne(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, fetch = jakarta.persistence.FetchType.EAGER)
+	private SellerProfile sellerProfile;
+
+	public SellerProfile getSellerProfile() {
+		return sellerProfile;
+	}
 	
-	private String storeDescription;
+	public void setSellerProfile(SellerProfile sellerProfile) {
+		this.sellerProfile = sellerProfile;
+		if (sellerProfile != null) {
+			sellerProfile.setUser(this);
+		}
+	}
 
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -80,20 +90,28 @@ public class UserDtls {
 
 	// Getter and Setter for storeName
 	public String getStoreName() {
-	    return storeName;
+	    return sellerProfile != null ? sellerProfile.getStoreName() : null;
 	}
 
 	public void setStoreName(String storeName) {
-	    this.storeName = storeName;
+	    if (this.sellerProfile == null) {
+	        this.sellerProfile = new SellerProfile();
+	        this.sellerProfile.setUser(this);
+	    }
+	    this.sellerProfile.setStoreName(storeName);
 	}
 
 	// Getter and Setter for storeDescription
 	public String getStoreDescription() {
-	    return storeDescription;
+	    return sellerProfile != null ? sellerProfile.getStoreDescription() : null;
 	}
 
 	public void setStoreDescription(String storeDescription) {
-	    this.storeDescription = storeDescription;
+	    if (this.sellerProfile == null) {
+	        this.sellerProfile = new SellerProfile();
+	        this.sellerProfile.setUser(this);
+	    }
+	    this.sellerProfile.setStoreDescription(storeDescription);
 	}
 
 	// Getter and Setter for name

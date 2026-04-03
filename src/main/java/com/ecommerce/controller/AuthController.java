@@ -130,8 +130,10 @@ public class AuthController {
             if (file != null && !file.isEmpty()) {
                 try {
                     File saveFile = new ClassPathResource("static/img").getFile();
-                    Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator + file.getOriginalFilename());
-                    if (!Files.exists(path.getParent())) Files.createDirectories(path.getParent());
+                    Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
+                            + file.getOriginalFilename());
+                    if (!Files.exists(path.getParent()))
+                        Files.createDirectories(path.getParent());
                     Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -148,24 +150,24 @@ public class AuthController {
             }
 
             return ResponseEntity.ok(Map.of(
-                "message", "Registered successfully", 
-                "success", true,
-                "token", token,
-                "role", savedUser.getRole(),
-                "name", savedUser.getName()
-            ));
+                    "message", "Registered successfully",
+                    "success", true,
+                    "token", token,
+                    "role", savedUser.getRole(),
+                    "name", savedUser.getName()));
         }
 
         return ResponseEntity.status(500).body(Map.of("message", "Something went wrong during registration"));
     }
 
     @PostMapping("/api/user/profile")
-    public ResponseEntity<?> updateProfile(@ModelAttribute UserDtls user, @RequestParam(value = "img", required = false) MultipartFile file) {
+    public ResponseEntity<?> updateProfile(@ModelAttribute UserDtls user,
+            @RequestParam(value = "img", required = false) MultipartFile file) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             return ResponseEntity.status(401).body(Map.of("message", "Not authenticated"));
         }
-        
+
         String email = auth.getName();
         UserDtls dbUser = userService.getUserByEmail(email);
         if (dbUser == null) {
@@ -173,14 +175,22 @@ public class AuthController {
         }
 
         // Update only provided fields
-        if (StringUtils.hasText(user.getName())) dbUser.setName(user.getName());
-        if (StringUtils.hasText(user.getMobileNumber())) dbUser.setMobileNumber(user.getMobileNumber());
-        if (StringUtils.hasText(user.getAddress())) dbUser.setAddress(user.getAddress());
-        if (StringUtils.hasText(user.getCity())) dbUser.setCity(user.getCity());
-        if (StringUtils.hasText(user.getState())) dbUser.setState(user.getState());
-        if (StringUtils.hasText(user.getPincode())) dbUser.setPincode(user.getPincode());
-        if (StringUtils.hasText(user.getStoreName())) dbUser.setStoreName(user.getStoreName());
-        if (StringUtils.hasText(user.getStoreDescription())) dbUser.setStoreDescription(user.getStoreDescription());
+        if (StringUtils.hasText(user.getName()))
+            dbUser.setName(user.getName());
+        if (StringUtils.hasText(user.getMobileNumber()))
+            dbUser.setMobileNumber(user.getMobileNumber());
+        if (StringUtils.hasText(user.getAddress()))
+            dbUser.setAddress(user.getAddress());
+        if (StringUtils.hasText(user.getCity()))
+            dbUser.setCity(user.getCity());
+        if (StringUtils.hasText(user.getState()))
+            dbUser.setState(user.getState());
+        if (StringUtils.hasText(user.getPincode()))
+            dbUser.setPincode(user.getPincode());
+        if (StringUtils.hasText(user.getStoreName()))
+            dbUser.setStoreName(user.getStoreName());
+        if (StringUtils.hasText(user.getStoreDescription()))
+            dbUser.setStoreDescription(user.getStoreDescription());
 
         UserDtls updated = userService.updateUserProfile(dbUser, file);
         updated.setPassword(null); // Safety
@@ -208,7 +218,7 @@ public class AuthController {
             user.setAccountNonLocked(true);
             user.setFailedAttempt(0);
             // Default password for Google users (won't be used for login)
-            user.setPassword("GOOGLE_AUTH_USER"); 
+            user.setPassword("GOOGLE_AUTH_USER");
             user = userService.saveUser(user);
         }
 
@@ -238,6 +248,9 @@ public class AuthController {
         }
         if (user != null && "ROLE_ADMIN".equals(user.getRole())) {
             return "/admin/";
+        }
+        if (user != null && "ROLE_USER".equals(user.getRole())) {
+            return "/";
         }
         return "/";
     }

@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+
+# Build files
+target/
+*.jar
+*.war
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Other
+*.log
+Dockerfile
+docker-compose.yml
+.dockerignore

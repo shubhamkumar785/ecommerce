@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base_modern::layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${product.title} + ' | Complete Payment'">Complete Payment</title>
+    <title>Complete Payment | Ecom Store</title>
 </head>
 <body>
     <section class="min-h-screen bg-pastel-bg py-6 px-4 md:px-0">
@@ -16,7 +16,7 @@
                     </h1>
                     <p class="text-slate-500 font-medium mt-2 text-[13px] md:text-[14px]">Choose a payment method and review your order details in the same secure checkout flow.</p>
                 </div>
-                <a th:href="@{/user/buy-now(pid=${product.id},quantity=${quantity})}"
+                <a href="/user/cart-checkout"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 font-bold hover:border-orange-200 hover:text-orange-500 transition shadow-sm text-xs">
                     <i class="fa-solid fa-arrow-left text-[10px]"></i> Back to Summary
                 </a>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-blue-500 text-white flex items-center justify-center shadow-sm">
+                        <div class="w-9 h-9 rounded-xl bg-green-50 text-green-500 flex items-center justify-center shadow-sm">
                             <i class="fa-solid fa-bag-shopping text-sm"></i>
                         </div>
                         <div>
@@ -54,9 +54,7 @@
                 </div>
             </div>
 
-            <form id="buyNowPaymentForm" action="/user/buy-now/place-order" method="post" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px]">
-                <input type="hidden" name="pid" th:value="${product.id}">
-                <input type="hidden" name="quantity" th:value="${quantity}">
+            <form id="cartPaymentForm" action="/user/save-order" method="post" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px]">
                 <input type="hidden" name="firstName" th:value="${orderRequest.firstName}">
                 <input type="hidden" name="lastName" th:value="${orderRequest.lastName}">
                 <input type="hidden" name="email" th:value="${orderRequest.email}">
@@ -120,7 +118,7 @@
                                     <div>
                                         <p class="text-[14px] font-bold text-slate-900 leading-tight">UPI</p>
                                         <p class="mt-1 text-[12px] text-slate-500 font-medium leading-5">Pay instantly using any UPI app or UPI ID</p>
-                                        <p class="mt-1 text-[12px] text-emerald-600 font-bold">Available on every product</p>
+                                        <p class="mt-1 text-[12px] text-emerald-600 font-bold">Verified checkout</p>
                                     </div>
                                 </div>
                             </button>
@@ -147,7 +145,7 @@
                                         <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">Card Number</label>
                                         <div class="relative">
                                             <input type="text" placeholder="XXXX XXXX XXXX XXXX"
-                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-[15px] md:text-base tracking-[0.14em] text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 pr-12 text-[15px] md:text-base tracking-[0.14em] text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
                                             <i class="fa-regular fa-credit-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 text-base"></i>
                                         </div>
                                     </div>
@@ -156,23 +154,23 @@
                                         <div>
                                             <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">Valid Thru</label>
                                             <input type="text" placeholder="MM / YY"
-                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] md:text-base text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-[15px] md:text-base text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
                                         </div>
                                         <div>
                                             <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">CVV</label>
                                             <input type="password" placeholder="CVV"
-                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] md:text-base text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-[15px] md:text-base text-slate-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">Name on Card</label>
                                         <input type="text" th:value="${deliveryFullName}" placeholder="Cardholder name"
-                                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[14px] md:text-[15px] text-slate-700 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-[14px] md:text-[15px] text-slate-700 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
                                     </div>
 
                                     <button type="submit"
-                                        class="w-full py-3 px-8 rounded-[16px] bg-[#ffca28] text-slate-900 font-black text-base shadow-lg hover:bg-[#ffc107] transition active:scale-95">
+                                        class="w-full py-2.5 px-8 rounded-xl bg-[#ffca28] text-slate-900 font-black text-base shadow-lg hover:bg-[#ffc107] transition active:scale-95">
                                         Pay &#8377;<span th:text="${sellingPrice}">0</span>
                                     </button>
                                 </div>
@@ -196,7 +194,7 @@
                                 </div>
 
                                 <button type="submit"
-                                    class="mt-5 w-full py-3 px-8 rounded-[16px] bg-nav text-white font-black text-[15px] shadow-xl hover:bg-slate-800 transition active:scale-95">
+                                    class="mt-5 w-full py-3 px-8 rounded-xl bg-nav text-white font-black text-[14px] shadow-xl hover:bg-slate-800 transition active:scale-95">
                                     PLACE ORDER WITH CASH ON DELIVERY
                                 </button>
                             </div>
@@ -214,7 +212,7 @@
 
                                 <div class="mt-4 rounded-[16px] bg-emerald-50/60 border border-emerald-100 p-3.5">
                                     <p class="text-slate-700 text-[14px] font-medium leading-6">
-                                        Enter a valid UPI ID like <span class="font-bold text-emerald-700">name@bank</span>. This option is available for every product checkout.
+                                        Enter a valid UPI ID like <span class="font-bold text-emerald-700">name@bank</span>.
                                     </p>
                                 </div>
 
@@ -222,15 +220,15 @@
                                     <div>
                                         <label class="block text-slate-700 font-bold text-[14px] md:text-[15px] mb-2">UPI ID</label>
                                         <div class="relative">
-                                            <input id="buyNowUpiId" name="upiId" type="text" placeholder="yourname@upi"
+                                            <input id="cartUpiId" name="upiId" type="text" placeholder="yourname@upi"
                                                 class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-[15px] md:text-base text-slate-700 outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition">
                                             <i class="fa-solid fa-mobile-screen-button absolute right-4 top-1/2 -translate-y-1/2 text-emerald-300 text-base"></i>
                                         </div>
-                                        <p id="buyNowUpiValidation" class="mt-2 hidden text-[12px] font-bold"></p>
+                                        <p id="cartUpiValidation" class="mt-2 hidden text-[12px] font-bold"></p>
                                     </div>
 
-                                    <div id="buyNowUpiStatus" class="hidden rounded-[16px] border px-4 py-3">
-                                        <p id="buyNowUpiStatusText" class="text-[13px] font-bold leading-6"></p>
+                                    <div id="cartUpiStatus" class="hidden rounded-[16px] border px-4 py-3">
+                                        <p id="cartUpiStatusText" class="text-[13px] font-bold leading-6"></p>
                                     </div>
 
                                     <div class="rounded-[16px] border border-dashed border-slate-200 bg-slate-50 px-4 py-3">
@@ -239,7 +237,7 @@
                                         </p>
                                     </div>
 
-                                    <button id="buyNowUpiPayButton" type="button"
+                                    <button id="cartUpiPayButton" type="button"
                                         class="w-full py-3 px-8 rounded-[16px] bg-emerald-500 text-white font-black text-base shadow-lg hover:bg-emerald-600 transition active:scale-95">
                                         PAY WITH UPI
                                     </button>
@@ -272,19 +270,11 @@
 
                 <aside class="space-y-4">
                     <div class="bg-white rounded-[20px] p-3.5 shadow-xl shadow-slate-200/50 border border-slate-50">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-[14px] bg-slate-50 border border-slate-100 flex items-center justify-center p-2 shadow-inner overflow-hidden">
-                                <img th:src="@{'/img/product_img/'+${product.image}}" th:alt="${product.title}"
-                                    class="max-w-full max-h-full object-contain mix-blend-multiply">
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] font-black uppercase tracking-[0.28em] text-slate-400 mb-2">Selected Product</p>
-                                <h3 class="text-[1rem] font-bold text-slate-900 leading-tight" th:text="${product.title}">Product title</h3>
-                                <p class="mt-1 text-[13px] font-bold text-slate-400">
-                                    Qty: <span class="text-slate-700" th:text="${quantity}">1</span>
-                                    <span class="mx-2 text-slate-300">|</span>
-                                    <span th:text="${product.category}">Laptop</span>
-                                </p>
+                        <p class="text-[10px] font-black uppercase tracking-[0.28em] text-slate-400 mb-2">Cart Summary</p>
+                        <h3 class="text-[1rem] font-bold text-slate-900" th:text="${itemsCount} + ' Items in your cart'">X Items</h3>
+                        <div class="mt-3 flex overflow-x-auto gap-2 no-scrollbar">
+                            <div th:each="cart : ${carts}" class="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 shrink-0 flex items-center justify-center p-1">
+                                <img th:src="@{'/img/product_img/'+${cart.product.image}}" class="max-w-full max-h-full object-contain mix-blend-multiply">
                             </div>
                         </div>
                     </div>
@@ -299,35 +289,33 @@
                                 <span th:text="${orderRequest.state}">State</span> -
                                 <span th:text="${orderRequest.pincode}">000000</span>
                             </p>
-                            <p class="text-[14px] font-medium">Phone: <span class="font-bold text-slate-900" th:text="${orderRequest.mobileNo}">9999999999</span></p>
-                            <p class="text-[14px] font-medium break-all">Email: <span class="font-bold text-slate-900" th:text="${orderRequest.email}">mail@example.com</span></p>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50">
+                    <div class="bg-white rounded-[20px] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-50">
                         <div class="px-4 py-3.5 border-b border-slate-100">
-                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Price Details</h3>
+                            <h3 class="text-[13px] font-black text-slate-500 uppercase tracking-widest">Price Details</h3>
                         </div>
                         <div class="p-4 space-y-3.5">
                             <div class="flex justify-between text-sm">
                                 <span class="text-slate-600 font-medium">MRP</span>
                                 <span class="text-slate-900 font-semibold">&#8377;[[${mrp}]]</span>
                             </div>
-                            <div class="flex justify-between text-sm">
+                            <div class="flex justify-between text-[14px]">
                                 <span class="text-slate-600 font-medium">Discount</span>
                                 <span class="text-green-600 font-semibold">- &#8377;[[${discountAmount}]]</span>
                             </div>
-                            <div class="flex justify-between text-sm">
+                            <div class="flex justify-between text-[14px]">
                                 <span class="text-slate-600 font-medium">Delivery Charges</span>
                                 <span class="text-green-600 font-semibold">Free</span>
                             </div>
                             <div class="pt-3.5 border-t border-dashed border-slate-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-base font-black text-slate-900">Total Amount</span>
+                                    <span class="text-[15px] font-black text-slate-900">Total Amount</span>
                                     <span class="text-xl font-black text-slate-900">&#8377;[[${sellingPrice}]]</span>
                                 </div>
                             </div>
-                            <div class="rounded-xl bg-green-50 px-3.5 py-3 text-center border border-green-100">
+                            <div class="rounded-[16px] bg-green-50 px-3.5 py-3 text-center border border-green-100">
                                 <p class="text-[13px] font-bold text-green-600">You will save &#8377;[[${discountAmount}]] on this order</p>
                             </div>
                         </div>
@@ -341,16 +329,17 @@
             const paymentButtons = document.querySelectorAll('.payment-option');
             const paymentPanels = document.querySelectorAll('.payment-panel');
             const paymentTypeInput = document.getElementById('paymentTypeInput');
-            const buyNowPaymentForm = document.getElementById('buyNowPaymentForm');
+            const cartPaymentForm = document.getElementById('cartPaymentForm');
             const availableMethods = Array.from(paymentButtons).map((button) => button.dataset.method);
             const initialMethod = availableMethods.includes(paymentTypeInput.value)
                 ? paymentTypeInput.value
                 : (availableMethods.includes('CARD') ? 'CARD' : availableMethods[0]);
-            const buyNowUpiInput = document.getElementById('buyNowUpiId');
-            const buyNowUpiValidation = document.getElementById('buyNowUpiValidation');
-            const buyNowUpiStatus = document.getElementById('buyNowUpiStatus');
-            const buyNowUpiStatusText = document.getElementById('buyNowUpiStatusText');
-            const buyNowUpiPayButton = document.getElementById('buyNowUpiPayButton');
+            
+            const cartUpiInput = document.getElementById('cartUpiId');
+            const cartUpiValidation = document.getElementById('cartUpiValidation');
+            const cartUpiStatus = document.getElementById('cartUpiStatus');
+            const cartUpiStatusText = document.getElementById('cartUpiStatusText');
+            const cartUpiPayButton = document.getElementById('cartUpiPayButton');
             const razorpayConfigured = /*[[${razorpayConfigured}]]*/ false;
             const upiPattern = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$/;
 
@@ -361,7 +350,6 @@
                     const isActive = button.dataset.method === method;
                     button.classList.toggle('bg-blue-50', isActive && method === 'CARD');
                     button.classList.toggle('border-blue-500', isActive && method === 'CARD');
-                    button.classList.toggle('shadow-sm', isActive);
                     button.classList.toggle('bg-orange-50', isActive && method === 'COD');
                     button.classList.toggle('border-orange-300', isActive && method === 'COD');
                     button.classList.toggle('bg-emerald-50', isActive && method === 'UPI');
@@ -375,26 +363,26 @@
                 });
 
                 if (method !== 'UPI') {
-                    clearBuyNowUpiStatus();
+                    clearCartUpiStatus();
                 }
             }
 
-            function clearBuyNowUpiStatus() {
-                buyNowUpiStatus.classList.add('hidden');
-                buyNowUpiValidation.classList.add('hidden');
-                buyNowUpiValidation.textContent = '';
-                buyNowUpiInput.classList.remove('border-red-400', 'focus:ring-red-200', 'focus:border-red-400');
+            function clearCartUpiStatus() {
+                cartUpiStatus.classList.add('hidden');
+                cartUpiValidation.classList.add('hidden');
+                cartUpiValidation.textContent = '';
+                cartUpiInput.classList.remove('border-red-400', 'focus:ring-red-200', 'focus:border-red-400');
             }
 
-            function showBuyNowUpiValidation(message, type = 'error') {
-                buyNowUpiValidation.textContent = message;
-                buyNowUpiValidation.className = `mt-2 text-[12px] font-bold ${type === 'success' ? 'text-emerald-600' : 'text-red-500'}`;
-                buyNowUpiInput.classList.toggle('border-red-400', type === 'error');
-                buyNowUpiInput.classList.toggle('focus:ring-red-200', type === 'error');
-                buyNowUpiInput.classList.toggle('focus:border-red-400', type === 'error');
+            function showCartUpiValidation(message, type = 'error') {
+                cartUpiValidation.textContent = message;
+                cartUpiValidation.className = `mt-2 text-[12px] font-bold ${type === 'success' ? 'text-emerald-600' : 'text-red-500'}`;
+                cartUpiInput.classList.toggle('border-red-400', type === 'error');
+                cartUpiInput.classList.toggle('focus:ring-red-200', type === 'error');
+                cartUpiInput.classList.toggle('focus:border-red-400', type === 'error');
             }
 
-            function setBuyNowUpiStatus(type, message) {
+            function setCartUpiStatus(type, message) {
                 const typeClasses = {
                     processing: 'rounded-[16px] border border-blue-100 bg-blue-50 px-4 py-3',
                     success: 'rounded-[16px] border border-emerald-100 bg-emerald-50 px-4 py-3',
@@ -406,46 +394,41 @@
                     error: 'text-[13px] font-bold leading-6 text-red-600'
                 };
 
-                buyNowUpiStatus.className = typeClasses[type] || typeClasses.processing;
-                buyNowUpiStatusText.className = textClasses[type] || textClasses.processing;
-                buyNowUpiStatusText.textContent = message;
-                buyNowUpiStatus.classList.remove('hidden');
+                cartUpiStatus.className = typeClasses[type] || typeClasses.processing;
+                cartUpiStatusText.className = textClasses[type] || textClasses.processing;
+                cartUpiStatusText.textContent = message;
+                cartUpiStatus.classList.remove('hidden');
             }
 
-            function validateBuyNowUpi(showMessage = true) {
-                const upiId = buyNowUpiInput.value.trim().toLowerCase();
+            function validateCartUpi(showMessage = true) {
+                const upiId = cartUpiInput.value.trim().toLowerCase();
                 if (!upiId) {
                     if (showMessage) {
-                        showBuyNowUpiValidation('Please enter your UPI ID to continue.');
+                        showCartUpiValidation('Please enter your UPI ID to continue.');
                     }
                     return false;
                 }
                 if (!upiPattern.test(upiId)) {
                     if (showMessage) {
-                        showBuyNowUpiValidation('Enter a valid UPI ID like name@bank.');
+                        showCartUpiValidation('Enter a valid UPI ID like name@bank.');
                     }
                     return false;
                 }
-                showBuyNowUpiValidation('UPI ID looks valid. You can continue.', 'success');
+                showCartUpiValidation('UPI ID looks valid. You can continue.', 'success');
                 return true;
             }
 
-            function setBuyNowUpiButtonLoading(loading, label = 'PAY WITH UPI') {
-                buyNowUpiPayButton.disabled = loading;
-                buyNowUpiPayButton.textContent = loading ? label : 'PAY WITH UPI';
-                buyNowUpiPayButton.classList.toggle('opacity-70', loading);
-                buyNowUpiPayButton.classList.toggle('cursor-not-allowed', loading);
+            function setCartUpiButtonLoading(loading, label = 'PAY WITH UPI') {
+                cartUpiPayButton.disabled = loading;
+                cartUpiPayButton.textContent = loading ? label : 'PAY WITH UPI';
+                cartUpiPayButton.classList.toggle('opacity-70', loading);
             }
 
-            async function verifyBuyNowUpiPayment(checkoutReference, response) {
-                setBuyNowUpiStatus('processing', 'Waiting for payment confirmation. Verifying your payment securely...');
-
+            async function verifyCartUpiPayment(checkoutReference, response) {
+                setCartUpiStatus('processing', 'Waiting for payment confirmation...');
                 const verificationResponse = await fetch('/user/payments/upi/verify', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         checkoutReference,
                         razorpayOrderId: response.razorpay_order_id,
@@ -456,65 +439,47 @@
                 const payload = await verificationResponse.json();
 
                 if (!verificationResponse.ok || !payload.success) {
-                    throw new Error(payload.message || 'Payment verification failed. No order was placed.');
+                    throw new Error(payload.message || 'Verification failed.');
                 }
 
-                setBuyNowUpiStatus('success', 'Payment Successful. Confirming your order now...');
-                if (typeof showToast === 'function') {
-                    showToast('Payment successful', 'success');
-                }
-                setTimeout(() => {
-                    window.location.href = payload.redirectUrl;
-                }, 900);
+                setCartUpiStatus('success', 'Payment Successful. Redirecting...');
+                setTimeout(() => { window.location.href = payload.redirectUrl; }, 1000);
             }
 
-            async function initiateBuyNowUpiPayment() {
+            async function initiateCartUpiPayment() {
                 if (!razorpayConfigured) {
-                    setBuyNowUpiStatus('error', 'UPI payments are not configured yet. Add Razorpay test credentials and try again.');
+                    setCartUpiStatus('error', 'Razorpay not configured.');
+                    return;
+                }
+                if (!validateCartUpi(true)) {
+                    cartUpiInput.focus();
                     return;
                 }
 
-                if (!validateBuyNowUpi(true)) {
-                    buyNowUpiInput.focus();
-                    return;
-                }
-
-                if (typeof Razorpay === 'undefined') {
-                    setBuyNowUpiStatus('error', 'Unable to load Razorpay checkout right now. Please refresh and try again.');
-                    return;
-                }
-
-                setBuyNowUpiButtonLoading(true, 'PROCESSING PAYMENT...');
-                setBuyNowUpiStatus('processing', 'Processing payment. Waiting for Razorpay checkout to open...');
+                setCartUpiButtonLoading(true, 'PROCESSING...');
+                setCartUpiStatus('processing', 'Starting checkout...');
 
                 try {
-                    const payload = Object.fromEntries(new FormData(buyNowPaymentForm).entries());
-                    payload.upiId = buyNowUpiInput.value.trim().toLowerCase();
+                    const payload = Object.fromEntries(new FormData(cartPaymentForm).entries());
+                    payload.upiId = cartUpiInput.value.trim().toLowerCase();
                     payload.paymentType = 'UPI';
-                    payload.checkoutType = 'BUY_NOW';
 
-                    const initiationResponse = await fetch('/user/payments/upi/initiate-buy-now', {
+                    const initiationResponse = await fetch('/user/payments/upi/initiate-cart', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
                     const initiationPayload = await initiationResponse.json();
 
                     if (!initiationResponse.ok || !initiationPayload.success) {
-                        throw new Error(initiationPayload.message || 'Unable to start the UPI payment.');
+                        throw new Error(initiationPayload.message || 'Initiation failed.');
                     }
-
-                    setBuyNowUpiStatus('processing', 'Waiting for payment confirmation in Razorpay. Approve the payment in your UPI app.');
 
                     const razorpayCheckout = new Razorpay({
                         key: initiationPayload.razorpayKeyId,
                         amount: initiationPayload.amount,
                         currency: initiationPayload.currency,
                         name: 'Ecom Store',
-                        description: 'UPI payment for your order',
                         order_id: initiationPayload.razorpayOrderId,
                         method: 'upi',
                         prefill: {
@@ -522,40 +487,24 @@
                             email: initiationPayload.customerEmail,
                             contact: initiationPayload.customerContact
                         },
-                        notes: {
-                            preferred_upi_id: payload.upiId
-                        },
-                        theme: {
-                            color: '#10b981'
+                        handler: function (response) {
+                            verifyCartUpiPayment(initiationPayload.checkoutReference, response)
+                                .catch((error) => {
+                                    setCartUpiButtonLoading(false);
+                                    setCartUpiStatus('error', error.message);
+                                });
                         },
                         modal: {
-                            confirm_close: true,
                             ondismiss: function () {
-                                setBuyNowUpiButtonLoading(false);
-                                setBuyNowUpiStatus('error', 'Payment was not completed. No order was placed.');
+                                setCartUpiButtonLoading(false);
+                                setCartUpiStatus('error', 'Payment cancelled.');
                             }
-                        },
-                        handler: function (response) {
-                            verifyBuyNowUpiPayment(initiationPayload.checkoutReference, response)
-                                .catch((error) => {
-                                    setBuyNowUpiButtonLoading(false);
-                                    setBuyNowUpiStatus('error', error.message || 'Payment verification failed. No order was placed.');
-                                });
                         }
                     });
-
-                    razorpayCheckout.on('payment.failed', function (response) {
-                        setBuyNowUpiButtonLoading(false);
-                        const reason = response.error && response.error.description
-                            ? response.error.description
-                            : 'Payment Failed. No order was placed.';
-                        setBuyNowUpiStatus('error', reason);
-                    });
-
                     razorpayCheckout.open();
                 } catch (error) {
-                    setBuyNowUpiButtonLoading(false);
-                    setBuyNowUpiStatus('error', error.message || 'Unable to start the UPI payment.');
+                    setCartUpiButtonLoading(false);
+                    setCartUpiStatus('error', error.message);
                 }
             }
 
@@ -563,25 +512,20 @@
                 button.addEventListener('click', () => activatePayment(button.dataset.method));
             });
 
-            buyNowUpiInput?.addEventListener('input', () => {
-                if (!buyNowUpiInput.value.trim()) {
-                    clearBuyNowUpiStatus();
-                    return;
-                }
-                validateBuyNowUpi(false);
+            cartUpiInput?.addEventListener('input', () => {
+                if (!cartUpiInput.value.trim()) { clearCartUpiStatus(); return; }
+                validateCartUpi(false);
             });
 
-            buyNowUpiPayButton?.addEventListener('click', initiateBuyNowUpiPayment);
-
-            buyNowPaymentForm?.addEventListener('submit', (event) => {
-                if (paymentTypeInput.value === 'UPI') {
-                    event.preventDefault();
-                    initiateBuyNowUpiPayment();
-                }
-            });
+            cartUpiPayButton?.addEventListener('click', initiateCartUpiPayment);
 
             activatePayment(initialMethod);
         </script>
+
+        <style>
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
     </section>
 </body>
 </html>
