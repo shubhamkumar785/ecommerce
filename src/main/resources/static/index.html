@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce - Deployment Successful</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .status-box {
+            background: #e8f8f5;
+            border-left: 4px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        #api-result {
+            margin-top: 20px;
+            font-family: monospace;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            display: none;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 Deployment Successful!</h1>
+    <p>Your Spring Boot application is now running perfectly with static frontend serving configured.</p>
+    
+    <div class="status-box">
+        <strong>✅ Static Assets:</strong> Working<br>
+        <strong>✅ CSS/Styles:</strong> Working<br>
+        <strong>✅ Routing:</strong> Configured
+    </div>
+
+    <button class="btn" onclick="testBackendAPI()">Test Backend API Connection</button>
+
+    <div id="api-result"></div>
+</div>
+
+<script>
+    async function testBackendAPI() {
+        const resultDiv = document.getElementById('api-result');
+        resultDiv.style.display = 'block';
+        resultDiv.textContent = 'Fetching data from /api/health...';
+
+        try {
+            // Because this file is served by Spring Boot, the relative path works perfectly
+            const response = await fetch('/api/health');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            resultDiv.textContent = '✅ Success!\n\nResponse:\n' + JSON.stringify(data, null, 2);
+            resultDiv.style.borderLeft = '4px solid #1abc9c';
+        } catch (error) {
+            resultDiv.textContent = '❌ Error connecting to backend:\n\n' + error.message;
+            resultDiv.style.borderLeft = '4px solid #e74c3c';
+        }
+    }
+</script>
+
+</body>
+</html>
